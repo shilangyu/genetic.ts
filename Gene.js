@@ -56,7 +56,7 @@ class Gene {
 			else
 				throw new Error(e)
 		}
-		
+
 		let xBest = population.map(x => x.fitness)
 							  .sort((a, b) => b - a)
 							  [this.amountOfParents-1]
@@ -89,7 +89,7 @@ class Gene {
 				for (i = 0; i < amount; i++) {
 					let tempObj = {}
 					for (let val in this.parents[0])
-						tempObj[val] = this.parents[floor(random(this.amountOfParents))][val] * random(1 - this.mutationRate, 1 + this.mutationRate)
+						tempObj[val] = this.parents[Math.floor(Math.random() * this.amountOfParents)][val] * (1 - this.mutationRate + (Math.random() / (0.5 / this.mutationRate)))
 					res.push(new Ball(50, i, tempObj))
 				}
 				break
@@ -97,7 +97,7 @@ class Gene {
 				for (i = 0; i < amount; i++) {
 					let tempObj = {}
 					for (let val in this.parents)
-						tempObj[val] = this.parents[val] * random(1 - this.mutationRate, 1 + this.mutationRate)
+						tempObj[val] = this.parents[val] * (1 - this.mutationRate + (Math.random() / (0.5 / this.mutationRate)))
 					res.push(new Ball(50, i, tempObj))
 				}
 				break
