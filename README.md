@@ -28,11 +28,12 @@ Now you are all set! Now just create a Gene instance, find the parents and finis
 ```js
     let gene = new Gene()
 ```
-Gene takes 3 optional parameters: mutationRate, inheritanceMode and numberOfParents
+Gene takes 4 optional parameters: mutationRate, numberOfParents, inheritanceMode and matingMode
 Their defaults are:
 - ```mutationRate``` is 1%
-- ```inheritanceMode``` is 'chromosome'
-- ```numberOfParents``` is 2 
+- ```numberOfParents``` is 2
+- ```inheritanceMode``` is 'chromosome' 
+- ```matingMode``` is 'probability' 
 
 Next you want to find their parents
 ```js
@@ -64,9 +65,9 @@ Method ```createPopulation``` takes an obligatory parameter: amount of members o
 ###### Mating pool modes:
 *methods of choosing the parents*
 
-```''```: 
+```'best'```: takes n amount of members with best fitness scores
 
-```''```: 
+```'probability'```: all members have a % chance of being chosen based on their fitness'
 
 
 ## on the way
