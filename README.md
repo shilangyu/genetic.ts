@@ -1,5 +1,8 @@
 # Genetic.js
 Simple and clear JavaScript class for genetic algorithms. Contains helpful warning and error messages to enhance your understanding.
+* [usage](#usage)
+* [modes](#modes)
+* [on the way](#on-the-way)
 
 ## usage
 First, include the Gene.js file in your project. In HTML:
@@ -46,18 +49,21 @@ Method ```createPopulation``` takes an obligatory parameter: amount of members o
 ## modes
 ###### Inheritance modes: 
 *methods of choosing the passed dna*
+
 ```'chromosome'```: classical method. Mixing parents' dna by choosing randomly a parent for each dna's property
 
 ```'average'```: sum of each parents dna property divided by the number of parents
 
 ###### Mutation modes:
 *methods of mutating the passed dna*
+
 ```''```: 
 
 ```''```: 
 
 ###### Mating pool modes:
 *methods of choosing the parents*
+
 ```''```: 
 
 ```''```: 
