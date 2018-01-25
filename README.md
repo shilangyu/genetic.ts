@@ -12,7 +12,7 @@ Then in your JavaScript code create your population. For now you need to do it y
 Here are the criteria’s of your population:
 - it must be an array of objects
 -  each object must have a property called ```fitness``` 
-- each object must contain also an object ```dna```. It will have all your dna data that you want to pass to the next generations. All properties of ```dna``` must be numbers
+- each object must contain also a ```dna``` object. It will have all your dna data that you want to pass to the next generations. All properties of ```dna``` must be numbers
 
 Example of a population:
 ```js
@@ -28,7 +28,7 @@ Now you are all set! Now just create a Gene instance, find the parents and finis
 Gene takes 3 optional parameters: mutationRate, inheritanceMode and numberOfParents
 Their defaults are:
 - ```mutationRate``` is 1%
-- ```inheritanceMode``` is chromosome
+- ```inheritanceMode``` is 'chromosome'
 - ```numberOfParents``` is 2 
 
 Next you want to find their parents
@@ -44,14 +44,27 @@ Finish off with creating a new population:
 Method ```createPopulation``` takes an obligatory parameter: amount of members of population to create
 
 ## modes
-###### Inheritance modes:
+###### Inheritance modes: 
+*methods of choosing the passed dna*
 ```'chromosome'```: classical method. Mixing parents' dna by choosing randomly a parent for each dna's property
-![imgur](https://i.imgur.com/3TaJltC.png) 
 
 ```'average'```: sum of each parents dna property divided by the number of parents
+
+###### Mutation modes:
+*methods of mutating the passed dna*
+```''```: 
+
+```''```: 
+
+###### Mating pool modes:
+*methods of choosing the parents*
+```''```: 
+
+```''```: 
 
 
 ## on the way
 - [ ] Gene.js creating and handling your population
 - [ ] ```dna``` containing properties that are strings
 - [ ] mutation modes
+- [ ] mating pool modes
