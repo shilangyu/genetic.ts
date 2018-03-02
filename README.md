@@ -74,4 +74,3 @@ Method ```createPopulation``` takes an obligatory parameter: amount of members o
 - [ ] Gene.js creating and handling your population
 - [ ] ```dna``` containing properties that are strings
 - [ ] mutation modes
-- [ ] mating pool modes
