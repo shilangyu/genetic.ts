@@ -37,15 +37,22 @@ Their defaults are:
 
 Next you want to find their parents
 ```js
-    gene.findParents(yourPopulation)
+    let yourParents = gene.findParents(yourPopulation)
 ```
-to see the parents and handle them yourself access them from ```gene.parents``` or catch it from the function itself (parents get returned)
+to see the parents and handle them yourself access them from ```gene.parents``` or catch it from the function itself.
+
 Now, create the genes:
 ```js
     let yourNewGenes = gene.createGenes(100)
 ```
 
 Method ```createGenes``` takes an obligatory parameter: amount of genes to create. Again, you can retrieve the genes from the function or from ```gene.newGenes```.
+
+Finish off with mutating the genes:
+```js
+    let yourNewMutatedGenes = gene.mutateGenes()
+```
+returns an array of mutated genes.
 
 ## modes
 ###### Inheritance modes: 
