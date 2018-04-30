@@ -66,13 +66,10 @@ class Gene {
 
 		switch(this.matingMode) {
 			case 'best':
-				let xBest = population	.map(x => x.fitness)
-										.sort((a, b) => b - a)
-										[this.amountOfParents-1]
-				this.parents = population	.filter(ele => ele.fitness >= xBest)
-											.sort((a, b) => b.fitness - a.fitness)
-											.slice(0, this.amountOfParents)
-											.map(ele => ele.dna)
+				this.parents = population	.slice()
+											.sort((a, b) => a.fitness - b.fitness)
+											.slice(-this.amountOfParents)
+											.map( ele => ele.dna)
 				break
 			case 'probability':
 				this.parents = []
