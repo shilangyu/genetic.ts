@@ -39,7 +39,7 @@ Next you want to find their parents
 ```js
     gene.findParents(yourPopulation)
 ```
-to see the parents and handle them yourself access them from ```gene.parents```
+to see the parents and handle them yourself access them from ```gene.parents``` or catch it from the function itself (parents get returned)
 Finish off with creating a new population:
 ```js
     let yourNewGenes = gene.createGenes(100)
