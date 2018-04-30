@@ -45,7 +45,7 @@ Now, create the genes:
     let yourNewGenes = gene.createGenes(100)
 ```
 
-Method ```createGenes``` takes an obligatory parameter: amount of genes to create. Again, you can retrieve the genes from the function or from ```gene.newGenes```
+Method ```createGenes``` takes an obligatory parameter: amount of genes to create. Again, you can retrieve the genes from the function or from ```gene.newGenes```.
 
 ## modes
 ###### Inheritance modes: 
