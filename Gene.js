@@ -95,8 +95,6 @@ class Gene {
 	}
 
 	createGenes(amount) {
-		let res = []
-	   
 		if(amount <= 0)
 			console.warn('You are creating an empty population.')
 
@@ -107,7 +105,7 @@ class Gene {
 					let tempObj = {}
 					for (let val in this.parents[0])
 						tempObj[val] = this.parents[Math.floor(Math.random() * this.amountOfParents)][val] * (1 - this.mutationRate + (Math.random() / (0.5 / this.mutationRate)))
-					res.push(tempObj)
+					this.newGenes.push(tempObj)
 				}
 				break
 			case 'average':
@@ -122,12 +120,12 @@ class Gene {
 					let tempObj = {}
 					for (let val in this.parents)
 						tempObj[val] = this.parents[val] * (1 - this.mutationRate + (Math.random() / (0.5 / this.mutationRate)))
-					res.push(tempObj)
+					this.newGenes.push(tempObj)
 				}
 				break
 			default:
 				break
 		}
-		return res
+		return this.newGenes
 	}
 }
