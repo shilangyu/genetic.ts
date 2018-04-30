@@ -104,7 +104,7 @@ class Gene {
 				for (let i = 0; i < amount; i++) {
 					let tempObj = {}
 					for (let val in this.parents[0])
-						tempObj[val] = this.parents[Math.floor(Math.random() * this.amountOfParents)][val] * (1 - this.mutationRate + (Math.random() / (0.5 / this.mutationRate)))
+						tempObj[val] = this.parents[Math.floor(Math.random() * this.amountOfParents)][val]
 					this.newGenes.push(tempObj)
 				}
 				break
@@ -119,7 +119,7 @@ class Gene {
 				for (let i = 0; i < amount; i++) {
 					let tempObj = {}
 					for (let val in this.parents)
-						tempObj[val] = this.parents[val] * (1 - this.mutationRate + (Math.random() / (0.5 / this.mutationRate)))
+						tempObj[val] = this.parents[val]
 					this.newGenes.push(tempObj)
 				}
 				break
