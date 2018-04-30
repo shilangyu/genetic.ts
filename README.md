@@ -42,10 +42,10 @@ Next you want to find their parents
 to see the parents and handle them yourself access them from ```gene.parents```
 Finish off with creating a new population:
 ```js
-    let yourNewPopulation = gene.createPopulation(100)
+    let yourNewGenes = gene.createGenes(100)
 ```
 
-Method ```createPopulation``` takes an obligatory parameter: amount of members of population to create
+Method ```createGenes``` takes an obligatory parameter: amount of genes to create
 
 ## modes
 ###### Inheritance modes: 
