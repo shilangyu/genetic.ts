@@ -30,6 +30,7 @@ class Gene {
 			this.mutationRate = mutationRate
 
 			this.parents = []
+			this.newGenes = []
 		} catch(e) {
 			if(e instanceof TypeError)
 				console.error(e)
@@ -90,7 +91,7 @@ class Gene {
 			default:
 				break
 		}
-		
+		return this.parents
 	}
 
 	createGenes(amount) {
