@@ -40,12 +40,12 @@ Next you want to find their parents
     gene.findParents(yourPopulation)
 ```
 to see the parents and handle them yourself access them from ```gene.parents``` or catch it from the function itself (parents get returned)
-Finish off with creating a new population:
+Now, create the genes:
 ```js
     let yourNewGenes = gene.createGenes(100)
 ```
 
-Method ```createGenes``` takes an obligatory parameter: amount of genes to create
+Method ```createGenes``` takes an obligatory parameter: amount of genes to create. Again, you can retrieve the genes from the function or from ```gene.newGenes```
 
 ## modes
 ###### Inheritance modes: 
