@@ -33,7 +33,7 @@ Gene takes 3 optional parameters: mutationRate, numberOfParents, and modes
 Their defaults are:
 - ```mutationRate``` is 1%
 - ```numberOfParents``` is 2
-- ```modes``` object with properties: inheritance = 'chromosome', mating = 'probability', mutating = '' 
+- ```modes``` object with properties: inheritance = 'chromosome', mating = 'probability', mutation = '' 
 
 Next you want to find their parents
 ```js
@@ -52,6 +52,11 @@ Finish off with mutating the genes:
 ```js
     let yourNewMutatedGenes = gene.mutateGenes()
 ```
+If you chose the ```'chance'``` mode, you need to pass in a function. Example:
+```js
+    let yourNewMutatedGenes = gene.mutateGenes( val => Math.random() * val)
+    // where val will be the value of the genes before mutation
+```
 returns an array of mutated genes.
 
 ## modes
@@ -65,9 +70,9 @@ returns an array of mutated genes.
 ###### Mutation modes:
 *methods of mutating the passed dna*
 
-```''```: 
+```'all'```: all genes get mutated by some % (```mutationRate```) 
 
-```''```: 
+```'chance'```:  all genes have a % (```mutationRate```) to get mutated, if yes, assigns a new value from the passed function 
 
 ###### Mating pool modes:
 *methods of choosing the parents*
