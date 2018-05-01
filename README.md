@@ -28,12 +28,12 @@ Now you are all set! Now just create a Gene instance, find the parents and finis
 ```js
     let gene = new Gene()
 ```
-Gene takes 4 optional parameters: mutationRate, numberOfParents, inheritanceMode and matingMode
+Gene takes 3 optional parameters: mutationRate, numberOfParents, and modes
+
 Their defaults are:
 - ```mutationRate``` is 1%
 - ```numberOfParents``` is 2
-- ```inheritanceMode``` is 'chromosome' 
-- ```matingMode``` is 'probability' 
+- ```modes``` object with properties: inheritance = 'chromosome', mating = 'probability', mutating = '' 
 
 Next you want to find their parents
 ```js
@@ -78,6 +78,5 @@ returns an array of mutated genes.
 
 
 ## on the way
-- [ ] Gene.js creating and handling your population
-- [ ] ```dna``` containing properties that are strings
+- [ ] ```dna``` containing  different types than only numbers
 - [ ] mutation modes
