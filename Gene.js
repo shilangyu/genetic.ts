@@ -1,9 +1,14 @@
 class Gene {
 
-	constructor(mutationRate = .01, amountOfParents = 2, inheritanceMode = 'chromosome', matingMode = 'probability') {
+	constructor(mutationRate = .01, amountOfParents = 2, modes) {
 		const inhModes = ['chromosome', 'average']
 		const mutModes = ['']
-		const mateModes = ['best', 'probability'] 
+		const mateModes = ['best', 'probability']
+
+		this.modes = {
+			inheritance: 'chromosome',
+			mating: 'probability'
+		}
 
 		try {
 			if(Number.isNaN(amountOfParents = Number.parseInt(amountOfParents)))
@@ -13,15 +18,17 @@ class Gene {
 			else
 				this.amountOfParents = amountOfParents
 
-			if(!inhModes.some(val => val == inheritanceMode))
-				throw `No such inheritance mode found: ${inheritanceMode}.\nAvailable modes: ${inhModes.join(', ')}`
+			if(modes.inheritance == undefined);
+			else if(!inhModes.some(val => val == modes.inheritance))
+				throw `No such inheritance mode found: ${modes.inheritance}.\nAvailable modes: ${inhModes.join(', ')}`
 			else
-				this.inheritanceMode = inheritanceMode
+				this.modes.inheritance = modes.inheritance
 
-			if(!mateModes.some(val => val == matingMode))
-				throw `No such mating mode found: ${matingMode}.\nAvailable modes: ${mateModes.join(', ')}`
+			if(modes.mating == undefined);
+			else if(!mateModes.some(val => val == modes.mating))
+				throw `No such mating mode found: ${modes.mating}.\nAvailable modes: ${mateModes.join(', ')}`
 			else
-				this.matingMode = matingMode
+				this.modes.mating = modes.mating
 			
 			if(Number.isNaN(mutationRate = Number.parseFloat(mutationRate)))
 				throw new TypeError(`mutationRate argument is not a number`)
@@ -65,7 +72,7 @@ class Gene {
 		}
 		
 
-		switch(this.matingMode) {
+		switch(this.modes.mating) {
 			case 'best':
 				this.parents = population	.slice()
 											.sort((a, b) => a.fitness - b.fitness)
@@ -99,7 +106,7 @@ class Gene {
 			console.warn('You are creating an empty population.')
 
 		// create new generation with parents mutated genes
-		switch (this.inheritanceMode) {
+		switch (this.modes.inheritance) {
 			case 'chromosome':
 				for (let i = 0; i < amount; i++) {
 					let tempObj = {}
