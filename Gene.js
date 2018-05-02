@@ -1,14 +1,11 @@
 class Gene {
-
 	constructor(mutationRate = .01, amountOfParents = 2, modes) {
 		const inhModes = ['chromosome', 'average']
-		const mutModes = ['all', 'chance']
 		const mateModes = ['best', 'probability']
 
 		this.modes = {
 			inheritance: 'chromosome',
-			mating: 'probability',
-			mutation: 'all'
+			mating: 'probability'
 		}
 
 		try {
@@ -30,12 +27,6 @@ class Gene {
 				throw `No such mating mode found: ${modes.mating}.\nAvailable modes: ${mateModes.join(', ')}`
 			else
 				this.modes.mating = modes.mating
-			
-			if(modes.mutation == undefined);
-			else if(!mutModes.some(val => val == modes.mutation))
-				throw `No such mutation mode found: ${modes.mutation}.\nAvailable modes: ${mutModes.join(', ')}`
-			else
-				this.modes.mutation = modes.mutation
 			
 			if(Number.isNaN(mutationRate = Number.parseFloat(mutationRate)))
 				throw new TypeError(`mutationRate argument is not a number`)
@@ -143,11 +134,11 @@ class Gene {
 		return this.newGenes
 	}
 
-	mutateGenes(f) {
+	mutateGenes(func) {
 
 		try {
-			if(typeof f != 'function' && this.modes.mutation == 'chance')
-				throw new TypeError(`Passed parameter needs to be a function for this mutation mode to work`)
+			if(typeof f != 'function')
+				throw new TypeError(`Passed parameter is not a function`)
 		} catch(e) {
 			if(e instanceof TypeError)
 				console.error(e)
@@ -155,23 +146,10 @@ class Gene {
 				throw new Error(e)
 		}
 
-		switch (this.modes.mutation) {
-			case 'all':
-				for (let i = 0; i < this.newGenes.length; i++) {
-					for (let val in this.newGenes[i])
-						this.newGenes[i][val] *= (1 - this.mutationRate + (Math.random() / (0.5 / this.mutationRate)))
-				}
-				break
-			case 'chance':
-				for (let i = 0; i < this.newGenes.length; i++) {
-					for (let val in this.newGenes[i]) {
-						if(Math.random() < this.mutationRate)
-							this.newGenes[i][val] = f(this.newGenes[i][val])
-					}
-				}
-				break
-			default:
-				break
+		for (let i = 0; i < this.newGenes.length; i++) {
+			for (let val in this.newGenes[i]) {
+				this.newGenes[i][val] = func(this.newGenes[i][val], this.mutationRate)
+			}
 		}
 		return this.newGenes
 	}
