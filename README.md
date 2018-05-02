@@ -33,7 +33,7 @@ Gene takes 3 optional parameters: mutationRate, numberOfParents, and modes
 Their defaults are:
 - ```mutationRate``` is 1%
 - ```numberOfParents``` is 2
-- ```modes``` object with properties: inheritance = 'chromosome', mating = 'probability', mutation = '' 
+- ```modes``` object with properties: inheritance = 'chromosome', mating = 'probability'
 
 Next you want to find their parents
 ```js
@@ -50,13 +50,12 @@ Method ```createGenes``` takes an obligatory parameter: amount of genes to creat
 
 Finish off with mutating the genes:
 ```js
-    let yourNewMutatedGenes = gene.mutateGenes()
+    let yourNewMutatedGenes = gene.mutateGenes( (value, mutationRate) => {
+        if(Math.random() < mutationRate)
+            return value + 0.1
+    })
 ```
-If you chose the ```'chance'``` mode, you need to pass in a function. Example:
-```js
-    let yourNewMutatedGenes = gene.mutateGenes( val => Math.random() * val)
-    // where val will be the value of the genes before mutation
-```
+You need to pass in a function that will return the value of the mutated gene. First argument is the current value and second one is the mutation rate. Above example will have a chance to mutate each gene, if successful, will add 0.1.
 returns an array of mutated genes.
 
 ## modes
@@ -67,12 +66,6 @@ returns an array of mutated genes.
 
 ```'average'```: sum of each parents dna property divided by the number of parents
 
-###### Mutation modes:
-*methods of mutating the passed dna*
-
-```'all'```: all genes get mutated by some % (```mutationRate```) 
-
-```'chance'```:  all genes have a % (```mutationRate```) to get mutated, if yes, assigns a new value from the passed function 
 
 ###### Mating pool modes:
 *methods of choosing the parents*
@@ -83,5 +76,5 @@ returns an array of mutated genes.
 
 
 ## on the way
-- [ ] ```dna``` containing  different types than only numbers
-- [ ] mutation modes
+- [ ] ```dna``` containing different types than only numbers
+- [ ] ```dna``` being other data structures
