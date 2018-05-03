@@ -50,14 +50,14 @@ Method ```createGenes``` takes an obligatory parameter: amount of genes to creat
 
 Finish off with mutating the genes:
 ```js
-    let yourNewMutatedGenes = gene.mutateGenes( (value, mutationRate) => {
+    let yourNewMutatedGenes = gene.mutateGenes( (value, mutationRate, dnaName) => {
         if(Math.random() < mutationRate)
             return value + 0.1
         else
             return value - 0.1
     })
 ```
-You need to pass in a function that will return the value of the mutated gene. First argument is the current value and second one is the mutation rate. Above example will have a chance to mutate each gene, if successful, will add 0.1 otherwise will substract 0.1
+You need to pass in a function that will return the value of the mutated gene. First argument is the current value, second one is the mutation rate and third one is the name of the dna property. Above example will have a chance to mutate each gene, if successful, will add 0.1 otherwise will substract 0.1
 returns an array of mutated genes.
 
 ## modes
