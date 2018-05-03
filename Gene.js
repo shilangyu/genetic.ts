@@ -137,7 +137,7 @@ class Gene {
 	mutateGenes(func) {
 
 		try {
-			if(typeof f != 'function')
+			if(typeof func != 'function')
 				throw new TypeError(`Passed parameter is not a function`)
 		} catch(e) {
 			if(e instanceof TypeError)
@@ -148,7 +148,7 @@ class Gene {
 
 		for (let i = 0; i < this.newGenes.length; i++) {
 			for (let val in this.newGenes[i]) {
-				this.newGenes[i][val] = func(this.newGenes[i][val], this.mutationRate)
+				this.newGenes[i][val] = func(this.newGenes[i][val], this.mutationRate, val)
 			}
 		}
 		return this.newGenes
