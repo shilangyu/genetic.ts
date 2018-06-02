@@ -1,5 +1,5 @@
 class Gene {
-	constructor(mutationRate = .01, amountOfParents = 2, modes) {
+	constructor(mutationRate = .01, amountOfParents = 2, modes = {}) {
 		const inhModes = ['chromosome', 'average']
 		const mateModes = ['best', 'probability']
 
@@ -8,85 +8,66 @@ class Gene {
 			mating: 'probability'
 		}
 
-		try {
-			if(Number.isNaN(amountOfParents = Number.parseInt(amountOfParents)))
-				throw new TypeError(`amountOfParents argument is not a number`)
-			else if(amountOfParents <= 0) 
-				throw 'Cannot use less than 1 parent.'
-			else
-				this.amountOfParents = amountOfParents
+		if (Number.isNaN(amountOfParents = Number.parseInt(amountOfParents)))
+			throw new TypeError(`amountOfParents argument is not a number`)
+		else if (amountOfParents <= 0)
+			throw 'Cannot use less than 1 parent.'
+		else
+			this.amountOfParents = amountOfParents
 
-			if(modes.inheritance == undefined);
-			else if(!inhModes.some(val => val == modes.inheritance))
-				throw `No such inheritance mode found: ${modes.inheritance}.\nAvailable modes: ${inhModes.join(', ')}`
-			else
-				this.modes.inheritance = modes.inheritance
+		if (modes.inheritance == undefined);
+		else if (!inhModes.some(val => val == modes.inheritance))
+			throw `No such inheritance mode found: ${modes.inheritance}.\nAvailable modes: ${inhModes.join(', ')}`
+		else
+			this.modes.inheritance = modes.inheritance
 
-			if(modes.mating == undefined);
-			else if(!mateModes.some(val => val == modes.mating))
-				throw `No such mating mode found: ${modes.mating}.\nAvailable modes: ${mateModes.join(', ')}`
-			else
-				this.modes.mating = modes.mating
-			
-			if(Number.isNaN(mutationRate = Number.parseFloat(mutationRate)))
-				throw new TypeError(`mutationRate argument is not a number`)
-			else if(mutationRate <= 0 || mutationRate >= 1)
-				console.warn(`Mutation rate is ${mutationRate*100}%`)
-			this.mutationRate = mutationRate
+		if (modes.mating == undefined);
+		else if (!mateModes.some(val => val == modes.mating))
+			throw `No such mating mode found: ${modes.mating}.\nAvailable modes: ${mateModes.join(', ')}`
+		else
+			this.modes.mating = modes.mating
 
-			this.parents = []
-			this.newGenes = []
-		} catch(e) {
-			if(e instanceof TypeError)
-				console.error(e)
-			else
-				throw new Error(e)
-		}
+		if (Number.isNaN(mutationRate = Number.parseFloat(mutationRate)))
+			throw new TypeError(`mutationRate argument is not a number`)
+		else if (mutationRate <= 0 || mutationRate >= 1)
+			console.warn(`Mutation rate is ${mutationRate*100}%`)
+		this.mutationRate = mutationRate
+
+		this.parents = []
+		this.newGenes = []
 	}
 
 	findParents(population) {
-		try {
-			if(!Array.isArray(population))
-				throw new TypeError(`Passed parameter is not an array`)
-			
-			if(population.length < this.amountOfParents)
-				throw new RangeError(`Population has less members than amount of parents chosen.\nPop: ${population.length}, Parents: ${this.amountOfParents}`)
+		if (!Array.isArray(population))
+			throw new TypeError(`Passed parameter is not an array`)
 
-			if(!population[0].hasOwnProperty('dna'))
-				throw new ReferenceError(`Population does not contain the 'dna' property.`)
-			
-			if(!population[0].hasOwnProperty('fitness'))
-				throw new ReferenceError(`Population does not contain the 'fitness' property.`)
-				
-		} catch(e) {
-			if(e instanceof TypeError)
-				console.error(e)
-			else if(e instanceof RangeError)
-				console.error(e)
-			else if(e instanceof ReferenceError)
-				console.error(e)
-			else
-				throw new Error(e)
-		}
-		
+		if (population.length < this.amountOfParents)
+			throw new RangeError(`Population has less members than amount of parents chosen.\nPop: ${population.length}, Parents: ${this.amountOfParents}`)
 
-		switch(this.modes.mating) {
+		if (!population[0].hasOwnProperty('dna'))
+			throw new ReferenceError(`Population does not contain the 'dna' property.`)
+
+		if (!population[0].hasOwnProperty('fitness'))
+			throw new ReferenceError(`Population does not contain the 'fitness' property.`)
+
+
+		switch (this.modes.mating) {
 			case 'best':
-				this.parents = population	.slice()
-											.sort((a, b) => a.fitness - b.fitness)
-											.slice(-this.amountOfParents)
-											.map( ele => ele.dna)
+				this.parents = population.slice()
+					.sort((a, b) => a.fitness - b.fitness)
+					.slice(-this.amountOfParents)
+					.map(ele => ele.dna)
 				break
 			case 'probability':
 				this.parents = []
-				
+
 				let left = this.amountOfParents
-				while(left-- > 0) {
-					let choose = Math.random() * population.reduce( (total, curr) => total+curr.fitness, 0)
-				
+				while (left-- > 0) {
+					let choose = Math.random() * population.reduce((total, curr) => total + curr.fitness, 0)
+
 					for (let i = 0; i < population.length; i++) {
 						choose -= population[i].fitness
-						if(choose <= 0 ) {
+						if (choose <= 0) {
 							this.parents.push(population[i].dna)
 							break
 						}
@@ -100,7 +81,7 @@ class Gene {
 	}
 
 	createGenes(amount) {
-		if(amount <= 0)
+		if (amount <= 0)
 			console.warn('You are creating an empty population.')
 
 		// create new generation with parents mutated genes
@@ -116,7 +97,7 @@ class Gene {
 			case 'average':
 				let temp = {}
 				for (let prop in this.parents[0]) {
-					if(this.parents[0].hasOwnProperty(prop))
+					if (this.parents[0].hasOwnProperty(prop))
 						temp[prop] = this.parents.map(ele => ele[prop]).reduce((sum, curr) => sum + curr) / this.amountOfParents
 				}
 				this.parents = temp
@@ -136,15 +117,8 @@ class Gene {
 
 	mutateGenes(func) {
 
-		try {
-			if(typeof func != 'function')
-				throw new TypeError(`Passed parameter is not a function`)
-		} catch(e) {
-			if(e instanceof TypeError)
-				console.error(e)
-			else
-				throw new Error(e)
-		}
+		if (typeof func != 'function')
+			throw new TypeError(`Passed parameter is not a function`)
 
 		for (let i = 0; i < this.newGenes.length; i++) {
 			for (let val in this.newGenes[i]) {
@@ -153,4 +127,23 @@ class Gene {
 		}
 		return this.newGenes
 	}
+
+	static mutateSome(func) {
+		return (val, mRate, propName) => {
+			if (Math.random() < mRate) {
+				return func(val, mRate, propName)
+			} else {
+				return val
+			}
+		}
+
+	}
+
+	static add(min, max) {
+		return (val) => {
+			return val + (Math.random() * (max - min) + min)
+		}
+	}
+
+
 }

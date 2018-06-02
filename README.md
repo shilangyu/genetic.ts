@@ -2,6 +2,7 @@
 Simple and clear JavaScript class for genetic algorithms. Contains helpful warning and error messages to enhance your understanding.
 * [usage](#usage)
 * [modes](#modes)
+* [mutating](#mutating)
 * [on the way](#on-the-way)
 
 ## usage
@@ -58,7 +59,7 @@ Finish off with mutating the genes:
     })
 ```
 You need to pass in a function that will return the value of the mutated gene. First argument is the current value, second one is the mutation rate and third one is the name of the dna property. Above example will have a chance to mutate each gene, if successful, will add 0.1 otherwise will substract 0.1
-returns an array of mutated genes.
+returns an array of mutated genes. For more information check [mutating](#mutating).
 
 ## modes
 ###### Inheritance modes: 
@@ -75,6 +76,24 @@ returns an array of mutated genes.
 ```'best'```: takes n amount of members with best fitness scores
 
 ```'probability'```: all members have a % chance of being chosen based on their fitness'
+
+
+## mutating
+Gene.js has some static methods to help you mutate the genes with some pre-made functions.
+If you'd like to mutate only some properties (based on the mutation rate) wrap your function in Gene.mutateSome() like so:
+```js
+    let yourNewMutatedGenes = gene.mutateGenes( 
+        Gene.mutateSome( (value, mutationRate, dnaName) => {
+            return value / 2
+        })
+    )
+```
+If you'd like to mutate values by some a random number in a range use Gene.add(min, max):
+```js
+    let yourNewMutatedGenes = gene.mutateGenes( 
+        Gene.add(-1, 1)
+    )
+```
 
 
 ## on the way
