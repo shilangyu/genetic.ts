@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Quadratic function</title>
-    <script src="https://rawgit.com/clitcancer/Genetic.js/master/Gene.js"></script>
+    <script src="../Genetic.js"></script>
     <style>
         input {
             width: 30px;
@@ -99,7 +99,7 @@
             }
 
             // now lets find the parents
-            let g = new Gene(.1, 2, {
+            let g = new Genetic(.1, 2, {
                 inheritance: 'chromosome',
                 mating: 'best'
             })
@@ -120,8 +120,8 @@
             // now we'll create a new population
             g.createGenes(ENV.membersPerPopulation)
             g.mutateGenes(
-                Gene.mutateSome(
-                    Gene.add(-0.5, 0.5)
+                Genetic.mutateSome(
+                    Genetic.add(-0.5, 0.5)
                 )
             )
             pop = createPopulation(g.newGenes)

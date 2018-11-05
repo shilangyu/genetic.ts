@@ -1,4 +1,4 @@
-class Gene {
+class Genetic {
 	constructor(mutationRate = .01, amountOfParents = 2, modes = {}) {
 		const inhModes = ['chromosome', 'average']
 		const mateModes = ['best', 'probability']
