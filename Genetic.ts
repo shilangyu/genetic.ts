@@ -18,6 +18,7 @@ interface IPopMember {
 
 export default class Genetic {
 	parents: DNA[]
+	chromosomes: DNA[]
 
 	constructor(
 		public mutationRate: number,
@@ -26,6 +27,7 @@ export default class Genetic {
 		public crossoverMode: CrossoverModes
 	) {
 		this.parents = []
+		this.chromosomes = []
 	}
 
 	findParents(population: IPopMember[]): this {
@@ -51,6 +53,43 @@ export default class Genetic {
 					}
 				}
 			}
+		}
+
+		return this
+	}
+
+	crossover(amountOfChromosomes: number): this {
+		if (this.crossoverMode === CrossoverModes.random) {
+			let left = amountOfChromosomes
+
+			while (left-- > 0) {
+				const res: DNA = {}
+
+				for (const key of Object.keys(this.parents[0])) {
+					let chosen = Math.floor(Math.random() * this.parents.length)
+					res[key] = this.parents[chosen][key]
+				}
+
+				this.chromosomes.push(res)
+			}
+		} else if (this.crossoverMode === CrossoverModes.clone) {
+			let left = amountOfChromosomes
+
+			while (left-- > 0) {
+				let chosen = Math.floor(Math.random() * this.parents.length)
+
+				this.chromosomes.push({ ...this.parents[chosen] })
+			}
+		} else if (this.crossoverMode === CrossoverModes.average) {
+			const res: DNA = {}
+
+			for (const key of Object.keys(this.parents[0])) {
+				const sum = this.parents.reduce((prev, curr) => prev + curr[key], 0)
+				const avrg = sum / this.parents.length
+				res[key] = avrg
+			}
+
+			this.chromosomes = new Array(amountOfChromosomes).fill(null).map(() => ({ ...res }))
 		}
 
 		return this
