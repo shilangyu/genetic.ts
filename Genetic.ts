@@ -60,36 +60,49 @@ export default class Genetic {
 
 	crossover(amountOfChromosomes: number): this {
 		if (this.crossoverMode === CrossoverModes.random) {
-			let left = amountOfChromosomes
-
-			while (left-- > 0) {
-				const res: DNA = {}
-
-				for (const key of Object.keys(this.parents[0])) {
-					let chosen = Math.floor(Math.random() * this.parents.length)
-					res[key] = this.parents[chosen][key]
-				}
-
-				this.chromosomes.push(res)
+			const deepAvrg = (targets: any[]): any => {
+				if (Array.isArray(targets[0])) {
+					return new Array(targets[0].length)
+						.fill(null)
+						.map((e, i) => deepAvrg(targets.map(e => e[i])))
+				} else if (typeof targets[0] === 'object') {
+					const temp: any = {}
+					for (const key of Object.keys(targets[0])) {
+						temp[key] = deepAvrg(targets.map(e => e[key]))
+					}
+					return temp
+				} else if (typeof targets[0] === 'number')
+					return targets[Math.floor(Math.random() * targets.length)]
 			}
+
+			this.chromosomes = new Array(amountOfChromosomes).fill(null).map(() => deepAvrg(this.parents))
 		} else if (this.crossoverMode === CrossoverModes.clone) {
 			let left = amountOfChromosomes
 
 			while (left-- > 0) {
 				let chosen = Math.floor(Math.random() * this.parents.length)
 
-				this.chromosomes.push({ ...this.parents[chosen] })
+				this.chromosomes.push(JSON.parse(JSON.stringify(this.parents[chosen])))
 			}
 		} else if (this.crossoverMode === CrossoverModes.average) {
-			const res: DNA = {}
-
-			for (const key of Object.keys(this.parents[0])) {
-				const sum = this.parents.reduce((prev, curr) => prev + curr[key], 0)
-				const avrg = sum / this.parents.length
-				res[key] = avrg
+			const deepAvrg = (targets: any[]): any => {
+				if (Array.isArray(targets[0])) {
+					return new Array(targets[0].length)
+						.fill(null)
+						.map((e, i) => deepAvrg(targets.map(e => e[i])))
+				} else if (typeof targets[0] === 'object') {
+					const temp: any = {}
+					for (const key of Object.keys(targets[0])) {
+						temp[key] = deepAvrg(targets.map(e => e[key]))
+					}
+					return temp
+				} else if (typeof targets[0] === 'number')
+					return targets.reduce((prev, curr) => prev + curr, 0) / targets.length
 			}
 
-			this.chromosomes = new Array(amountOfChromosomes).fill(null).map(() => ({ ...res }))
+			const res = JSON.stringify(deepAvrg(this.parents))
+
+			this.chromosomes = new Array(amountOfChromosomes).fill(null).map(() => JSON.parse(res))
 		}
 
 		return this
