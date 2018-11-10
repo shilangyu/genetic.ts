@@ -124,6 +124,7 @@ export default class Genetic {
 		}
 
 		this.chromosomes = this.chromosomes.map(deeper)
+		return this.chromosomes
 	}
 
 	static validatePopulation(population: any[]) {
