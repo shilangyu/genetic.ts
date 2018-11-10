@@ -16,6 +16,8 @@ interface IPopMember {
 	dna: DNA
 }
 
+type MutationFunction = (mutationRate: number) => number
+
 export default class Genetic {
 	parents: DNA[]
 	chromosomes: DNA[]
@@ -108,7 +110,7 @@ export default class Genetic {
 		return this
 	}
 
-	mutation(func: () => number) {
+	mutation(func: MutationFunction) {
 		const deeper = (target: any[]): any => {
 			if (Array.isArray(target)) {
 				return target.map(deeper)
@@ -118,7 +120,7 @@ export default class Genetic {
 					temp[key] = deeper(target[key])
 				}
 				return temp
-			} else if (typeof target === 'number') return target + func()
+			} else if (typeof target === 'number') return target + func(this.mutationRate)
 		}
 
 		this.chromosomes = this.chromosomes.map(deeper)
@@ -178,4 +180,14 @@ export default class Genetic {
 
 		for (const curr of population.slice(1)) validateStructure(curr, population[0])
 	}
+}
+
+export const chance = (func: MutationFunction): MutationFunction => mutationRate => {
+	if (Math.random() < mutationRate)
+		return func(mutationRate)
+	return 0
+}
+
+export const add = (min: number, max: number): MutationFunction => () => {
+	return Math.random() * (max - min) + min
 }
