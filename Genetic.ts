@@ -108,6 +108,22 @@ export default class Genetic {
 		return this
 	}
 
+	mutation(func: () => number) {
+		const deeper = (target: any[]): any => {
+			if (Array.isArray(target)) {
+				return target.map(deeper)
+			} else if (typeof target === 'object') {
+				const temp: any = {}
+				for (const key of Object.keys(target)) {
+					temp[key] = deeper(target[key])
+				}
+				return temp
+			} else if (typeof target === 'number') return target + func()
+		}
+
+		this.chromosomes = this.chromosomes.map(deeper)
+	}
+
 	static validatePopulation(population: any[]) {
 		if (!population.every(mem => 'fitness' in mem))
 			throw new Error('Member of the population is missing the fitness property.')
