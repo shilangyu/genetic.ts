@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Quadratic function</title>
+		<script>
+			const exports = {}
+		</script>
+		<script src="./Genetic.js"></script>
+		<style>
+			input {
+				width: 30px;
+			}
+		</style>
+	</head>
+
+	<body>
+		Description: <br />
+		The genetic algorithm tries to find a, b, and c knowing the 2 roots of that function. <br />
+		<br />the formula: <br />
+		f(x) = ax<sup>2</sup> + bx + c <br />
+		<br />Roots: <br />
+		f( <input id="x1" value="-1" />) = 0 <br />
+		f( <input id="x2" value="3" />) = 0 <br />
+
+		<br />
+		<br />
+		best guess: <br />
+		a = <span id="a"></span> <br />
+		b = <span id="b"></span> <br />
+		c = <span id="c"></span> <br />
+		How far off the answer: <span id="accuracy"></span>
+
+		<script>
+			const ENV = {
+				population: {
+					size: 100,
+					members: []
+				},
+				intervalID: null,
+				x1: (() => {
+					const ref = document.querySelector('#x1')
+					return () => Number(ref.value)
+				})(),
+				x2: (() => {
+					const ref = document.querySelector('#x2')
+					return () => Number(ref.value)
+				})(),
+				setBest: (() => {
+					const prev = ['a', 'b', 'c', 'accuracy'].map(e => document.querySelector(`#${e}`))
+					return dna => {
+						dna.accuracy = Math.abs(f(dna.a, dna.b, dna.c, ENV.x1()))
+						dna.accuracy += Math.abs(f(dna.a, dna.b, dna.c, ENV.x2()))
+						prev.forEach(e => (e.innerText = dna[e.id]))
+					}
+				})()
+			}
+
+			const f = (a, b, c, x) => a * x ** 2 + b * x + c
+
+			class Guess {
+				constructor(dna) {
+					this.fitness = 0
+					this.dna = dna || {
+						a: Math.random() * 10 - 5,
+						b: Math.random() * 10 - 5,
+						c: Math.random() * 10 - 5
+					}
+				}
+
+				calcFitness(x) {
+					this.fitness += Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x))
+				}
+			}
+
+			function initPopulation(genes) {
+				const { population: pop } = ENV
+				pop.members = new Array(pop.size)
+					.fill(null)
+					.map((e, i) => new Guess(genes ? genes[i] : null))
+			}
+			initPopulation()
+
+			setInterval(() => {
+				const xs = ['x1', 'x2'].map(e => ENV[e]())
+
+				for (const mem of ENV.population.members) for (const x of xs) mem.calcFitness(x)
+
+				ENV.population.members = ENV.population.members.map(e => {
+					e.fitness = 1 / e.fitness
+					return e
+				})
+
+				ENV.setBest(ENV.population.members.sort((a, b) => b.fitness - a.fitness)[0].dna)
+
+				const newGenes = new Genetic(0.1, 2, 'BEST', 'RANDOM')
+					.findParents(ENV.population.members)
+					.crossover(ENV.population.size)
+					.mutation(exports.chance(exports.add(-0.5, 0.5)))
+
+				initPopulation(newGenes)
+			}, 10)
+		</script>
+	</body>
+</html>

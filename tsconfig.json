@@ -5,7 +5,8 @@
 		"strict": true,
 		"lib": [
 			"es2017"
-		]
+		],
+		"outDir": "./docs"
 	},
 	"exclude": ["node_modules", "**/*.test.ts"]
 }
