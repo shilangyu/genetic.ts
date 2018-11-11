@@ -1,101 +1,132 @@
 # Genetic.js
-Simple and clear JavaScript class for genetic algorithms. Contains helpful warning and error messages to enhance your understanding.
-* [usage](#usage)
-* [modes](#modes)
-* [mutating](#mutating)
-* [on the way](#on-the-way)
+
+A typescript library for genetic algorithms. Handles your parent finding, crossover and mutation. Contains also some helpful functions to get you started.
+
+- [before you start](#before-you-start)
+- [usage](#usage)
+- [modes](#modes)
+- [mutating](#mutating)
+
+## before you start
+
+A population is considered correct when:
+
+```ts
+interface IPopMember {
+	fitness: number
+	dna: any /* !!!arrays and objects have to end with a number!!! */
+}
+```
+
+- it is an array
+- each element in the array is an object (`IPopMember`):
+  - containing a fitness property (`number`)
+  - containing a dna property:
+    - can be any data structure as long as it ends with a `number`
+    - the structure is the same for every element in the array
+
+If you're unsure whether your population is correct you can always use the static method `Genetic.validatePopulation(pop)` that will throw an error if something is wrong.
 
 ## usage
-First, include the Gene.js file in your project. In HTML:
-```html
-<script scr="Gene.js"></script>
-```
-Adjust the path in the ```scr``` property
 
-Then in your JavaScript code create your population. For now you need to do it yourself, but soon i'll update the code to do it for you.
-Here are the criteria’s of your population:
-- it must be an array of objects
--  each object must have a property called ```fitness``` 
-- each object must contain also a ```dna``` object. It will have all your dna data that you want to pass to the next generations. All properties of ```dna``` must be numbers
+Genetic class methods are **chainable**. Meaning you can create your new genes in one go. Here's an example.
 
-Example of a population:
-```js
-    let yourPopulation =
-        [{fitness: 201, dna:{prop1: 111, prop2: 0.2, prop3:43}}, 
-        {fitness: 10, dna:{prop1: 200, prop2: 3, prop3: 50}},
-        {fitness: 92, dna:{prop1: 2, prop2: 20, prop3: 13}}]
-```
-Now you are all set! Now just create a Gene instance, find the parents and finish with creating your new, better population. Just like that:
-```js
-    let gene = new Gene()
-```
-Gene takes 3 optional parameters: mutationRate, numberOfParents, and modes
+```ts
+import Genetic, {
+	CrossoverModes,
+	ParentsSelectionModes,
+	chance,
+	add
+} from './Genetic' /* 1 */
+const pop = [
+	{ fitness: 100, dna: { asd: 1, tut: 11 } },
+	{ fitness: 200, dna: { asd: 2, tut: 12 } },
+	{ fitness: 300, dna: { asd: 3, tut: 1 } },
+	{ fitness: 400, dna: { asd: 4, tut: 12 } },
+	{ fitness: 500, dna: { asd: 8, tut: 10 } }
+] /* 2 */
 
-Their defaults are:
-- ```mutationRate``` is 1%
-- ```numberOfParents``` is 2
-- ```modes``` object with properties: inheritance = 'chromosome', mating = 'probability'
+Genetic.validatePopulation(pop) /* 3 */
 
-Next you want to find their parents
-```js
-    let yourParents = gene.findParents(yourPopulation)
-```
-to see the parents and handle them yourself access them from ```gene.parents``` or catch it from the function itself.
+const newGenes = new Genetic(
+	0.1,
+	2,
+	ParentsSelectionModes.best,
+	CrossoverModes.random
+) /* 4 */
+	.findParents(pop) /* 5 */
+	.crossover(5) /* 6 */
+	.mutate(chance(add(-0.5, 0.5))) /* 7 */
 
-Now, create the genes:
-```js
-    let yourNewGenes = gene.createGenes(100)
+const newPopulation = newGenes.map(dna => ({ fitness: 0, dna })) /* 8 */
 ```
 
-Method ```createGenes``` takes an obligatory parameter: amount of genes to create. Again, you can retrieve the genes from the function or from ```gene.newGenes```.
+1. importing the class, Mode enums and 2 helper functions: `chance` and `add`
+2. creating a population that satisfies the `IPopMember[]` interface
+3. validating the population. If correct nothing will happen but if not an error with me thrown and the script will be terminated.
+4. initializing a Genetic instance. Takes 4 parameters:
 
-Finish off with mutating the genes:
-```js
-    let yourNewMutatedGenes = gene.mutateGenes( (value, mutationRate, dnaName) => {
-        if(Math.random() < mutationRate)
-            return value + 0.1
-        else
-            return value - 0.1
-    })
-```
-You need to pass in a function that will return the value of the mutated gene. First argument is the current value, second one is the mutation rate and third one is the name of the dna property. Above example will have a chance to mutate each gene, if successful, will add 0.1 otherwise will substract 0.1
-returns an array of mutated genes. For more information check [mutating](#mutating).
+- mutation rate
+- amount of parents
+- parent selection mode
+- crossover mode
+
+5. finding parents. Takes 1 parameter:
+
+- a valid population
+
+6. creating new genes (chromosomes). Takes 1 parameter:
+
+- amount of genes to create
+
+7. mutating the previously created genes. Takes 1 parameter:
+
+- function that will return a number that will be added to a gene
+
+8. mapping the new genes to a new population
 
 ## modes
-###### Inheritance modes: 
-*methods of choosing the passed dna*
 
-```'chromosome'```: classical method. Mixing parents' dna by choosing randomly a parent for each dna's property
+###### Parent selection modes:
 
-```'average'```: sum of each parents dna property divided by the number of parents
+_methods of choosing the parents_
 
+`'BEST'`: takes members with highest fitness scores
 
-###### Mating pool modes:
-*methods of choosing the parents*
+`'PROBABILITY'`: selects members based on their fitness scores that will correspond to the chance of being chosen
 
-```'best'```: takes n amount of members with best fitness scores
+###### Crossover modes:
 
-```'probability'```: all members have a % chance of being chosen based on their fitness'
+_methods of choosing the passed dna_
 
+`'RANDOM'`: randomly choosing a parent for each gene
+
+`'AVERAGE'`: averaging all parents' gene
+
+`'CLONE'`: randomly selecting a parent and cloning all of his genes
 
 ## mutating
-Gene.js has some static methods to help you mutate the genes with some pre-made functions.
-If you'd like to mutate only some properties (based on the mutation rate) wrap your function in Gene.mutateSome() like so:
-```js
-    let yourNewMutatedGenes = gene.mutateGenes( 
-        Gene.mutateSome( (value, mutationRate, dnaName) => {
-            return value / 2
-        })
-    )
-```
-If you'd like to mutate values by some a random number in a range use Gene.add(min, max):
-```js
-    let yourNewMutatedGenes = gene.mutateGenes( 
-        Gene.add(-1, 1)
-    )
+
+Here's what you need to know about the function that you're passing to the `mutate` method:
+
+- accept 1 argument:
+  - mutation rate
+- returns a number
+
+Genetic.ts provides some pre-made functions for mutations:
+
+##### chance
+
+If you'd like to mutate only some properties (based on the mutation rate) wrap your function in `chance(yourFunction)`, like so:
+
+```ts
+g.mutate(chance(mRate => 1 * mRate))
 ```
 
+##### add
 
-## on the way
-- [ ] ```dna``` containing different types than only numbers
-- [ ] ```dna``` being other data structures
+If you'd like to mutate values by some random number in a range use `add(min, max)`:
+
+```ts
+g.mutate(add(-0.3, 0.3)) /* min inclusive, max exclusive */
+```
