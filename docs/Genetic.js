@@ -93,7 +93,7 @@ var Genetic = /** @class */ (function () {
         }
         return this;
     };
-    Genetic.prototype.mutation = function (func) {
+    Genetic.prototype.mutate = function (func) {
         var _this = this;
         var deeper = function (target) {
             if (Array.isArray(target)) {

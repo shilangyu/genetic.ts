@@ -110,7 +110,7 @@ export default class Genetic {
 		return this
 	}
 
-	mutation(func: MutationFunction) {
+	mutate(func: MutationFunction) {
 		const deeper = (target: any[]): any => {
 			if (Array.isArray(target)) {
 				return target.map(deeper)

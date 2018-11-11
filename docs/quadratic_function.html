@@ -96,7 +96,7 @@
 				const newGenes = new Genetic(0.1, 2, 'BEST', 'RANDOM')
 					.findParents(ENV.population.members)
 					.crossover(ENV.population.size)
-					.mutation(exports.chance(exports.add(-0.5, 0.5)))
+					.mutate(exports.chance(exports.add(-0.5, 0.5)))
 
 				initPopulation(newGenes)
 			}, 10)
