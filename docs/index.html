@@ -1,14 +1,51 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Genetic.js</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-	Hello there! Here are some example projects showcasing my <a href="https://github.com/shilangyu/Genetic.js">Genetic.js</a> library for genetic algorithms. <br>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Genetic.js</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		/>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
+			defer
+		></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+	</head>
+	<body class="container cyan lighten-3">
+		<h4>
+			Hello there! Here are some example projects showcasing my
+			<a href="https://github.com/shilangyu/Genetic.js">Genetic.js</a> library
+			for genetic algorithms.
+		</h4>
+		<div class="divider"></div>
+		<div class="row" id="previews"></div>
 
-	<a href="./quadratic_function.html">Quadratic function</a>
-</body>
+		<script>
+			const Card = (title, desc, href) => `
+				<div class="col s12 m6 l4">
+					<div class="card pink accent-1 hoverable">
+						<div class="card-content black-text">
+							<span class="card-title">${title}</span>
+							<p>${desc}</p>
+						</div>
+						<div class="card-action">
+							<a href="${href}" class="black-text">Showcase</a>
+						</div>
+					</div>
+				</div>
+			`
+			document.querySelector('#previews').innerHTML = Card(
+				'Quadratic function',
+				'The genetic algorithm tries to find a, b, and c of a function knowing its 2 roots.',
+				'./quadratic_function.html'
+			)
+		</script>
+	</body>
 </html>
