@@ -1,22 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Genetic = /** @class */ (function () {
-    function Genetic(mutationRate, numberOfParents, parentsSelectionMode, crossoverMode) {
-        this.mutationRate = mutationRate;
-        this.numberOfParents = numberOfParents;
-        this.parentsSelectionMode = parentsSelectionMode;
-        this.crossoverMode = crossoverMode;
+    function Genetic(_a) {
+        var _b = _a.mutationRate, mutationRate = _b === void 0 ? 0.1 : _b, _c = _a.numberOfParents, numberOfParents = _c === void 0 ? 2 : _c, _d = _a.modes, _e = _d === void 0 ? {
+            parentsSelection: "BEST" /* best */,
+            crossover: "RANDOM" /* random */
+        } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? "BEST" /* best */ : _f, _g = _e.crossover, crossover = _g === void 0 ? "RANDOM" /* random */ : _g;
         this.parents = [];
         this.chromosomes = [];
+        this.mutationRate = mutationRate;
+        this.numberOfParents = numberOfParents;
+        this.modes = {
+            parentsSelection: parentsSelection,
+            crossover: crossover
+        };
     }
     Genetic.prototype.findParents = function (population) {
-        if (this.parentsSelectionMode === "BEST" /* best */) {
+        if (this.modes.parentsSelection === "BEST" /* best */) {
             this.parents = population
                 .sort(function (a, b) { return a.fitness - b.fitness; })
                 .slice(-this.numberOfParents)
                 .map(function (e) { return e.dna; });
         }
-        else if (this.parentsSelectionMode === "PROBABILITY" /* probability */) {
+        else if (this.modes.parentsSelection === "PROBABILITY" /* probability */) {
             var left = this.numberOfParents;
             var fitnessSum = population.reduce(function (prev, curr) { return prev + curr.fitness; }, 0);
             while (left-- > 0) {
@@ -37,7 +43,7 @@ var Genetic = /** @class */ (function () {
     };
     Genetic.prototype.crossover = function (amountOfChromosomes) {
         var _this = this;
-        if (this.crossoverMode === "RANDOM" /* random */) {
+        if (this.modes.crossover === "RANDOM" /* random */) {
             var deepAvrg_1 = function (targets) {
                 if (Array.isArray(targets[0])) {
                     return new Array(targets[0].length)
@@ -58,16 +64,18 @@ var Genetic = /** @class */ (function () {
                 else if (typeof targets[0] === 'number')
                     return targets[Math.floor(Math.random() * targets.length)];
             };
-            this.chromosomes = new Array(amountOfChromosomes).fill(null).map(function () { return deepAvrg_1(_this.parents); });
+            this.chromosomes = new Array(amountOfChromosomes)
+                .fill(null)
+                .map(function () { return deepAvrg_1(_this.parents); });
         }
-        else if (this.crossoverMode === "CLONE" /* clone */) {
+        else if (this.modes.crossover === "CLONE" /* clone */) {
             var left = amountOfChromosomes;
             while (left-- > 0) {
                 var chosen = Math.floor(Math.random() * this.parents.length);
                 this.chromosomes.push(JSON.parse(JSON.stringify(this.parents[chosen])));
             }
         }
-        else if (this.crossoverMode === "AVERAGE" /* average */) {
+        else if (this.modes.crossover === "AVERAGE" /* average */) {
             var deepAvrg_2 = function (targets) {
                 if (Array.isArray(targets[0])) {
                     return new Array(targets[0].length)
@@ -89,7 +97,9 @@ var Genetic = /** @class */ (function () {
                     return targets.reduce(function (prev, curr) { return prev + curr; }, 0) / targets.length;
             };
             var res_1 = JSON.stringify(deepAvrg_2(this.parents));
-            this.chromosomes = new Array(amountOfChromosomes).fill(null).map(function () { return JSON.parse(res_1); });
+            this.chromosomes = new Array(amountOfChromosomes)
+                .fill(null)
+                .map(function () { return JSON.parse(res_1); });
         }
         return this;
     };
@@ -135,7 +145,9 @@ var Genetic = /** @class */ (function () {
                 throw new Error('Dna of a member of the population has an incorrect type.');
         }
         validateTypes(population);
-        var zip = function (a, b) { return a.map(function (e, i) { return [e, b[i]]; }); };
+        var zip = function (a, b) {
+            return a.map(function (e, i) { return [e, b[i]]; });
+        };
         function validateStructure(obj, model) {
             if (Array.isArray(model)) {
                 if (obj.length !== model.length)

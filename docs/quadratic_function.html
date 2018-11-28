@@ -99,13 +99,13 @@
 					ENV.population.members.sort((a, b) => b.fitness - a.fitness)[0].dna
 				)
 
-				const newGenes = new Genetic(0.1, 2, 'BEST', 'RANDOM')
+				const newGenes = new Genetic({})
 					.findParents(ENV.population.members)
 					.crossover(ENV.population.size)
 					.mutate(exports.chance(exports.add(-0.5, 0.5)))
 
 				initPopulation(newGenes)
-			}, 10)
+			}, 1)
 		</script>
 	</body>
 </html>

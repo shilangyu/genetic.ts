@@ -48,12 +48,14 @@ const pop = [
 
 Genetic.validatePopulation(pop) /* 3 */
 
-const newGenes = new Genetic(
-	0.1,
-	2,
-	ParentsSelectionModes.best,
-	CrossoverModes.random
-) /* 4 */
+const newGenes = new Genetic({
+	mutationRate: 0.1,
+	numberOfParents: 2,
+	modes: {
+		parentsSelection: ParentsSelectionModes.best,
+		corssover: CrossoverModes.random
+	}
+}) /* 4 */
 	.findParents(pop) /* 5 */
 	.crossover(5) /* 6 */
 	.mutate(chance(add(-0.5, 0.5))) /* 7 */
@@ -64,12 +66,13 @@ const newPopulation = newGenes.map(dna => ({ fitness: 0, dna })) /* 8 */
 1. importing the class, Mode enums and 2 helper functions: `chance` and `add`
 2. creating a population that satisfies the `IPopMember[]` interface
 3. validating the population. If correct nothing will happen but if not an error with me thrown and the script will be terminated.
-4. initializing a Genetic instance. Takes 4 parameters:
+4. initializing a Genetic instance. Takes an object as parameter:
 
-- mutation rate
-- amount of parents
-- parent selection mode
-- crossover mode
+- mutation rate (default: 0.1)
+- amount of parents (default: 2)
+- modes
+	- parent selection (default: 'BEST')
+	- crossover (default: 'RANDOM')
 
 5. finding parents. Takes 1 parameter:
 

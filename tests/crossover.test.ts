@@ -3,7 +3,7 @@ import Genetic, { CrossoverModes, ParentsSelectionModes } from '../Genetic'
 describe('`crossover` method of an Genetic instance', () => {
 	describe('random gene crossover', () => {
 		it('tests for shallow DNA', () => {
-			const g = new Genetic(0.01, 2, ParentsSelectionModes.best, CrossoverModes.random)
+			const g = new Genetic({})
 
 			const mockPopulation = [
 				{ fitness: 100, dna: { asd: 1, tut: 11 } },
@@ -21,7 +21,7 @@ describe('`crossover` method of an Genetic instance', () => {
 		})
 
 		it('tests for deep DNA', () => {
-			const g = new Genetic(0.01, 2, ParentsSelectionModes.best, CrossoverModes.random)
+			const g = new Genetic({})
 
 			const mockPopulation = [
 				{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
@@ -41,7 +41,10 @@ describe('`crossover` method of an Genetic instance', () => {
 
 	describe('clone gene crossover', () => {
 		it('tests for shallow DNA', () => {
-			const g = new Genetic(0.01, 1, ParentsSelectionModes.best, CrossoverModes.clone)
+			const g = new Genetic({
+				numberOfParents: 1,
+				modes: { crossover: CrossoverModes.clone }
+			})
 
 			const mockPopulation = [
 				{ fitness: 100, dna: { asd: 1, tut: 11 } },
@@ -60,7 +63,10 @@ describe('`crossover` method of an Genetic instance', () => {
 		})
 
 		it('tests for deep DNA', () => {
-			const g = new Genetic(0.01, 1, ParentsSelectionModes.best, CrossoverModes.clone)
+			const g = new Genetic({
+				numberOfParents: 1,
+				modes: { crossover: CrossoverModes.clone }
+			})
 
 			const mockPopulation = [
 				{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
@@ -85,7 +91,9 @@ describe('`crossover` method of an Genetic instance', () => {
 
 	describe('average gene crossover', () => {
 		it('tests for shallow DNA', () => {
-			const g = new Genetic(0.01, 2, ParentsSelectionModes.best, CrossoverModes.average)
+			const g = new Genetic({
+				modes: { crossover: CrossoverModes.average }
+			})
 
 			const mockPopulation = [
 				{ fitness: 100, dna: { asd: 1, tut: 11 } },
@@ -104,7 +112,9 @@ describe('`crossover` method of an Genetic instance', () => {
 		})
 
 		it('tests for deep DNA', () => {
-			const g = new Genetic(0.01, 2, ParentsSelectionModes.best, CrossoverModes.average)
+			const g = new Genetic({
+				modes: { crossover: CrossoverModes.average }
+			})
 
 			const mockPopulation = [
 				{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },

@@ -2,7 +2,9 @@ import Genetic, { CrossoverModes, ParentsSelectionModes } from '../Genetic'
 
 describe('`findParents` method of an Genetic instance', () => {
 	it('tests the best parents selection', () => {
-		const g = new Genetic(0.01, 2, ParentsSelectionModes.best, CrossoverModes.clone)
+		const g = new Genetic({
+			modes: { crossover: CrossoverModes.clone }
+		})
 
 		const mockPopulation = [
 			{ fitness: 100, dna: { asd: 1 } },
@@ -21,9 +23,17 @@ describe('`findParents` method of an Genetic instance', () => {
 	})
 
 	it('tests the probability parents selection', () => {
-		const g = new Genetic(0.01, 2, ParentsSelectionModes.probability, CrossoverModes.clone)
+		const g = new Genetic({
+			modes: {
+				parentsSelection: ParentsSelectionModes.probability,
+				crossover: CrossoverModes.clone
+			}
+		})
 
-		const mockPopulation = [{ fitness: 0, dna: { asd: 4 } }, { fitness: 500, dna: { asd: 5 } }]
+		const mockPopulation = [
+			{ fitness: 0, dna: { asd: 4 } },
+			{ fitness: 500, dna: { asd: 5 } }
+		]
 
 		g.findParents(mockPopulation)
 
