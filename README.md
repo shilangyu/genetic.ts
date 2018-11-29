@@ -49,16 +49,18 @@ const pop = [
 Genetic.validatePopulation(pop) /* 3 */
 
 const newGenes = new Genetic({
+	population: pop,
 	mutationRate: 0.1,
+	mutationFunction: chance(add(-0.5, 0.5)),
 	numberOfParents: 2,
 	modes: {
 		parentsSelection: ParentsSelectionModes.best,
 		corssover: CrossoverModes.random
 	}
 }) /* 4 */
-	.findParents(pop) /* 5 */
-	.crossover(5) /* 6 */
-	.mutate(chance(add(-0.5, 0.5))) /* 7 */
+	.findParents() /* 5 */
+	.crossover() /* 6 */
+	.mutate() /* 7 */
 
 const newPopulation = newGenes.map(dna => ({ fitness: 0, dna })) /* 8 */
 ```

@@ -31,7 +31,8 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 			{ fitness: 500, dna: { asd: 5 } }
 		]
 
-		const expected = 'Fitness of a member of the population is not of type number.'
+		const expected =
+			'Fitness of a member of the population is not of type number.'
 		let result = ''
 
 		try {
@@ -64,7 +65,6 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 		expect(result).toBe(expected)
 	})
 
-
 	it('tests wrong type DNA', () => {
 		const mockPopulation = [
 			{ fitness: 100, dna: { asd: { abc: [1, 2, [0]] } } },
@@ -95,7 +95,8 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 			{ fitness: 500, dna: { asd: { abc: [1, 2, [0]] } } }
 		]
 
-		const expected = 'Dna of a member of the population has a different structure.'
+		const expected =
+			'Dna of a member of the population has a different structure.'
 		let result = ''
 
 		try {

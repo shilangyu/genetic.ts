@@ -1,15 +1,7 @@
-import Genetic, {
-	CrossoverModes,
-	chance,
-	add
-} from '../Genetic'
+import Genetic, { CrossoverModes, chance, add } from '../Genetic'
 
 describe('`mutation` method of an Genetic instance', () => {
 	it('tests adding 1 to a property', () => {
-		const g = new Genetic({
-			modes: { crossover: CrossoverModes.average }
-		})
-
 		const mockPopulation = [
 			{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
 			{ fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
@@ -18,9 +10,16 @@ describe('`mutation` method of an Genetic instance', () => {
 			{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 		]
 
-		g.findParents(mockPopulation)
-			.crossover(3)
-			.mutate(() => 1)
+		const g = new Genetic({
+			population: mockPopulation,
+			amountOfDna: 3,
+			mutationFunction: () => 1,
+			modes: { crossover: CrossoverModes.average }
+		})
+
+		g.findParents()
+			.crossover()
+			.mutate()
 
 		const result = g.chromosomes
 		const expected = [
@@ -33,11 +32,6 @@ describe('`mutation` method of an Genetic instance', () => {
 	})
 
 	it('tests the chance function', () => {
-		let g = new Genetic({
-			mutationRate: 0,
-			modes: { crossover: CrossoverModes.average }
-		})
-
 		const mockPopulation = [
 			{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
 			{ fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
@@ -46,9 +40,17 @@ describe('`mutation` method of an Genetic instance', () => {
 			{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 		]
 
-		g.findParents(mockPopulation)
-			.crossover(3)
-			.mutate(chance(() => 1))
+		let g = new Genetic({
+			population: mockPopulation,
+			amountOfDna: 3,
+			mutationFunction: chance(() => 1),
+			mutationRate: 0,
+			modes: { crossover: CrossoverModes.average }
+		})
+
+		g.findParents()
+			.crossover()
+			.mutate()
 
 		let result = g.chromosomes
 		let expected = [
@@ -60,13 +62,16 @@ describe('`mutation` method of an Genetic instance', () => {
 		expect(result).toEqual(expected)
 
 		g = new Genetic({
+			population: mockPopulation,
+			amountOfDna: 3,
+			mutationFunction: chance(() => 1),
 			mutationRate: 1,
 			modes: { crossover: CrossoverModes.average }
 		})
 
-		g.findParents(mockPopulation)
-			.crossover(3)
-			.mutate(chance(() => 1))
+		g.findParents()
+			.crossover()
+			.mutate()
 
 		result = g.chromosomes
 		expected = [
@@ -79,10 +84,6 @@ describe('`mutation` method of an Genetic instance', () => {
 	})
 
 	it('tests the add function', () => {
-		const g = new Genetic({
-			modes: { crossover: CrossoverModes.average }
-		})
-
 		const mockPopulation = [
 			{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
 			{ fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
@@ -91,9 +92,16 @@ describe('`mutation` method of an Genetic instance', () => {
 			{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 		]
 
-		g.findParents(mockPopulation)
-			.crossover(3)
-			.mutate(add(1, 1))
+		const g = new Genetic({
+			population: mockPopulation,
+			amountOfDna: 3,
+			mutationFunction: add(1, 1),
+			modes: { crossover: CrossoverModes.average }
+		})
+
+		g.findParents()
+			.crossover()
+			.mutate()
 
 		const result = g.chromosomes
 		const expected = [

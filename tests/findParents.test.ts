@@ -2,10 +2,6 @@ import Genetic, { CrossoverModes, ParentsSelectionModes } from '../Genetic'
 
 describe('`findParents` method of an Genetic instance', () => {
 	it('tests the best parents selection', () => {
-		const g = new Genetic({
-			modes: { crossover: CrossoverModes.clone }
-		})
-
 		const mockPopulation = [
 			{ fitness: 100, dna: { asd: 1 } },
 			{ fitness: 200, dna: { asd: 2 } },
@@ -14,7 +10,13 @@ describe('`findParents` method of an Genetic instance', () => {
 			{ fitness: 500, dna: { asd: 5 } }
 		]
 
-		g.findParents(mockPopulation)
+		const g = new Genetic({
+			population: mockPopulation,
+			mutationFunction: () => 1,
+			modes: { crossover: CrossoverModes.clone }
+		})
+
+		g.findParents()
 
 		const result = g.parents
 		const expected = [{ asd: 4 }, { asd: 5 }]
@@ -23,19 +25,21 @@ describe('`findParents` method of an Genetic instance', () => {
 	})
 
 	it('tests the probability parents selection', () => {
+		const mockPopulation = [
+			{ fitness: 0, dna: { asd: 4 } },
+			{ fitness: 500, dna: { asd: 5 } }
+		]
+
 		const g = new Genetic({
+			population: mockPopulation,
+			mutationFunction: () => 1,
 			modes: {
 				parentsSelection: ParentsSelectionModes.probability,
 				crossover: CrossoverModes.clone
 			}
 		})
 
-		const mockPopulation = [
-			{ fitness: 0, dna: { asd: 4 } },
-			{ fitness: 500, dna: { asd: 5 } }
-		]
-
-		g.findParents(mockPopulation)
+		g.findParents()
 
 		const result = g.parents
 		const expected = [{ asd: 5 }, { asd: 4 }]

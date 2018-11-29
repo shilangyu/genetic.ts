@@ -3,8 +3,6 @@ import Genetic, { CrossoverModes, ParentsSelectionModes } from '../Genetic'
 describe('`crossover` method of an Genetic instance', () => {
 	describe('random gene crossover', () => {
 		it('tests for shallow DNA', () => {
-			const g = new Genetic({})
-
 			const mockPopulation = [
 				{ fitness: 100, dna: { asd: 1, tut: 11 } },
 				{ fitness: 200, dna: { asd: 2, tut: 12 } },
@@ -13,7 +11,13 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: { asd: 8, tut: 10 } }
 			]
 
-			g.findParents(mockPopulation).crossover(3)
+			const g = new Genetic({
+				population: mockPopulation,
+				amountOfDna: 3,
+				mutationFunction: () => 1
+			})
+
+			g.findParents().crossover()
 
 			const result = g.chromosomes
 
@@ -21,8 +25,6 @@ describe('`crossover` method of an Genetic instance', () => {
 		})
 
 		it('tests for deep DNA', () => {
-			const g = new Genetic({})
-
 			const mockPopulation = [
 				{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
 				{ fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
@@ -31,7 +33,13 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 			]
 
-			g.findParents(mockPopulation).crossover(3)
+			const g = new Genetic({
+				population: mockPopulation,
+				amountOfDna: 3,
+				mutationFunction: () => 1
+			})
+
+			g.findParents().crossover()
 
 			const result = g.chromosomes
 
@@ -41,11 +49,6 @@ describe('`crossover` method of an Genetic instance', () => {
 
 	describe('clone gene crossover', () => {
 		it('tests for shallow DNA', () => {
-			const g = new Genetic({
-				numberOfParents: 1,
-				modes: { crossover: CrossoverModes.clone }
-			})
-
 			const mockPopulation = [
 				{ fitness: 100, dna: { asd: 1, tut: 11 } },
 				{ fitness: 200, dna: { asd: 2, tut: 12 } },
@@ -54,20 +57,27 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: { asd: 8, tut: 10 } }
 			]
 
-			g.findParents(mockPopulation).crossover(3)
+			const g = new Genetic({
+				population: mockPopulation,
+				numberOfParents: 1,
+				amountOfDna: 3,
+				mutationFunction: () => 1,
+				modes: { crossover: CrossoverModes.clone }
+			})
+
+			g.findParents().crossover()
 
 			const result = g.chromosomes
-			const expected = [{ asd: 8, tut: 10 }, { asd: 8, tut: 10 }, { asd: 8, tut: 10 }]
+			const expected = [
+				{ asd: 8, tut: 10 },
+				{ asd: 8, tut: 10 },
+				{ asd: 8, tut: 10 }
+			]
 
 			expect(result).toEqual(expected)
 		})
 
 		it('tests for deep DNA', () => {
-			const g = new Genetic({
-				numberOfParents: 1,
-				modes: { crossover: CrossoverModes.clone }
-			})
-
 			const mockPopulation = [
 				{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
 				{ fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
@@ -76,7 +86,15 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 			]
 
-			g.findParents(mockPopulation).crossover(3)
+			const g = new Genetic({
+				population: mockPopulation,
+				numberOfParents: 1,
+				amountOfDna: 3,
+				mutationFunction: () => 1,
+				modes: { crossover: CrossoverModes.clone }
+			})
+
+			g.findParents().crossover()
 
 			const result = g.chromosomes
 			const expected = [
@@ -91,10 +109,6 @@ describe('`crossover` method of an Genetic instance', () => {
 
 	describe('average gene crossover', () => {
 		it('tests for shallow DNA', () => {
-			const g = new Genetic({
-				modes: { crossover: CrossoverModes.average }
-			})
-
 			const mockPopulation = [
 				{ fitness: 100, dna: { asd: 1, tut: 11 } },
 				{ fitness: 200, dna: { asd: 2, tut: 12 } },
@@ -103,19 +117,26 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: { asd: 8, tut: 10 } }
 			]
 
-			g.findParents(mockPopulation).crossover(3)
+			const g = new Genetic({
+				population: mockPopulation,
+				amountOfDna: 3,
+				mutationFunction: () => 1,
+				modes: { crossover: CrossoverModes.average }
+			})
+
+			g.findParents().crossover()
 
 			const result = g.chromosomes
-			const expected = [{ asd: 6, tut: 11 }, { asd: 6, tut: 11 }, { asd: 6, tut: 11 }]
+			const expected = [
+				{ asd: 6, tut: 11 },
+				{ asd: 6, tut: 11 },
+				{ asd: 6, tut: 11 }
+			]
 
 			expect(result).toEqual(expected)
 		})
 
 		it('tests for deep DNA', () => {
-			const g = new Genetic({
-				modes: { crossover: CrossoverModes.average }
-			})
-
 			const mockPopulation = [
 				{ fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
 				{ fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
@@ -124,7 +145,14 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 			]
 
-			g.findParents(mockPopulation).crossover(3)
+			const g = new Genetic({
+				population: mockPopulation,
+				amountOfDna: 3,
+				mutationFunction: () => 1,
+				modes: { crossover: CrossoverModes.average }
+			})
+
+			g.findParents().crossover()
 
 			const result = g.chromosomes
 			const expected = [

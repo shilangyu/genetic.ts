@@ -2,12 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Genetic = /** @class */ (function () {
     function Genetic(_a) {
-        var _b = _a.mutationRate, mutationRate = _b === void 0 ? 0.1 : _b, _c = _a.numberOfParents, numberOfParents = _c === void 0 ? 2 : _c, _d = _a.modes, _e = _d === void 0 ? {
+        var population = _a.population, amountOfDna = _a.amountOfDna, mutationFunction = _a.mutationFunction, _b = _a.mutationRate, mutationRate = _b === void 0 ? 0.1 : _b, _c = _a.numberOfParents, numberOfParents = _c === void 0 ? 2 : _c, _d = _a.modes, _e = _d === void 0 ? {
             parentsSelection: "BEST" /* best */,
             crossover: "RANDOM" /* random */
         } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? "BEST" /* best */ : _f, _g = _e.crossover, crossover = _g === void 0 ? "RANDOM" /* random */ : _g;
         this.parents = [];
         this.chromosomes = [];
+        this.population = population;
+        this.amountOfDna = amountOfDna || population.length;
+        this.mutationFunction = mutationFunction;
         this.mutationRate = mutationRate;
         this.numberOfParents = numberOfParents;
         this.modes = {
@@ -15,7 +18,8 @@ var Genetic = /** @class */ (function () {
             crossover: crossover
         };
     }
-    Genetic.prototype.findParents = function (population) {
+    Genetic.prototype.findParents = function (populationOverwrite) {
+        var population = populationOverwrite || this.population;
         if (this.modes.parentsSelection === "BEST" /* best */) {
             this.parents = population
                 .sort(function (a, b) { return a.fitness - b.fitness; })
@@ -41,8 +45,9 @@ var Genetic = /** @class */ (function () {
         }
         return this;
     };
-    Genetic.prototype.crossover = function (amountOfChromosomes) {
+    Genetic.prototype.crossover = function (amountOfDnaOverwrite) {
         var _this = this;
+        var amountOfDna = amountOfDnaOverwrite || this.amountOfDna;
         if (this.modes.crossover === "RANDOM" /* random */) {
             var deepAvrg_1 = function (targets) {
                 if (Array.isArray(targets[0])) {
@@ -64,12 +69,12 @@ var Genetic = /** @class */ (function () {
                 else if (typeof targets[0] === 'number')
                     return targets[Math.floor(Math.random() * targets.length)];
             };
-            this.chromosomes = new Array(amountOfChromosomes)
+            this.chromosomes = new Array(amountOfDna)
                 .fill(null)
                 .map(function () { return deepAvrg_1(_this.parents); });
         }
         else if (this.modes.crossover === "CLONE" /* clone */) {
-            var left = amountOfChromosomes;
+            var left = amountOfDna;
             while (left-- > 0) {
                 var chosen = Math.floor(Math.random() * this.parents.length);
                 this.chromosomes.push(JSON.parse(JSON.stringify(this.parents[chosen])));
@@ -97,14 +102,15 @@ var Genetic = /** @class */ (function () {
                     return targets.reduce(function (prev, curr) { return prev + curr; }, 0) / targets.length;
             };
             var res_1 = JSON.stringify(deepAvrg_2(this.parents));
-            this.chromosomes = new Array(amountOfChromosomes)
+            this.chromosomes = new Array(amountOfDna)
                 .fill(null)
                 .map(function () { return JSON.parse(res_1); });
         }
         return this;
     };
-    Genetic.prototype.mutate = function (func) {
+    Genetic.prototype.mutate = function (mutationFunctionOverwrite) {
         var _this = this;
+        var mutationFunction = mutationFunctionOverwrite || this.mutationFunction;
         var deeper = function (target) {
             if (Array.isArray(target)) {
                 return target.map(deeper);
@@ -118,7 +124,7 @@ var Genetic = /** @class */ (function () {
                 return temp;
             }
             else if (typeof target === 'number')
-                return target + func(_this.mutationRate);
+                return target + mutationFunction(_this.mutationRate);
         };
         this.chromosomes = this.chromosomes.map(deeper);
         return this.chromosomes;

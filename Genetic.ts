@@ -10,6 +10,9 @@ export const enum CrossoverModes {
 }
 
 interface GeneticConstructor {
+	population: IPopMember[]
+	amountOfDna?: number
+	mutationFunction: MutationFunction
 	mutationRate?: number
 	numberOfParents?: number
 	modes?: {
@@ -31,6 +34,9 @@ export default class Genetic {
 	parents: DNA[] = []
 	chromosomes: DNA[] = []
 
+	population: IPopMember[]
+	amountOfDna: number
+	mutationFunction: MutationFunction
 	mutationRate: number
 	numberOfParents: number
 	modes: {
@@ -39,6 +45,9 @@ export default class Genetic {
 	}
 
 	constructor({
+		population,
+		amountOfDna,
+		mutationFunction,
 		mutationRate = 0.1,
 		numberOfParents = 2,
 		modes: {
@@ -49,6 +58,9 @@ export default class Genetic {
 			crossover: CrossoverModes.random
 		}
 	}: GeneticConstructor) {
+		this.population = population
+		this.amountOfDna = amountOfDna || population.length
+		this.mutationFunction = mutationFunction
 		this.mutationRate = mutationRate
 		this.numberOfParents = numberOfParents
 		this.modes = {
@@ -57,7 +69,9 @@ export default class Genetic {
 		}
 	}
 
-	findParents(population: IPopMember[]): this {
+	findParents(populationOverwrite?: IPopMember[]): this {
+		const population = populationOverwrite || this.population
+
 		if (this.modes.parentsSelection === ParentsSelectionModes.best) {
 			this.parents = population
 				.sort((a, b) => a.fitness - b.fitness)
@@ -87,7 +101,9 @@ export default class Genetic {
 		return this
 	}
 
-	crossover(amountOfChromosomes: number): this {
+	crossover(amountOfDnaOverwrite?: number): this {
+		const amountOfDna = amountOfDnaOverwrite || this.amountOfDna
+		
 		if (this.modes.crossover === CrossoverModes.random) {
 			const deepAvrg = (targets: any[]): any => {
 				if (Array.isArray(targets[0])) {
@@ -104,11 +120,11 @@ export default class Genetic {
 					return targets[Math.floor(Math.random() * targets.length)]
 			}
 
-			this.chromosomes = new Array(amountOfChromosomes)
+			this.chromosomes = new Array(amountOfDna)
 				.fill(null)
 				.map(() => deepAvrg(this.parents))
 		} else if (this.modes.crossover === CrossoverModes.clone) {
-			let left = amountOfChromosomes
+			let left = amountOfDna
 
 			while (left-- > 0) {
 				let chosen = Math.floor(Math.random() * this.parents.length)
@@ -133,7 +149,7 @@ export default class Genetic {
 
 			const res = JSON.stringify(deepAvrg(this.parents))
 
-			this.chromosomes = new Array(amountOfChromosomes)
+			this.chromosomes = new Array(amountOfDna)
 				.fill(null)
 				.map(() => JSON.parse(res))
 		}
@@ -141,7 +157,9 @@ export default class Genetic {
 		return this
 	}
 
-	mutate(func: MutationFunction) {
+	mutate(mutationFunctionOverwrite?: MutationFunction) {
+		const mutationFunction = mutationFunctionOverwrite || this.mutationFunction
+
 		const deeper = (target: any[]): any => {
 			if (Array.isArray(target)) {
 				return target.map(deeper)
@@ -152,7 +170,7 @@ export default class Genetic {
 				}
 				return temp
 			} else if (typeof target === 'number')
-				return target + func(this.mutationRate)
+				return target + mutationFunction(this.mutationRate)
 		}
 
 		this.chromosomes = this.chromosomes.map(deeper)
