@@ -86,18 +86,21 @@
 			initPopulation()
 
 			setInterval(() => {
+				let best
 				const xs = ['x1', 'x2'].map(e => ENV[e]())
 
-				const ga = new Genetic({
+				const newGenes = new Genetic({
 					population: ENV.population.members,
 					mutationFunction: exports.chance(exports.add(-0.5, 0.5)),
 					fitnessFunction: mem => mem.calcFitness(...xs)
 				})
 					.calculateFitness()
 					.findParents()
-				ENV.setBest(ga.parents[0])
-				const newGenes = ga.crossover().mutate()
+					.overwrite(self => (best = self.parents[0]))
+					.crossover()
+					.mutate()
 
+				ENV.setBest(best)
 				initPopulation(newGenes)
 			}, 1)
 		</script>

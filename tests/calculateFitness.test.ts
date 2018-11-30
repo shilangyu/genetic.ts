@@ -1,7 +1,7 @@
 import Genetic from '../Genetic'
 
 describe('`calculateFitness` method of an Genetic instance', () => {
-	it('tests the best parents selection', () => {
+	it('tests calculation of fitness', () => {
 		const mockPopulation = [
 			{ fitness: 0, dna: { asd: 1, a: [0, 2] } },
 			{ fitness: 0, dna: { asd: 2, a: [1, 2] } },

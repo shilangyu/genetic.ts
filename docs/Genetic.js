@@ -19,34 +19,36 @@ var Genetic = /** @class */ (function () {
             crossover: crossover
         };
     }
-    Genetic.prototype.calculateFitness = function (fitnessFunctionOverwrite) {
-        var fitnessFunction = fitnessFunctionOverwrite || this.fitnessFunction;
+    Genetic.prototype.overwrite = function (overwriter) {
+        overwriter(this);
+        return this;
+    };
+    Genetic.prototype.calculateFitness = function () {
         for (var _i = 0, _a = this.population; _i < _a.length; _i++) {
             var member = _a[_i];
-            member.fitness = fitnessFunction(member);
+            member.fitness = this.fitnessFunction(member);
         }
         return this;
     };
-    Genetic.prototype.findParents = function (populationOverwrite) {
-        var population = populationOverwrite || this.population;
+    Genetic.prototype.findParents = function () {
         if (this.modes.parentsSelection === "BEST" /* best */) {
-            this.parents = population
+            this.parents = this.population
                 .sort(function (a, b) { return a.fitness - b.fitness; })
                 .slice(-this.numberOfParents)
                 .map(function (e) { return e.dna; });
         }
         else if (this.modes.parentsSelection === "PROBABILITY" /* probability */) {
             var left = this.numberOfParents;
-            var fitnessSum = population.reduce(function (prev, curr) { return prev + curr.fitness; }, 0);
+            var fitnessSum = this.population.reduce(function (prev, curr) { return prev + curr.fitness; }, 0);
             while (left-- > 0) {
                 var chosen = Math.random() * fitnessSum;
-                for (var _i = 0, population_1 = population; _i < population_1.length; _i++) {
-                    var member = population_1[_i];
+                for (var _i = 0, _a = this.population; _i < _a.length; _i++) {
+                    var member = _a[_i];
                     chosen -= member.fitness;
                     if (chosen <= 0) {
                         this.parents.push(member.dna);
                         fitnessSum -= member.fitness;
-                        population.splice(population.indexOf(member), 1);
+                        this.population.splice(this.population.indexOf(member), 1);
                         break;
                     }
                 }
@@ -54,9 +56,8 @@ var Genetic = /** @class */ (function () {
         }
         return this;
     };
-    Genetic.prototype.crossover = function (amountOfDnaOverwrite) {
+    Genetic.prototype.crossover = function () {
         var _this = this;
-        var amountOfDna = amountOfDnaOverwrite || this.amountOfDna;
         if (this.modes.crossover === "RANDOM" /* random */) {
             var deepAvrg_1 = function (targets) {
                 if (Array.isArray(targets[0])) {
@@ -78,10 +79,10 @@ var Genetic = /** @class */ (function () {
                 else if (typeof targets[0] === 'number')
                     return targets[Math.floor(Math.random() * targets.length)];
             };
-            this.chromosomes = new Array(amountOfDna).fill(null).map(function () { return deepAvrg_1(_this.parents); });
+            this.chromosomes = new Array(this.amountOfDna).fill(null).map(function () { return deepAvrg_1(_this.parents); });
         }
         else if (this.modes.crossover === "CLONE" /* clone */) {
-            var left = amountOfDna;
+            var left = this.amountOfDna;
             while (left-- > 0) {
                 var chosen = Math.floor(Math.random() * this.parents.length);
                 this.chromosomes.push(JSON.parse(JSON.stringify(this.parents[chosen])));
@@ -109,13 +110,12 @@ var Genetic = /** @class */ (function () {
                     return targets.reduce(function (prev, curr) { return prev + curr; }, 0) / targets.length;
             };
             var res_1 = JSON.stringify(deepAvrg_2(this.parents));
-            this.chromosomes = new Array(amountOfDna).fill(null).map(function () { return JSON.parse(res_1); });
+            this.chromosomes = new Array(this.amountOfDna).fill(null).map(function () { return JSON.parse(res_1); });
         }
         return this;
     };
-    Genetic.prototype.mutate = function (mutationFunctionOverwrite) {
+    Genetic.prototype.mutate = function () {
         var _this = this;
-        var mutationFunction = mutationFunctionOverwrite || this.mutationFunction;
         var deeper = function (target) {
             if (Array.isArray(target)) {
                 return target.map(deeper);
@@ -129,7 +129,7 @@ var Genetic = /** @class */ (function () {
                 return temp;
             }
             else if (typeof target === 'number')
-                return target + mutationFunction(_this.mutationRate);
+                return target + _this.mutationFunction(_this.mutationRate);
         };
         this.chromosomes = this.chromosomes.map(deeper);
         return this.chromosomes;
