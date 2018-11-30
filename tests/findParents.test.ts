@@ -13,7 +13,8 @@ describe('`findParents` method of an Genetic instance', () => {
 		const g = new Genetic({
 			population: mockPopulation,
 			mutationFunction: () => 1,
-			modes: { crossover: CrossoverModes.clone }
+			modes: { crossover: CrossoverModes.clone },
+			fitnessFunction: () => 0
 		})
 
 		g.findParents()
@@ -36,7 +37,8 @@ describe('`findParents` method of an Genetic instance', () => {
 			modes: {
 				parentsSelection: ParentsSelectionModes.probability,
 				crossover: CrossoverModes.clone
-			}
+			},
+			fitnessFunction: () => 0
 		})
 
 		g.findParents()

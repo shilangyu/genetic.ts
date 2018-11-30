@@ -16,8 +16,7 @@
 
 	<body>
 		Description: <br />
-		The genetic algorithm tries to find a, b, and c knowing the 2 roots of that
-		function. <br />
+		The genetic algorithm tries to find a, b, and c knowing the 2 roots of that function. <br />
 		<br />the formula: <br />
 		f(x) = ax<sup>2</sup> + bx + c <br />
 		<br />Roots: <br />
@@ -48,9 +47,7 @@
 					return () => Number(ref.value)
 				})(),
 				setBest: (() => {
-					const prev = ['a', 'b', 'c', 'accuracy'].map(e =>
-						document.querySelector(`#${e}`)
-					)
+					const prev = ['a', 'b', 'c', 'accuracy'].map(e => document.querySelector(`#${e}`))
 					return dna => {
 						dna.accuracy = Math.abs(f(dna.a, dna.b, dna.c, ENV.x1()))
 						dna.accuracy += Math.abs(f(dna.a, dna.b, dna.c, ENV.x2()))
@@ -71,8 +68,12 @@
 					}
 				}
 
-				calcFitness(x) {
-					this.fitness += Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x))
+				calcFitness(x1, x2) {
+					return (
+						1 /
+						(Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x1)) +
+							Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x2)))
+					)
 				}
 			}
 
@@ -87,25 +88,15 @@
 			setInterval(() => {
 				const xs = ['x1', 'x2'].map(e => ENV[e]())
 
-				for (const mem of ENV.population.members)
-					for (const x of xs) mem.calcFitness(x)
-
-				ENV.population.members = ENV.population.members.map(e => {
-					e.fitness = 1 / e.fitness
-					return e
-				})
-
-				ENV.setBest(
-					ENV.population.members.sort((a, b) => b.fitness - a.fitness)[0].dna
-				)
-
-				const newGenes = new Genetic({
+				const ga = new Genetic({
 					population: ENV.population.members,
-					mutationFunction: exports.chance(exports.add(-0.5, 0.5))
+					mutationFunction: exports.chance(exports.add(-0.5, 0.5)),
+					fitnessFunction: mem => mem.calcFitness(...xs)
 				})
+					.calculateFitness()
 					.findParents()
-					.crossover()
-					.mutate()
+				ENV.setBest(ga.parents[0])
+				const newGenes = ga.crossover().mutate()
 
 				initPopulation(newGenes)
 			}, 1)

@@ -14,6 +14,7 @@ interface GeneticConstructor {
 	amountOfDna?: number
 	mutationFunction: MutationFunction
 	mutationRate?: number
+	fitnessFunction: FitnessFunction
 	numberOfParents?: number
 	modes?: {
 		parentsSelection?: ParentsSelectionModes
@@ -29,6 +30,7 @@ interface IPopMember {
 }
 
 type MutationFunction = (mutationRate: number) => number
+type FitnessFunction = (member: IPopMember) => number
 
 export default class Genetic {
 	parents: DNA[] = []
@@ -38,6 +40,7 @@ export default class Genetic {
 	amountOfDna: number
 	mutationFunction: MutationFunction
 	mutationRate: number
+	fitnessFunction: FitnessFunction
 	numberOfParents: number
 	modes: {
 		parentsSelection: ParentsSelectionModes
@@ -50,10 +53,8 @@ export default class Genetic {
 		mutationFunction,
 		mutationRate = 0.1,
 		numberOfParents = 2,
-		modes: {
-			parentsSelection = ParentsSelectionModes.best,
-			crossover = CrossoverModes.random
-		} = {
+		fitnessFunction,
+		modes: { parentsSelection = ParentsSelectionModes.best, crossover = CrossoverModes.random } = {
 			parentsSelection: ParentsSelectionModes.best,
 			crossover: CrossoverModes.random
 		}
@@ -63,10 +64,19 @@ export default class Genetic {
 		this.mutationFunction = mutationFunction
 		this.mutationRate = mutationRate
 		this.numberOfParents = numberOfParents
+		this.fitnessFunction = fitnessFunction
 		this.modes = {
 			parentsSelection,
 			crossover
 		}
+	}
+
+	calculateFitness(fitnessFunctionOverwrite?: FitnessFunction): this {
+		const fitnessFunction = fitnessFunctionOverwrite || this.fitnessFunction
+
+		for (const member of this.population) member.fitness = fitnessFunction(member)
+
+		return this
 	}
 
 	findParents(populationOverwrite?: IPopMember[]): this {
@@ -77,9 +87,7 @@ export default class Genetic {
 				.sort((a, b) => a.fitness - b.fitness)
 				.slice(-this.numberOfParents)
 				.map(e => e.dna)
-		} else if (
-			this.modes.parentsSelection === ParentsSelectionModes.probability
-		) {
+		} else if (this.modes.parentsSelection === ParentsSelectionModes.probability) {
 			let left = this.numberOfParents
 			let fitnessSum = population.reduce((prev, curr) => prev + curr.fitness, 0)
 
@@ -103,7 +111,7 @@ export default class Genetic {
 
 	crossover(amountOfDnaOverwrite?: number): this {
 		const amountOfDna = amountOfDnaOverwrite || this.amountOfDna
-		
+
 		if (this.modes.crossover === CrossoverModes.random) {
 			const deepAvrg = (targets: any[]): any => {
 				if (Array.isArray(targets[0])) {
@@ -120,9 +128,7 @@ export default class Genetic {
 					return targets[Math.floor(Math.random() * targets.length)]
 			}
 
-			this.chromosomes = new Array(amountOfDna)
-				.fill(null)
-				.map(() => deepAvrg(this.parents))
+			this.chromosomes = new Array(amountOfDna).fill(null).map(() => deepAvrg(this.parents))
 		} else if (this.modes.crossover === CrossoverModes.clone) {
 			let left = amountOfDna
 
@@ -149,9 +155,7 @@ export default class Genetic {
 
 			const res = JSON.stringify(deepAvrg(this.parents))
 
-			this.chromosomes = new Array(amountOfDna)
-				.fill(null)
-				.map(() => JSON.parse(res))
+			this.chromosomes = new Array(amountOfDna).fill(null).map(() => JSON.parse(res))
 		}
 
 		return this
@@ -169,8 +173,7 @@ export default class Genetic {
 					temp[key] = deeper(target[key])
 				}
 				return temp
-			} else if (typeof target === 'number')
-				return target + mutationFunction(this.mutationRate)
+			} else if (typeof target === 'number') return target + mutationFunction(this.mutationRate)
 		}
 
 		this.chromosomes = this.chromosomes.map(deeper)
@@ -179,88 +182,61 @@ export default class Genetic {
 
 	static validatePopulation(population: any[]) {
 		if (!population.every(mem => 'fitness' in mem))
-			throw new Error(
-				'Member of the population is missing the fitness property.'
-			)
+			throw new Error('Member of the population is missing the fitness property.')
 
 		if (!population.every(mem => typeof mem.fitness === 'number'))
-			throw new Error(
-				'Fitness of a member of the population is not of type number.'
-			)
+			throw new Error('Fitness of a member of the population is not of type number.')
 
 		if (!population.every(mem => 'dna' in mem))
 			throw new Error('Member of the population is missing the dna property.')
 
 		function validateTypes(obj: any) {
 			if (Array.isArray(obj)) for (const ele of obj) validateTypes(ele)
-			else if (typeof obj === 'object')
-				for (const ele of Object.values(obj)) validateTypes(ele)
+			else if (typeof obj === 'object') for (const ele of Object.values(obj)) validateTypes(ele)
 			else if (typeof obj !== 'number')
-				throw new Error(
-					'Dna of a member of the population has an incorrect type.'
-				)
+				throw new Error('Dna of a member of the population has an incorrect type.')
 		}
 		validateTypes(population)
 
-		const zip = (a: any, b: any): any[] =>
-			a.map((e: any, i: number) => [e, b[i]])
+		const zip = (a: any, b: any): any[] => a.map((e: any, i: number) => [e, b[i]])
 
 		function validateStructure(obj: any, model: any) {
 			if (Array.isArray(model)) {
 				if (obj.length !== model.length)
-					throw new Error(
-						'Dna of a member of the population has a different structure.'
-					)
+					throw new Error('Dna of a member of the population has a different structure.')
 
 				for (const [a, b] of zip(obj, model)) {
 					if (Array.isArray(a) !== Array.isArray(b)) {
-						throw new Error(
-							'Dna of a member of the population has a different structure.'
-						)
+						throw new Error('Dna of a member of the population has a different structure.')
 					} else if (typeof a !== typeof b) {
-						throw new Error(
-							'Dna of a member of the population has a different structure.'
-						)
+						throw new Error('Dna of a member of the population has a different structure.')
 					} else if (typeof a !== 'number') {
 						validateStructure(a, b)
 					}
 				}
 			} else if (typeof obj === 'object') {
-				if (
-					!zip(Object.keys(obj), Object.keys(model)).every(([a, b]) => a === b)
-				) {
-					throw new Error(
-						'Dna of a member of the population has a different structure.'
-					)
+				if (!zip(Object.keys(obj), Object.keys(model)).every(([a, b]) => a === b)) {
+					throw new Error('Dna of a member of the population has a different structure.')
 				}
 
 				for (const [a, b] of zip(Object.values(obj), Object.values(model))) {
 					if (Array.isArray(a) !== Array.isArray(b)) {
-						throw new Error(
-							'Dna of a member of the population has a different structure.'
-						)
+						throw new Error('Dna of a member of the population has a different structure.')
 					} else if (typeof a !== typeof b) {
-						throw new Error(
-							'Dna of a member of the population has a different structure.'
-						)
+						throw new Error('Dna of a member of the population has a different structure.')
 					} else if (typeof a !== 'number') {
 						validateStructure(a, b)
 					}
 				}
 			} else if (typeof obj !== 'number')
-				throw new Error(
-					'Dna of a member of the population has a different structure.'
-				)
+				throw new Error('Dna of a member of the population has a different structure.')
 		}
 
-		for (const curr of population.slice(1))
-			validateStructure(curr, population[0])
+		for (const curr of population.slice(1)) validateStructure(curr, population[0])
 	}
 }
 
-export const chance = (
-	func: MutationFunction
-): MutationFunction => mutationRate => {
+export const chance = (func: MutationFunction): MutationFunction => mutationRate => {
 	if (Math.random() < mutationRate) return func(mutationRate)
 	return 0
 }

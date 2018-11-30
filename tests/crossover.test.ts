@@ -14,7 +14,8 @@ describe('`crossover` method of an Genetic instance', () => {
 			const g = new Genetic({
 				population: mockPopulation,
 				amountOfDna: 3,
-				mutationFunction: () => 1
+				mutationFunction: () => 1,
+				fitnessFunction: () => 0
 			})
 
 			g.findParents().crossover()
@@ -36,7 +37,8 @@ describe('`crossover` method of an Genetic instance', () => {
 			const g = new Genetic({
 				population: mockPopulation,
 				amountOfDna: 3,
-				mutationFunction: () => 1
+				mutationFunction: () => 1,
+				fitnessFunction: () => 0
 			})
 
 			g.findParents().crossover()
@@ -62,6 +64,7 @@ describe('`crossover` method of an Genetic instance', () => {
 				numberOfParents: 1,
 				amountOfDna: 3,
 				mutationFunction: () => 1,
+				fitnessFunction: () => 0,
 				modes: { crossover: CrossoverModes.clone }
 			})
 
@@ -91,7 +94,8 @@ describe('`crossover` method of an Genetic instance', () => {
 				numberOfParents: 1,
 				amountOfDna: 3,
 				mutationFunction: () => 1,
-				modes: { crossover: CrossoverModes.clone }
+				modes: { crossover: CrossoverModes.clone },
+				fitnessFunction: () => 0
 			})
 
 			g.findParents().crossover()
@@ -121,7 +125,8 @@ describe('`crossover` method of an Genetic instance', () => {
 				population: mockPopulation,
 				amountOfDna: 3,
 				mutationFunction: () => 1,
-				modes: { crossover: CrossoverModes.average }
+				modes: { crossover: CrossoverModes.average },
+				fitnessFunction: () => 0
 			})
 
 			g.findParents().crossover()
@@ -149,7 +154,8 @@ describe('`crossover` method of an Genetic instance', () => {
 				population: mockPopulation,
 				amountOfDna: 3,
 				mutationFunction: () => 1,
-				modes: { crossover: CrossoverModes.average }
+				modes: { crossover: CrossoverModes.average },
+				fitnessFunction: () => 0
 			})
 
 			g.findParents().crossover()

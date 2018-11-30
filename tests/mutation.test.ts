@@ -14,7 +14,8 @@ describe('`mutation` method of an Genetic instance', () => {
 			population: mockPopulation,
 			amountOfDna: 3,
 			mutationFunction: () => 1,
-			modes: { crossover: CrossoverModes.average }
+			modes: { crossover: CrossoverModes.average },
+			fitnessFunction: () => 0
 		})
 
 		g.findParents()
@@ -45,7 +46,8 @@ describe('`mutation` method of an Genetic instance', () => {
 			amountOfDna: 3,
 			mutationFunction: chance(() => 1),
 			mutationRate: 0,
-			modes: { crossover: CrossoverModes.average }
+			modes: { crossover: CrossoverModes.average },
+			fitnessFunction: () => 0
 		})
 
 		g.findParents()
@@ -66,7 +68,8 @@ describe('`mutation` method of an Genetic instance', () => {
 			amountOfDna: 3,
 			mutationFunction: chance(() => 1),
 			mutationRate: 1,
-			modes: { crossover: CrossoverModes.average }
+			modes: { crossover: CrossoverModes.average },
+			fitnessFunction: () => 0
 		})
 
 		g.findParents()
@@ -96,7 +99,8 @@ describe('`mutation` method of an Genetic instance', () => {
 			population: mockPopulation,
 			amountOfDna: 3,
 			mutationFunction: add(1, 1),
-			modes: { crossover: CrossoverModes.average }
+			modes: { crossover: CrossoverModes.average },
+			fitnessFunction: () => 0
 		})
 
 		g.findParents()
