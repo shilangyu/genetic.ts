@@ -162,7 +162,7 @@ export default class Genetic {
 		return this
 	}
 
-	mutate() {
+	mutate(): this {
 		const deeper = (target: any[]): any => {
 			if (Array.isArray(target)) {
 				return target.map(deeper)
@@ -177,7 +177,7 @@ export default class Genetic {
 		}
 
 		this.newDna = this.newDna.map(deeper)
-		return this.newDna
+		return this
 	}
 
 	finishGeneration(mapDnaFunction: MapDnaFunction): this {

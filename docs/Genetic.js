@@ -133,7 +133,7 @@ var Genetic = /** @class */ (function () {
                 return target + _this.mutationFunction(_this.mutationRate);
         };
         this.newDna = this.newDna.map(deeper);
-        return this.newDna;
+        return this;
     };
     Genetic.prototype.finishGeneration = function (mapDnaFunction) {
         this.population = mapDnaFunction(this.newDna);
