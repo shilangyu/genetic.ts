@@ -7,7 +7,7 @@ var Genetic = /** @class */ (function () {
             crossover: "RANDOM" /* random */
         } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? "BEST" /* best */ : _f, _g = _e.crossover, crossover = _g === void 0 ? "RANDOM" /* random */ : _g;
         this.parents = [];
-        this.chromosomes = [];
+        this.newDna = [];
         this.generation = 1;
         this.population = population;
         this.amountOfDna = amountOfDna || population.length;
@@ -80,13 +80,13 @@ var Genetic = /** @class */ (function () {
                 else if (typeof targets[0] === 'number')
                     return targets[Math.floor(Math.random() * targets.length)];
             };
-            this.chromosomes = new Array(this.amountOfDna).fill(null).map(function () { return deepAvrg_1(_this.parents); });
+            this.newDna = new Array(this.amountOfDna).fill(null).map(function () { return deepAvrg_1(_this.parents); });
         }
         else if (this.modes.crossover === "CLONE" /* clone */) {
             var left = this.amountOfDna;
             while (left-- > 0) {
                 var chosen = Math.floor(Math.random() * this.parents.length);
-                this.chromosomes.push(JSON.parse(JSON.stringify(this.parents[chosen])));
+                this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])));
             }
         }
         else if (this.modes.crossover === "AVERAGE" /* average */) {
@@ -111,7 +111,7 @@ var Genetic = /** @class */ (function () {
                     return targets.reduce(function (prev, curr) { return prev + curr; }, 0) / targets.length;
             };
             var res_1 = JSON.stringify(deepAvrg_2(this.parents));
-            this.chromosomes = new Array(this.amountOfDna).fill(null).map(function () { return JSON.parse(res_1); });
+            this.newDna = new Array(this.amountOfDna).fill(null).map(function () { return JSON.parse(res_1); });
         }
         return this;
     };
@@ -132,11 +132,11 @@ var Genetic = /** @class */ (function () {
             else if (typeof target === 'number')
                 return target + _this.mutationFunction(_this.mutationRate);
         };
-        this.chromosomes = this.chromosomes.map(deeper);
-        return this.chromosomes;
+        this.newDna = this.newDna.map(deeper);
+        return this.newDna;
     };
     Genetic.prototype.finishGeneration = function (mapDnaFunction) {
-        this.population = mapDnaFunction(this.chromosomes);
+        this.population = mapDnaFunction(this.newDna);
         this.generation++;
         return this;
     };

@@ -22,7 +22,7 @@ describe('`mutation` method of an Genetic instance', () => {
 			.crossover()
 			.mutate()
 
-		const result = g.chromosomes
+		const result = g.newDna
 		const expected = [
 			[{ a: 9, e: [119] }, [[223, 50, 21]]],
 			[{ a: 9, e: [119] }, [[223, 50, 21]]],
@@ -54,7 +54,7 @@ describe('`mutation` method of an Genetic instance', () => {
 			.crossover()
 			.mutate()
 
-		let result = g.chromosomes
+		let result = g.newDna
 		let expected = [
 			[{ a: 8, e: [118] }, [[222, 49, 20]]],
 			[{ a: 8, e: [118] }, [[222, 49, 20]]],
@@ -76,7 +76,7 @@ describe('`mutation` method of an Genetic instance', () => {
 			.crossover()
 			.mutate()
 
-		result = g.chromosomes
+		result = g.newDna
 		expected = [
 			[{ a: 9, e: [119] }, [[223, 50, 21]]],
 			[{ a: 9, e: [119] }, [[223, 50, 21]]],
@@ -107,7 +107,7 @@ describe('`mutation` method of an Genetic instance', () => {
 			.crossover()
 			.mutate()
 
-		const result = g.chromosomes
+		const result = g.newDna
 		const expected = [
 			[{ a: 9, e: [119] }, [[223, 50, 21]]],
 			[{ a: 9, e: [119] }, [[223, 50, 21]]],

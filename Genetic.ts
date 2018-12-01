@@ -35,7 +35,7 @@ type MapDnaFunction = (newDna: DNA[]) => IPopMember[]
 
 export default class Genetic {
 	parents: DNA[] = []
-	chromosomes: DNA[] = []
+	newDna: DNA[] = []
 	generation: number = 1
 
 	population: IPopMember[]
@@ -129,14 +129,14 @@ export default class Genetic {
 					return targets[Math.floor(Math.random() * targets.length)]
 			}
 
-			this.chromosomes = new Array(this.amountOfDna).fill(null).map(() => deepAvrg(this.parents))
+			this.newDna = new Array(this.amountOfDna).fill(null).map(() => deepAvrg(this.parents))
 		} else if (this.modes.crossover === CrossoverModes.clone) {
 			let left = this.amountOfDna
 
 			while (left-- > 0) {
 				let chosen = Math.floor(Math.random() * this.parents.length)
 
-				this.chromosomes.push(JSON.parse(JSON.stringify(this.parents[chosen])))
+				this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])))
 			}
 		} else if (this.modes.crossover === CrossoverModes.average) {
 			const deepAvrg = (targets: any[]): any => {
@@ -156,7 +156,7 @@ export default class Genetic {
 
 			const res = JSON.stringify(deepAvrg(this.parents))
 
-			this.chromosomes = new Array(this.amountOfDna).fill(null).map(() => JSON.parse(res))
+			this.newDna = new Array(this.amountOfDna).fill(null).map(() => JSON.parse(res))
 		}
 
 		return this
@@ -176,12 +176,12 @@ export default class Genetic {
 				return target + this.mutationFunction(this.mutationRate)
 		}
 
-		this.chromosomes = this.chromosomes.map(deeper)
-		return this.chromosomes
+		this.newDna = this.newDna.map(deeper)
+		return this.newDna
 	}
 
 	finishGeneration(mapDnaFunction: MapDnaFunction): this {
-		this.population = mapDnaFunction(this.chromosomes)
+		this.population = mapDnaFunction(this.newDna)
 		this.generation++
 
 		return this
