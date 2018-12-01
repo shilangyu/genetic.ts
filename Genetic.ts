@@ -20,6 +20,7 @@ interface GeneticConstructor {
 		parentsSelection?: ParentsSelectionModes
 		crossover?: CrossoverModes
 	}
+	preserveParents: boolean
 }
 
 type DNA = any
@@ -48,6 +49,7 @@ export default class Genetic {
 		parentsSelection: ParentsSelectionModes
 		crossover: CrossoverModes
 	}
+	preserveParents: boolean
 
 	constructor({
 		population,
@@ -62,7 +64,8 @@ export default class Genetic {
 		} = {
 			parentsSelection: ParentsSelectionModes.best,
 			crossover: CrossoverModes.random
-		}
+		},
+		preserveParents = false
 	}: GeneticConstructor) {
 		this.population = population
 		this.amountOfDna = amountOfDna || population.length
@@ -74,6 +77,7 @@ export default class Genetic {
 			parentsSelection,
 			crossover
 		}
+		this.preserveParents = preserveParents
 	}
 
 	overwrite(overwriter: (self: this) => void): this {
@@ -90,7 +94,7 @@ export default class Genetic {
 
 	findParents(): this {
 		this.parents = []
-		
+
 		if (this.modes.parentsSelection === ParentsSelectionModes.best) {
 			this.parents = this.population
 				.sort((a, b) => a.fitness - b.fitness)
@@ -194,6 +198,13 @@ export default class Genetic {
 		}
 
 		this.newDna = this.newDna.map(deeper)
+
+		if (this.preserveParents) {
+			this.parents.forEach((parent, i) => {
+				this.newDna[i] = JSON.parse(JSON.stringify(parent))
+			})
+		}
+
 		return this
 	}
 

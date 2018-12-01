@@ -52,6 +52,7 @@
 						document.querySelector(`#${e}`)
 					)
 					return dna => {
+						dna = { ...dna }
 						dna.accuracy = Math.abs(f(dna.a, dna.b, dna.c, ENV.x1()))
 						dna.accuracy += Math.abs(f(dna.a, dna.b, dna.c, ENV.x2()))
 						prev.forEach(e => (e.innerText = dna[e.id]))
@@ -92,6 +93,7 @@
 				population: ENV.population.members,
 				mutationFunction: exports.chance(exports.add(-0.5, 0.5)),
 				fitnessFunction: mem => mem.calcFitness(ENV.x1(), ENV.x2()),
+				preserveParents: true,
 				modes: {
 					crossover: 'CLONE'
 				}

@@ -5,7 +5,7 @@ var Genetic = /** @class */ (function () {
         var population = _a.population, amountOfDna = _a.amountOfDna, mutationFunction = _a.mutationFunction, _b = _a.mutationRate, mutationRate = _b === void 0 ? 0.1 : _b, _c = _a.numberOfParents, numberOfParents = _c === void 0 ? 2 : _c, fitnessFunction = _a.fitnessFunction, _d = _a.modes, _e = _d === void 0 ? {
             parentsSelection: "BEST" /* best */,
             crossover: "RANDOM" /* random */
-        } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? "BEST" /* best */ : _f, _g = _e.crossover, crossover = _g === void 0 ? "RANDOM" /* random */ : _g;
+        } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? "BEST" /* best */ : _f, _g = _e.crossover, crossover = _g === void 0 ? "RANDOM" /* random */ : _g, _h = _a.preserveParents, preserveParents = _h === void 0 ? false : _h;
         this.parents = [];
         this.newDna = [];
         this.generation = 1;
@@ -19,6 +19,7 @@ var Genetic = /** @class */ (function () {
             parentsSelection: parentsSelection,
             crossover: crossover
         };
+        this.preserveParents = preserveParents;
     }
     Genetic.prototype.overwrite = function (overwriter) {
         overwriter(this);
@@ -139,6 +140,11 @@ var Genetic = /** @class */ (function () {
                 return target + _this.mutationFunction(_this.mutationRate);
         };
         this.newDna = this.newDna.map(deeper);
+        if (this.preserveParents) {
+            this.parents.forEach(function (parent, i) {
+                _this.newDna[i] = JSON.parse(JSON.stringify(parent));
+            });
+        }
         return this;
     };
     Genetic.prototype.finishGeneration = function (mapDnaFunction) {
