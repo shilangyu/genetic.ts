@@ -8,6 +8,7 @@ var Genetic = /** @class */ (function () {
         } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? "BEST" /* best */ : _f, _g = _e.crossover, crossover = _g === void 0 ? "RANDOM" /* random */ : _g;
         this.parents = [];
         this.chromosomes = [];
+        this.generation = 1;
         this.population = population;
         this.amountOfDna = amountOfDna || population.length;
         this.mutationFunction = mutationFunction;
@@ -133,6 +134,11 @@ var Genetic = /** @class */ (function () {
         };
         this.chromosomes = this.chromosomes.map(deeper);
         return this.chromosomes;
+    };
+    Genetic.prototype.finishGeneration = function (mapDnaFunction) {
+        this.population = mapDnaFunction(this.chromosomes);
+        this.generation++;
+        return this;
     };
     Genetic.validatePopulation = function (population) {
         if (!population.every(function (mem) { return 'fitness' in mem; }))

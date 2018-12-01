@@ -31,10 +31,12 @@ interface IPopMember {
 
 type MutationFunction = (mutationRate: number) => number
 type FitnessFunction = (member: IPopMember) => number
+type MapDnaFunction = (newDna: DNA[]) => IPopMember[]
 
 export default class Genetic {
 	parents: DNA[] = []
 	chromosomes: DNA[] = []
+	generation: number = 1
 
 	population: IPopMember[]
 	amountOfDna: number
@@ -176,6 +178,13 @@ export default class Genetic {
 
 		this.chromosomes = this.chromosomes.map(deeper)
 		return this.chromosomes
+	}
+
+	finishGeneration(mapDnaFunction: MapDnaFunction): this {
+		this.population = mapDnaFunction(this.chromosomes)
+		this.generation++
+
+		return this
 	}
 
 	static validatePopulation(population: any[]) {
