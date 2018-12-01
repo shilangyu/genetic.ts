@@ -91,7 +91,10 @@
 			const ga = new Genetic({
 				population: ENV.population.members,
 				mutationFunction: exports.chance(exports.add(-0.5, 0.5)),
-				fitnessFunction: mem => mem.calcFitness(ENV.x1(), ENV.x2())
+				fitnessFunction: mem => mem.calcFitness(ENV.x1(), ENV.x2()),
+				modes: {
+					crossover: 'CLONE'
+				}
 			})
 
 			setInterval(() => {

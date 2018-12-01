@@ -32,6 +32,7 @@ var Genetic = /** @class */ (function () {
         return this;
     };
     Genetic.prototype.findParents = function () {
+        this.parents = [];
         if (this.modes.parentsSelection === "BEST" /* best */) {
             this.parents = this.population
                 .sort(function (a, b) { return a.fitness - b.fitness; })
@@ -59,6 +60,7 @@ var Genetic = /** @class */ (function () {
     };
     Genetic.prototype.crossover = function () {
         var _this = this;
+        this.newDna = [];
         if (this.modes.crossover === "RANDOM" /* random */) {
             var deepAvrg_1 = function (targets) {
                 if (Array.isArray(targets[0])) {

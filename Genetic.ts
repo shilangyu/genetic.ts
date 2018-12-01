@@ -89,6 +89,8 @@ export default class Genetic {
 	}
 
 	findParents(): this {
+		this.parents = []
+		
 		if (this.modes.parentsSelection === ParentsSelectionModes.best) {
 			this.parents = this.population
 				.sort((a, b) => a.fitness - b.fitness)
@@ -122,6 +124,8 @@ export default class Genetic {
 	}
 
 	crossover(): this {
+		this.newDna = []
+
 		if (this.modes.crossover === CrossoverModes.random) {
 			const deepAvrg = (targets: any[]): any => {
 				if (Array.isArray(targets[0])) {
