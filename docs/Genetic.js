@@ -80,7 +80,9 @@ var Genetic = /** @class */ (function () {
                 else if (typeof targets[0] === 'number')
                     return targets[Math.floor(Math.random() * targets.length)];
             };
-            this.newDna = new Array(this.amountOfDna).fill(null).map(function () { return deepAvrg_1(_this.parents); });
+            this.newDna = new Array(this.amountOfDna)
+                .fill(null)
+                .map(function () { return deepAvrg_1(_this.parents); });
         }
         else if (this.modes.crossover === "CLONE" /* clone */) {
             var left = this.amountOfDna;
@@ -111,7 +113,9 @@ var Genetic = /** @class */ (function () {
                     return targets.reduce(function (prev, curr) { return prev + curr; }, 0) / targets.length;
             };
             var res_1 = JSON.stringify(deepAvrg_2(this.parents));
-            this.newDna = new Array(this.amountOfDna).fill(null).map(function () { return JSON.parse(res_1); });
+            this.newDna = new Array(this.amountOfDna)
+                .fill(null)
+                .map(function () { return JSON.parse(res_1); });
         }
         return this;
     };
@@ -140,6 +144,13 @@ var Genetic = /** @class */ (function () {
         this.generation++;
         return this;
     };
+    Genetic.prototype.nextGeneration = function (mapDnaFunction) {
+        return this.calculateFitness()
+            .findParents()
+            .crossover()
+            .mutate()
+            .finishGeneration(mapDnaFunction);
+    };
     Genetic.validatePopulation = function (population) {
         if (!population.every(function (mem) { return 'fitness' in mem; }))
             throw new Error('Member of the population is missing the fitness property.');
@@ -162,7 +173,9 @@ var Genetic = /** @class */ (function () {
                 throw new Error('Dna of a member of the population has an incorrect type.');
         }
         validateTypes(population);
-        var zip = function (a, b) { return a.map(function (e, i) { return [e, b[i]]; }); };
+        var zip = function (a, b) {
+            return a.map(function (e, i) { return [e, b[i]]; });
+        };
         function validateStructure(obj, model) {
             if (Array.isArray(model)) {
                 if (obj.length !== model.length)

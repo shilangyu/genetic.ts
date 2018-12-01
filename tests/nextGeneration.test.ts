@@ -1,6 +1,6 @@
 import Genetic from '../Genetic'
 
-describe('`finishGeneration` method of an Genetic instance', () => {
+describe('`nextGeneration` method of an Genetic instance', () => {
 	it('tests the generation counter increase', () => {
 		const g = new Genetic({
 			population: [],
@@ -8,7 +8,7 @@ describe('`finishGeneration` method of an Genetic instance', () => {
 			fitnessFunction: () => 0
 		})
 
-		g.finishGeneration(() => [])
+		g.nextGeneration(() => [])
 
 		const result = g.generation
 		const expected = 2
@@ -32,10 +32,7 @@ describe('`finishGeneration` method of an Genetic instance', () => {
 			fitnessFunction: () => 0
 		})
 
-		g.findParents()
-			.crossover()
-			.mutate()
-		g.finishGeneration(newDna => newDna.map(dna => ({ fitness: 0, dna })))
+		g.nextGeneration(newDna => newDna.map(dna => ({ fitness: 0, dna })))
 
 		const result = g.population
 		const expected = [
