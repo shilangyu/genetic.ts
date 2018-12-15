@@ -2,12 +2,39 @@
 
 A typescript library for genetic algorithms. Handles your parent finding, crossover and mutation. Contains also some helpful functions to get you started.
 
-- [before you start](#before-you-start)
+- [configuration](#configuration)
 - [usage](#usage)
+- [population](#population)
+- [fitness function](#fitness-function)
 - [modes](#modes)
 - [mutating](#mutating)
 
-## before you start
+---
+
+## configuration
+
+The `Genetic` class accepts a configuration object in the constructor. Genetic instance will follow the same structure. Here's the object it accepts with its defaults (those that do not have a default require a value to be passed):
+
+- `population`: array containing your members that satisfy the [IPopMember](#population) interface
+- `amountOfDna`: amount of new genes to create (default: length of your population)
+- `mutationFunction`: function to be used when mutating the genes | [see here](#mutating)
+- `mutationRate`: mutation rate of the algorithm (default: 0.1)
+- `amountOfParents`: amount of parents to be chosen in the mating pool (default: 2)
+- `fitnessFunction`: function to be used to assess each members fitness | [see here](#fitness-function)
+- `modes`: object containing properties specifying the modes:
+  - `parentsSelection`: method of choosing the parents (default: 'RANDOM') | [see here](#modes)
+  - `crossover`: method of crossing parents' genes (default: 'BEST') | [see here](#modes)
+- `preserveParents`: preservation of parents' genes in the new generation (default: false)
+
+---
+
+## usage
+
+/* TODO */
+
+---
+
+## population
 
 A population is considered correct when:
 
@@ -19,76 +46,30 @@ interface IPopMember {
 ```
 
 - it is an array
-- each element in the array is an object (`IPopMember`):
-  - containing a fitness property (`number`)
-  - containing a dna property:
+- each element in the array is an object implementing `IPopMember`:
+  - contains a fitness property (`number`)
+  - contains a dna property:
     - can be any data structure as long as it ends with a `number`
     - the structure is the same for every element in the array
 
 If you're unsure whether your population is correct you can always use the static method `Genetic.validatePopulation(pop)` that will throw an error if something is wrong.
 
-## usage
+---
 
-Genetic class methods are **chainable**. Meaning you can create your new genes in one go. Here's an example.
+## fitness function
+
+A fitness function accepts a member and returns its calculated fitness.
+
+A fitness function is considered correct when:
 
 ```ts
-import Genetic, {
-	CrossoverModes,
-	ParentsSelectionModes,
-	chance,
-	add
-} from './Genetic' /* 1 */
-const pop = [
-	{ fitness: 100, dna: { asd: 1, tut: 11 } },
-	{ fitness: 200, dna: { asd: 2, tut: 12 } },
-	{ fitness: 300, dna: { asd: 3, tut: 1 } },
-	{ fitness: 400, dna: { asd: 4, tut: 12 } },
-	{ fitness: 500, dna: { asd: 8, tut: 10 } }
-] /* 2 */
-
-Genetic.validatePopulation(pop) /* 3 */
-
-const newGenes = new Genetic({
-	population: pop,
-	mutationRate: 0.1,
-	mutationFunction: chance(add(-0.5, 0.5)),
-	numberOfParents: 2,
-	modes: {
-		parentsSelection: ParentsSelectionModes.best,
-		corssover: CrossoverModes.random
-	}
-}) /* 4 */
-	.findParents() /* 5 */
-	.crossover() /* 6 */
-	.mutate() /* 7 */
-
-const newPopulation = newGenes.map(dna => ({ fitness: 0, dna })) /* 8 */
+type FitnessFunction = (member: IPopMember) => number
 ```
 
-1. importing the class, Mode enums and 2 helper functions: `chance` and `add`
-2. creating a population that satisfies the `IPopMember[]` interface
-3. validating the population. If correct nothing will happen but if not an error with me thrown and the script will be terminated.
-4. initializing a Genetic instance. Takes an object as parameter:
+- will accept a member
+- will return a number
 
-- mutation rate (default: 0.1)
-- amount of parents (default: 2)
-- modes
-	- parent selection (default: 'BEST')
-	- crossover (default: 'RANDOM')
-
-5. finding parents. Takes 1 parameter:
-
-- a valid population
-
-6. creating new genes (chromosomes). Takes 1 parameter:
-
-- amount of genes to create
-
-7. mutating the previously created genes. Takes 1 parameter:
-
-- function that will return a number that will be added to a gene
-
-8. mapping the new genes to a new population
+---
 
 ## modes
 
@@ -102,36 +83,45 @@ _methods of choosing the parents_
 
 ###### Crossover modes:
 
-_methods of choosing the passed dna_
+_method of crossing parents' genes_
 
 `'RANDOM'`: randomly choosing a parent for each gene
 
-`'AVERAGE'`: averaging all parents' gene
+`'AVERAGE'`: averaging all parents' dna
 
-`'CLONE'`: randomly selecting a parent and cloning all of his genes
+`'CLONE'`: randomly selecting a parent and cloning his dna
+
+---
 
 ## mutating
 
-Here's what you need to know about the function that you're passing to the `mutate` method:
+A mutation function accepts data about the current gene and will return a number that will be added to the gene.
 
-- accept 1 argument:
-  - mutation rate
-- returns a number
+A mutation function is considered correct when:
+
+```ts
+type MutationFunction = (mutationRate: number) => number
+```
+
+- will accept a mutationRate
+- will return a number
+
+#### premade mutation functions
 
 Genetic.ts provides some pre-made functions for mutations:
 
-##### chance
+###### chance
 
 If you'd like to mutate only some properties (based on the mutation rate) wrap your function in `chance(yourFunction)`, like so:
 
 ```ts
-g.mutate(chance(mRate => 1 * mRate))
+const mutFunc = chance(mRate => 2 * mRate)
 ```
 
-##### add
+###### add
 
 If you'd like to mutate values by some random number in a range use `add(min, max)`:
 
 ```ts
-g.mutate(add(-0.3, 0.3)) /* min inclusive, max exclusive */
+const mutFunc = add(-0.3, 0.3) /* min inclusive, max exclusive */
 ```
