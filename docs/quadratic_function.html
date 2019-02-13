@@ -16,8 +16,7 @@
 
 	<body>
 		Description: <br />
-		The genetic algorithm tries to find a, b, and c knowing the 2 roots of that
-		function. <br />
+		The genetic algorithm tries to find a, b, and c knowing the 2 roots of that function. <br />
 		<br />the formula: <br />
 		f(x) = ax<sup>2</sup> + bx + c <br />
 		<br />Roots: <br />
@@ -48,9 +47,7 @@
 					return () => Number(ref.value)
 				})(),
 				setBest: (() => {
-					const prev = ['a', 'b', 'c', 'accuracy'].map(e =>
-						document.querySelector(`#${e}`)
-					)
+					const prev = ['a', 'b', 'c', 'accuracy'].map(e => document.querySelector(`#${e}`))
 					return dna => {
 						dna = { ...dna }
 						dna.accuracy = Math.abs(f(dna.a, dna.b, dna.c, ENV.x1()))
