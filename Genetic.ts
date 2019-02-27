@@ -20,7 +20,7 @@ interface GeneticConstructor {
 		parentsSelection?: ParentsSelectionModes
 		crossover?: CrossoverModes
 	}
-	preserveParents: boolean
+	preserveParents?: boolean
 }
 
 type DNA = any
