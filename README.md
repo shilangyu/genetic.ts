@@ -30,7 +30,77 @@ The `Genetic` class accepts a configuration object in the constructor. Genetic i
 
 ## usage
 
-/* TODO */
+See [examples](https://shilangyu.github.io/Genetic.js). Source code is in `docs/`.
+
+```ts
+import Genetic, { CrossoverModes, chance, add } from './Genetic.ts' /* import the library */
+
+const population = [
+	{
+		dna: [1, 2, 4],
+		fit: function() {
+			return this.dna.reduce((a, b) => a + b)
+		}
+	},
+	{
+		dna: [4, 4, 8],
+		fit: function() {
+			return this.dna.reduce((a, b) => a + b)
+		}
+	},
+	{
+		dna: [11, 3, 7],
+		fit: function() {
+			return this.dna.reduce((a, b) => a + b)
+		}
+	}
+]
+
+/* create your genetic object */
+const ga = new Genetic({
+	population: population /* set your population */,
+	mutationFunction: chance(add(-0.5, 0.5)) /* add mutation function */,
+	fitnessFunction: mem => mem.fit() /* add fitness function */
+})
+
+/* All Genetic's methods are chainable */
+ga.calculateFitness() /* calls previously passed fitnessFunction on all members */
+	.findParents() /* finds parents using the passed mode */
+	.crossover() /* creates new genes using the passed mode */
+	.mutate() /* mutates the genes using the passed mode */
+	.finishGeneration(newGenes => {
+		newGenes.forEach((g, i) => {
+			population[i].dna = g
+		})
+		return population
+	}) /* here you map the new genes to your population, then return the ready population. It will also increment the generation count */
+
+/* or use the `nextGeneration` method to do the above all at once */
+ga.nextGeneration(newGenes => {
+	newGenes.forEach((g, i) => {
+		population[i].dna = g
+	})
+	return population
+})
+```
+
+If you wish to use the `.js` version it is located in the `docs/` folder. The usage is identical however enums are not available so use the capitalized string version:
+
+ts:
+
+```js
+modes: {
+	crossover: CrossoverModes.clone
+}
+```
+
+js:
+
+```js
+modes: {
+	crossover: 'CLONE'
+}
+```
 
 ---
 
