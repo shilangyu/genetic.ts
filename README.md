@@ -60,7 +60,10 @@ const population = [
 const ga = new Genetic({
 	population: population /* set your population */,
 	mutationFunction: chance(add(-0.5, 0.5)) /* add mutation function */,
-	fitnessFunction: mem => mem.fit() /* add fitness function */
+	fitnessFunction: mem => mem.fit() /* add fitness function */,
+	modes: {
+		crossover: CrossoverModes.clone /* overwrite default modes with enums */
+	}
 })
 
 /* All Genetic's methods are chainable */
