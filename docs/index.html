@@ -38,11 +38,17 @@
 					</div>
 				</div>
 			`
-			document.querySelector('#previews').innerHTML = Card(
-				'Quadratic function',
-				'The genetic algorithm tries to find a, b, and c of a function knowing its 2 roots.',
-				'./quadratic_function.html'
-			)
+			document.querySelector('#previews').innerHTML =
+				Card(
+					'Quadratic function',
+					'The genetic algorithm tries to find a, b, and c of a function knowing its 2 roots.',
+					'./quadratic_function.html'
+				) +
+				Card(
+					`Shakespeare's monkeys`,
+					'The gentic algorithm tries to reach your sentence.',
+					'./shakespeare-monkey.html'
+				)
 		</script>
 	</body>
 </html>
