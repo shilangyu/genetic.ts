@@ -1,12 +1,12 @@
-export const enum ParentsSelectionModes {
-	best = 'BEST',
-	probability = 'PROBABILITY'
+export enum ParentsSelectionModes {
+	best,
+	probability
 }
 
-export const enum CrossoverModes {
-	random = 'RANDOM',
-	average = 'AVERAGE',
-	clone = 'CLONE'
+export enum CrossoverModes {
+	random,
+	average,
+	clone
 }
 
 interface GeneticConstructor {

@@ -1,11 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var ParentsSelectionModes;
+(function (ParentsSelectionModes) {
+    ParentsSelectionModes[ParentsSelectionModes["best"] = 0] = "best";
+    ParentsSelectionModes[ParentsSelectionModes["probability"] = 1] = "probability";
+})(ParentsSelectionModes = exports.ParentsSelectionModes || (exports.ParentsSelectionModes = {}));
+var CrossoverModes;
+(function (CrossoverModes) {
+    CrossoverModes[CrossoverModes["random"] = 0] = "random";
+    CrossoverModes[CrossoverModes["average"] = 1] = "average";
+    CrossoverModes[CrossoverModes["clone"] = 2] = "clone";
+})(CrossoverModes = exports.CrossoverModes || (exports.CrossoverModes = {}));
 var Genetic = /** @class */ (function () {
     function Genetic(_a) {
         var population = _a.population, amountOfDna = _a.amountOfDna, mutationFunction = _a.mutationFunction, _b = _a.mutationRate, mutationRate = _b === void 0 ? 0.1 : _b, _c = _a.numberOfParents, numberOfParents = _c === void 0 ? 2 : _c, fitnessFunction = _a.fitnessFunction, _d = _a.modes, _e = _d === void 0 ? {
-            parentsSelection: "BEST" /* best */,
-            crossover: "RANDOM" /* random */
-        } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? "BEST" /* best */ : _f, _g = _e.crossover, crossover = _g === void 0 ? "RANDOM" /* random */ : _g, _h = _a.preserveParents, preserveParents = _h === void 0 ? false : _h;
+            parentsSelection: ParentsSelectionModes.best,
+            crossover: CrossoverModes.random
+        } : _d, _f = _e.parentsSelection, parentsSelection = _f === void 0 ? ParentsSelectionModes.best : _f, _g = _e.crossover, crossover = _g === void 0 ? CrossoverModes.random : _g, _h = _a.preserveParents, preserveParents = _h === void 0 ? false : _h;
         this.parents = [];
         this.newDna = [];
         this.generation = 1;
@@ -34,13 +45,13 @@ var Genetic = /** @class */ (function () {
     };
     Genetic.prototype.findParents = function () {
         this.parents = [];
-        if (this.modes.parentsSelection === "BEST" /* best */) {
+        if (this.modes.parentsSelection === ParentsSelectionModes.best) {
             this.parents = this.population
                 .sort(function (a, b) { return a.fitness - b.fitness; })
                 .slice(-this.numberOfParents)
                 .map(function (e) { return e.dna; });
         }
-        else if (this.modes.parentsSelection === "PROBABILITY" /* probability */) {
+        else if (this.modes.parentsSelection === ParentsSelectionModes.probability) {
             var left = this.numberOfParents;
             var fitnessSum = this.population.reduce(function (prev, curr) { return prev + curr.fitness; }, 0);
             while (left-- > 0) {
@@ -62,7 +73,7 @@ var Genetic = /** @class */ (function () {
     Genetic.prototype.crossover = function () {
         var _this = this;
         this.newDna = [];
-        if (this.modes.crossover === "RANDOM" /* random */) {
+        if (this.modes.crossover === CrossoverModes.random) {
             var deepAvrg_1 = function (targets) {
                 if (Array.isArray(targets[0])) {
                     return new Array(targets[0].length)
@@ -85,14 +96,14 @@ var Genetic = /** @class */ (function () {
             };
             this.newDna = new Array(this.amountOfDna).fill(null).map(function () { return deepAvrg_1(_this.parents); });
         }
-        else if (this.modes.crossover === "CLONE" /* clone */) {
+        else if (this.modes.crossover === CrossoverModes.clone) {
             var left = this.amountOfDna;
             while (left-- > 0) {
                 var chosen = Math.floor(Math.random() * this.parents.length);
                 this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])));
             }
         }
-        else if (this.modes.crossover === "AVERAGE" /* average */) {
+        else if (this.modes.crossover === CrossoverModes.average) {
             var deepAvrg_2 = function (targets) {
                 if (Array.isArray(targets[0])) {
                     return new Array(targets[0].length)

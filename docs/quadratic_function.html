@@ -91,7 +91,7 @@
 				fitnessFunction: mem => mem.calcFitness(ENV.x1(), ENV.x2()),
 				preserveParents: true,
 				modes: {
-					crossover: 'CLONE'
+					crossover: exports.CrossoverModes.average
 				}
 			})
 

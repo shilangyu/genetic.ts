@@ -22,8 +22,8 @@ The `Genetic` class accepts a configuration object in the constructor. Genetic i
 - `amountOfParents`: amount of parents to be chosen in the mating pool (default: 2)
 - `fitnessFunction`: function to be used to assess each members fitness | [see here](#fitness-function)
 - `modes`: object containing properties specifying the modes:
-  - `parentsSelection`: method of choosing the parents (default: 'RANDOM') | [see here](#modes)
-  - `crossover`: method of crossing parents' genes (default: 'BEST') | [see here](#modes)
+  - `parentsSelection`: method of choosing the parents (default: 'random') | [see here](#modes)
+  - `crossover`: method of crossing parents' genes (default: 'best') | [see here](#modes)
 - `preserveParents`: preservation of parents' genes in the new generation (default: false)
 
 ---
@@ -87,23 +87,7 @@ ga.nextGeneration(newGenes => {
 })
 ```
 
-If you wish to use the `.js` version it is located in the `docs/` folder. The usage is identical however enums are not available so use the capitalized string version:
-
-ts:
-
-```js
-modes: {
-	crossover: CrossoverModes.clone
-}
-```
-
-js:
-
-```js
-modes: {
-	crossover: 'CLONE'
-}
-```
+If you wish to use the `.js` version it is located in the `docs/` folder. The usage is identical.
 
 ---
 
@@ -150,19 +134,19 @@ type FitnessFunction = (member: IPopMember) => number
 
 _methods of choosing the parents_
 
-`'BEST'`: takes members with highest fitness scores
+`best`: takes members with highest fitness scores
 
-`'PROBABILITY'`: selects members based on their fitness scores that will correspond to the chance of being chosen
+`probability`: selects members based on their fitness scores that will correspond to the chance of being chosen
 
 ###### Crossover modes:
 
 _method of crossing parents' genes_
 
-`'RANDOM'`: randomly choosing a parent for each gene
+`random`: randomly choosing a parent for each gene
 
-`'AVERAGE'`: averaging all parents' dna
+`average`: averaging all parents' dna
 
-`'CLONE'`: randomly selecting a parent and cloning his dna
+`clone`: randomly selecting a parent and cloning his dna
 
 ---
 
