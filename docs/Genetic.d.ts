@@ -7,12 +7,12 @@ export declare enum CrossoverModes {
     average = 1,
     clone = 2
 }
-interface GeneticConstructor {
-    population: IPopMember[];
+interface GeneticConstructor<T> {
+    population: T[];
     amountOfDna?: number;
     mutationFunction: MutationFunction;
     mutationRate?: number;
-    fitnessFunction: FitnessFunction;
+    fitnessFunction: FitnessFunction<T>;
     numberOfParents?: number;
     modes?: {
         parentsSelection?: ParentsSelectionModes;
@@ -26,31 +26,31 @@ interface IPopMember {
     dna: DNA;
 }
 declare type MutationFunction = (mutationRate: number) => number;
-declare type FitnessFunction = (member: IPopMember) => number;
-declare type MapDnaFunction = (newDna: DNA[]) => IPopMember[];
-export default class Genetic {
+declare type FitnessFunction<T> = (member: T) => number;
+declare type MapDnaFunction<T> = (newDna: DNA[]) => T[];
+export default class Genetic<MemberType extends IPopMember> {
     parents: DNA[];
     newDna: DNA[];
     generation: number;
-    population: IPopMember[];
+    population: MemberType[];
     amountOfDna: number;
     mutationFunction: MutationFunction;
     mutationRate: number;
-    fitnessFunction: FitnessFunction;
+    fitnessFunction: FitnessFunction<MemberType>;
     numberOfParents: number;
     modes: {
         parentsSelection: ParentsSelectionModes;
         crossover: CrossoverModes;
     };
     preserveParents: boolean;
-    constructor({ population, amountOfDna, mutationFunction, mutationRate, numberOfParents, fitnessFunction, modes: { parentsSelection, crossover }, preserveParents }: GeneticConstructor);
+    constructor({ population, amountOfDna, mutationFunction, mutationRate, numberOfParents, fitnessFunction, modes: { parentsSelection, crossover }, preserveParents }: GeneticConstructor<MemberType>);
     overwrite(overwriter: (self: this) => void): this;
     calculateFitness(): this;
     findParents(): this;
     crossover(): this;
     mutate(): this;
-    finishGeneration(mapDnaFunction: MapDnaFunction): this;
-    nextGeneration(mapDnaFunction: MapDnaFunction): this;
+    finishGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this;
+    nextGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this;
     static validatePopulation(population: any[]): void;
 }
 export declare const chance: (func: MutationFunction) => MutationFunction;

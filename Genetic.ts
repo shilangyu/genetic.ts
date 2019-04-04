@@ -9,12 +9,12 @@ export enum CrossoverModes {
 	clone
 }
 
-interface GeneticConstructor {
-	population: IPopMember[]
+interface GeneticConstructor<T> {
+	population: T[]
 	amountOfDna?: number
 	mutationFunction: MutationFunction
 	mutationRate?: number
-	fitnessFunction: FitnessFunction
+	fitnessFunction: FitnessFunction<T>
 	numberOfParents?: number
 	modes?: {
 		parentsSelection?: ParentsSelectionModes
@@ -31,19 +31,19 @@ interface IPopMember {
 }
 
 type MutationFunction = (mutationRate: number) => number
-type FitnessFunction = (member: IPopMember) => number
-type MapDnaFunction = (newDna: DNA[]) => IPopMember[]
+type FitnessFunction<T> = (member: T) => number
+type MapDnaFunction<T> = (newDna: DNA[]) => T[]
 
-export default class Genetic {
+export default class Genetic<MemberType extends IPopMember> {
 	parents: DNA[] = []
 	newDna: DNA[] = []
 	generation: number = 1
 
-	population: IPopMember[]
+	population: MemberType[]
 	amountOfDna: number
 	mutationFunction: MutationFunction
 	mutationRate: number
-	fitnessFunction: FitnessFunction
+	fitnessFunction: FitnessFunction<MemberType>
 	numberOfParents: number
 	modes: {
 		parentsSelection: ParentsSelectionModes
@@ -63,7 +63,7 @@ export default class Genetic {
 			crossover: CrossoverModes.random
 		},
 		preserveParents = false
-	}: GeneticConstructor) {
+	}: GeneticConstructor<MemberType>) {
 		this.population = population
 		this.amountOfDna = amountOfDna || population.length
 		this.mutationFunction = mutationFunction
@@ -195,14 +195,14 @@ export default class Genetic {
 		return this
 	}
 
-	finishGeneration(mapDnaFunction: MapDnaFunction): this {
+	finishGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
 		this.population = mapDnaFunction(this.newDna)
 		this.generation++
 
 		return this
 	}
 
-	nextGeneration(mapDnaFunction: MapDnaFunction): this {
+	nextGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
 		return this.calculateFitness()
 			.findParents()
 			.crossover()
