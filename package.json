@@ -1,13 +1,15 @@
 {
 	"name": "geneticjs",
 	"version": "1.0.0",
-	"description": "Simple and clear JavaScript class for genetic algorithms. Contains helpful warning and error messages to enhance your understanding.",
-	"main": "Genetic.js",
-	"directories": {
-		"example": "examples"
-	},
+	"description": "Simple and clear JavaScript class for genetic algorithms. Contains helpful functions to get you going.",
+	"main": "./dist/Genetic.js",
+	"types": "./dist/Genetic.d.ts",
 	"scripts": {
-		"test": "jest --no-cache"
+		"test": "jest --no-cache",
+		"build": "tsc",
+		"prepare": "npm run build",
+		"prepublishOnly": "pnpm test",
+		"postversion": "git push && git push --tags"
 	},
 	"husky": {
 		"hooks": {
@@ -18,8 +20,13 @@
 		"type": "git",
 		"url": "git+https://github.com/clitcancer/Genetic.js.git"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"GA",
+		"genetic",
+		"genetic-algorithm",
+		"neuro-evolution"
+	],
+	"author": "Marcin Wojnarowski @shilangyu",
 	"license": "ISC",
 	"bugs": {
 		"url": "https://github.com/clitcancer/Genetic.js/issues"
@@ -31,5 +38,8 @@
 		"jest": "^23.6.0",
 		"ts-jest": "^23.10.4",
 		"typescript": "^3.1.6"
-	}
+	},
+	"files": [
+		"dist/**/*"
+	]
 }
