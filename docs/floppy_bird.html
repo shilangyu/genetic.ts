@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Genetic.js - Floppy bird</title>
+		<script>
+			const exports = {}
+		</script>
+		<script src="./Genetic.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+	</head>
+
+	<body>
+		Description: <br />
+		The genetic algorithm trains a population of birds that make decisions with a neural network.
+		<br />
+		Speed: <input type="range" id="speed" value="1" max="100" min="1" step="1" /> <br />
+
+		<script>
+			const ENV = {
+				population: {
+					size: 100,
+					members: []
+				},
+				walls: {
+					xoffset: 400,
+					tunnelHeight: 50,
+					members: []
+				},
+				canvas: {
+					size: 400
+				},
+				speed: (() => {
+					const ref = document.querySelector('#speed')
+					return () => Number(ref.value)
+				})()
+			}
+
+			let ga
+
+			const feedforward = (inputs, weights) => {
+				const actifunc = x => 1 / (1 + Math.exp(-x))
+
+				const firstLayer = weights[0].reduce(
+					(prev, curr) => [
+						...prev,
+						actifunc(curr.reduce((prev, curr, i) => prev + curr * [...inputs, 1][i], 0))
+					],
+					[]
+				)
+
+				const outputLayer = weights[1].reduce(
+					(prev, curr) => [
+						...prev,
+						actifunc(curr.reduce((prev, curr, i) => prev + curr * [...firstLayer, 1][i], 0))
+					],
+					[]
+				)
+
+				return outputLayer.indexOf(Math.max(...outputLayer))
+			}
+
+			class Bird {
+				constructor(dna) {
+					this.dna = dna || [
+						Array(4)
+							.fill()
+							.map(e =>
+								Array(4 + 1)
+									.fill()
+									.map(e => Math.random())
+							),
+						Array(2)
+							.fill()
+							.map(e =>
+								Array(4 + 1)
+									.fill()
+									.map(e => Math.random())
+							)
+					]
+
+					this.pos = {
+						x: width / 20,
+						y: height / 2
+					}
+					this.vel = {
+						x: 0,
+						y: 0
+					}
+					this.acc = {
+						x: 0,
+						y: 0.1
+					}
+
+					this.color = [Math.floor(Math.random() * 100), 100, 50]
+
+					this.size = 30
+
+					this.isDead = false
+
+					this.lifespan = 0
+					this.distFromDeathWall = Infinity
+				}
+
+				calculateFitness() {
+					return this.lifespan + (this.distFromDeathWall > 100 ? 0 : 1 / this.distFromDeathWall)
+				}
+
+				update() {
+					this.vel.x += this.acc.x
+					this.vel.y += this.acc.y
+
+					this.pos.x += this.vel.x
+					this.pos.y += this.vel.y
+
+					this.lifespan++
+				}
+
+				draw() {
+					push()
+					noStroke()
+					fill(...this.color)
+					ellipse(this.pos.x, this.pos.y, this.size)
+					pop()
+				}
+
+				checkDead(wall) {
+					const { x, y } = this.pos
+
+					const outOfBounds = y - this.size < 0 || y + this.size > height
+					const hitWall =
+						x > wall.pos.x &&
+						x < wall.pos.x + wall.width &&
+						(y < wall.pos.y - wall.height / 2 || y > wall.pos.y + wall.height / 2)
+
+					this.isDead = outOfBounds || hitWall
+
+					if (this.isDead) {
+						this.distFromDeathWall = Math.abs(wall.pos.y - this.pos.y)
+					}
+				}
+
+				checkJump(wall) {
+					const inputs = [
+						(this.vel.y + 6) / 12,
+						this.pos.y / height,
+						(wall.pos.x - this.pos.x) / ENV.walls.xoffset,
+						(wall.pos.y - height * 0.15) / (height * 0.7)
+					]
+					// if (inputs.some(e => e > 1 || e < 0)) console.log(inputs)
+					if (feedforward(inputs, this.dna)) {
+						this.vel.y -= 3
+					}
+				}
+			}
+
+			class Wall {
+				constructor(xoffset) {
+					this.pos = {
+						x: xoffset,
+						y: Math.random() * (height * 0.7) + height * 0.15
+					}
+					this.vel = {
+						x: -2,
+						y: 0
+					}
+
+					this.width = 15
+					this.height = ENV.walls.tunnelHeight
+				}
+
+				update() {
+					this.pos.x += this.vel.x
+					this.pos.y += this.vel.y
+				}
+
+				draw() {
+					push()
+					noStroke()
+					fill(100, 0, 0)
+					rect(this.pos.x, 0, this.width, this.pos.y - this.height / 2)
+					rect(this.pos.x, this.pos.y + this.height / 2, this.width, height)
+					pop()
+				}
+			}
+
+			function setup() {
+				createCanvas(ENV.canvas.size, ENV.canvas.size)
+				colorMode(HSB)
+
+				ga = new Genetic({
+					population: newGen(),
+					mutationFunction: exports.chance(exports.add(-0.01, 0.01)),
+					fitnessFunction: mem => mem.calculateFitness(),
+					preserveParents: true,
+					mutationRate: 0.01,
+					modes: {
+						crossover: 'CLONE',
+						parentSelection: 'BEST'
+					}
+				})
+			}
+
+			function newGen(genes) {
+				ENV.population.members = Array(ENV.population.size)
+					.fill()
+					.map((e, i) => (genes ? new Bird(genes[i]) : new Bird()))
+
+				ENV.walls.members = Array(100)
+					.fill()
+					.map((e, i) => new Wall((i + 1) * ENV.walls.xoffset))
+
+				return ENV.population.members
+			}
+
+			function draw() {
+				let speed = ENV.speed()
+				while (speed--) {
+					background(151, 0, 50)
+
+					let allDead = true
+					const thinkWall = ENV.walls.members.find(
+						e => e.pos.x > 0 && e.pos.x - ENV.population.members[0].pos.x > 0
+					)
+					const collisionWall = ENV.walls.members.find(e => e.pos.x > 0)
+					for (const bird of ENV.population.members) {
+						if (!bird.isDead) {
+							allDead = false
+							bird.draw()
+							bird.update()
+							bird.checkJump(thinkWall)
+							bird.checkDead(collisionWall)
+						}
+					}
+					if (allDead) {
+						ga.calculateFitness()
+							.findParents()
+							.crossover()
+							.mutate()
+							.finishGeneration(newGenes => newGen(newGenes))
+					}
+
+					for (const wall of ENV.walls.members) {
+						wall.draw()
+						wall.update()
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
