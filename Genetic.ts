@@ -77,11 +77,6 @@ export default class Genetic<MemberType extends IPopMember> {
 		this.preserveParents = preserveParents
 	}
 
-	overwrite(overwriter: (self: this) => void): this {
-		overwriter(this)
-		return this
-	}
-
 	calculateFitness(): this {
 		for (const member of this.population) member.fitness = this.fitnessFunction(member)
 
