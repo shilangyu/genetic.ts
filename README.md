@@ -1,6 +1,6 @@
 # Genetic.js
 
-A typescript library for genetic algorithms. Handles your parent finding, crossover and mutation. Contains also some helpful functions to get you started.
+A simple yet powerful and hackable Genetic Algorithm library. Handles your parent finding, crossover and mutation. Contains also some helpful functions to get you started quick.
 
 - [configuration](#configuration)
 - [installation](#installation)
@@ -17,19 +17,25 @@ A typescript library for genetic algorithms. Handles your parent finding, crosso
 As a module:
 
 ```sh
-npm i --save geneticjs
+npm i --save genetic.ts
 ```
 
 or
 
 ```sh
-pnpm i --save geneticjs
+pnpm i --save genetic.ts
 ```
 
 or
 
 ```sh
-yarn add geneticjs
+yarn add genetic.ts
+```
+
+For browser:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/genetic.ts/dist/Genetic.browser.min.js"></script>
 ```
 
 ---
@@ -53,7 +59,7 @@ The `genetic.Instance` class accepts a configuration object in the constructor. 
 
 ## usage
 
-See [examples](https://shilangyu.github.io/Genetic.js). Source code is in `docs/`.
+See [examples](https://shilangyu.github.io/genetic.ts). Source code is in `docs/`.
 
 ```ts
 import * as genetic from 'genetic.ts' /* import the library, this object will be available globally if imported through HTML */
