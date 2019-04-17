@@ -56,7 +56,7 @@ The `genetic.Instance` class accepts a configuration object in the constructor. 
 See [examples](https://shilangyu.github.io/Genetic.js). Source code is in `docs/`.
 
 ```ts
-import * as genetic from 'geneticjs' /* import the library, this object will be available globally if imported through HTML */
+import * as genetic from 'genetic.ts' /* import the library, this object will be available globally if imported through HTML */
 
 const population = [
 	{
