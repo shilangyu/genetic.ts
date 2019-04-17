@@ -10,7 +10,7 @@
 		"prepare": "npm run build && npm run browser",
 		"prepublishOnly": "pnpm test",
 		"postversion": "git push && git push --tags",
-		"browser": "npx browserify ./dist/Genetic.js --standalone Genetic | npx uglify-es -o ./dist/Genetic.browser.min.js"
+		"browser": "npx browserify ./dist/Genetic.js --standalone genetic | npx uglify-es -o ./dist/Genetic.browser.min.js"
 	},
 	"husky": {
 		"hooks": {
