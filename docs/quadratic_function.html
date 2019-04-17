@@ -3,10 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>Genetic.js - Quadratic function</title>
-		<script>
-			const exports = {}
-		</script>
-		<script src="./Genetic.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/genetic.ts/dist/Genetic.browser.min.js"></script>
 		<style>
 			input {
 				width: 30px;
@@ -17,7 +14,7 @@
 	<body>
 		Description: <br />
 		The genetic algorithm tries to find a, b, and c knowing the 2 roots of that function. <br />
-		<br />the formula: <br />
+		<br />The formula: <br />
 		f(x) = ax<sup>2</sup> + bx + c <br />
 		<br />Roots: <br />
 		f( <input id="x1" value="-1" />) = 0 <br />
@@ -25,7 +22,7 @@
 
 		<br />
 		<br />
-		best guess: <br />
+		Best guess: <br />
 		a = <span id="a"></span> <br />
 		b = <span id="b"></span> <br />
 		c = <span id="c"></span> <br />
@@ -85,13 +82,13 @@
 			}
 			initPopulation()
 
-			const ga = new Genetic({
+			const ga = new genetic.Instance({
 				population: ENV.population.members,
-				mutationFunction: exports.chance(exports.add(-0.5, 0.5)),
+				mutationFunction: genetic.chance(genetic.add(-0.5, 0.5)),
 				fitnessFunction: mem => mem.calcFitness(ENV.x1(), ENV.x2()),
 				preserveParents: true,
 				modes: {
-					crossover: exports.CrossoverModes.average
+					crossover: genetic.CrossoverModes.average
 				}
 			})
 
