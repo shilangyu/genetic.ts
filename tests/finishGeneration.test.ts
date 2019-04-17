@@ -1,8 +1,8 @@
-import Genetic from '../Genetic'
+import { Instance } from '../Genetic'
 
 describe('`finishGeneration` method of an Genetic instance', () => {
 	it('tests the generation counter increase', () => {
-		const g = new Genetic({
+		const g = new Instance({
 			population: [],
 			mutationFunction: () => 1,
 			fitnessFunction: () => 0
@@ -25,7 +25,7 @@ describe('`finishGeneration` method of an Genetic instance', () => {
 			{ fitness: 500, dna: { asd: 8, tut: 10 } }
 		]
 
-		const g = new Genetic({
+		const g = new Instance({
 			population: mockPopulation,
 			numberOfParents: 1,
 			mutationFunction: () => 0,

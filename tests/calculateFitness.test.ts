@@ -1,4 +1,4 @@
-import Genetic from '../Genetic'
+import { Instance } from '../Genetic'
 
 describe('`calculateFitness` method of an Genetic instance', () => {
 	it('tests calculation of fitness', () => {
@@ -10,7 +10,7 @@ describe('`calculateFitness` method of an Genetic instance', () => {
 			{ fitness: 0, dna: { asd: 5, a: [4, 2] } }
 		]
 
-		const g = new Genetic({
+		const g = new Instance({
 			fitnessFunction: ({ dna }) => dna.asd + dna.a[1] * dna.a[0],
 			population: mockPopulation,
 			mutationFunction: () => 1

@@ -1,4 +1,4 @@
-import Genetic, { CrossoverModes, chance, add } from '../Genetic'
+import { Instance, CrossoverModes, chance, add } from '../Genetic'
 
 describe('`mutation` method of an Genetic instance', () => {
 	it('tests adding 1 to a property', () => {
@@ -10,7 +10,7 @@ describe('`mutation` method of an Genetic instance', () => {
 			{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 		]
 
-		const g = new Genetic({
+		const g = new Instance({
 			population: mockPopulation,
 			amountOfDna: 3,
 			mutationFunction: () => 1,
@@ -41,7 +41,7 @@ describe('`mutation` method of an Genetic instance', () => {
 			{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 		]
 
-		let g = new Genetic({
+		let g = new Instance({
 			population: mockPopulation,
 			amountOfDna: 3,
 			mutationFunction: chance(() => 1),
@@ -63,7 +63,7 @@ describe('`mutation` method of an Genetic instance', () => {
 
 		expect(result).toEqual(expected)
 
-		g = new Genetic({
+		g = new Instance({
 			population: mockPopulation,
 			amountOfDna: 3,
 			mutationFunction: chance(() => 1),
@@ -95,7 +95,7 @@ describe('`mutation` method of an Genetic instance', () => {
 			{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 		]
 
-		const g = new Genetic({
+		const g = new Instance({
 			population: mockPopulation,
 			amountOfDna: 3,
 			mutationFunction: add(1, 1),

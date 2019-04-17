@@ -1,4 +1,4 @@
-import Genetic from '../Genetic'
+import { validatePopulation } from '../Genetic'
 
 describe('`validatePopulation` static method of the Genetic class', () => {
 	it('tests missing fitness', () => {
@@ -14,7 +14,7 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 		let result = ''
 
 		try {
-			Genetic.validatePopulation(mockPopulation)
+			validatePopulation(mockPopulation)
 		} catch (err) {
 			result = err.message
 		}
@@ -31,12 +31,11 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 			{ fitness: 500, dna: { asd: 5 } }
 		]
 
-		const expected =
-			'Fitness of a member of the population is not of type number.'
+		const expected = 'Fitness of a member of the population is not of type number.'
 		let result = ''
 
 		try {
-			Genetic.validatePopulation(mockPopulation)
+			validatePopulation(mockPopulation)
 		} catch (err) {
 			result = err.message
 		}
@@ -57,7 +56,7 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 		let result = ''
 
 		try {
-			Genetic.validatePopulation(mockPopulation)
+			validatePopulation(mockPopulation)
 		} catch (err) {
 			result = err.message
 		}
@@ -78,7 +77,7 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 		let result = ''
 
 		try {
-			Genetic.validatePopulation(mockPopulation)
+			validatePopulation(mockPopulation)
 		} catch (err) {
 			result = err.message
 		}
@@ -95,12 +94,11 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 			{ fitness: 500, dna: { asd: { abc: [1, 2, [0]] } } }
 		]
 
-		const expected =
-			'Dna of a member of the population has a different structure.'
+		const expected = 'Dna of a member of the population has a different structure.'
 		let result = ''
 
 		try {
-			Genetic.validatePopulation(mockPopulation)
+			validatePopulation(mockPopulation)
 		} catch (err) {
 			result = err.message
 		}
@@ -121,7 +119,7 @@ describe('`validatePopulation` static method of the Genetic class', () => {
 		let result = ''
 
 		try {
-			Genetic.validatePopulation(mockPopulation)
+			validatePopulation(mockPopulation)
 		} catch (err) {
 			result = err.message
 		}

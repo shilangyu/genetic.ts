@@ -1,4 +1,4 @@
-import Genetic, { CrossoverModes } from '../Genetic'
+import { Instance, CrossoverModes } from '../Genetic'
 
 describe('`crossover` method of an Genetic instance', () => {
 	describe('random gene crossover', () => {
@@ -11,7 +11,7 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: { asd: 8, tut: 10 } }
 			]
 
-			const g = new Genetic({
+			const g = new Instance({
 				population: mockPopulation,
 				amountOfDna: 3,
 				mutationFunction: () => 1,
@@ -34,7 +34,7 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 			]
 
-			const g = new Genetic({
+			const g = new Instance({
 				population: mockPopulation,
 				amountOfDna: 3,
 				mutationFunction: () => 1,
@@ -59,7 +59,7 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: { asd: 8, tut: 10 } }
 			]
 
-			const g = new Genetic({
+			const g = new Instance({
 				population: mockPopulation,
 				numberOfParents: 1,
 				amountOfDna: 3,
@@ -71,11 +71,7 @@ describe('`crossover` method of an Genetic instance', () => {
 			g.findParents().crossover()
 
 			const result = g.newDna
-			const expected = [
-				{ asd: 8, tut: 10 },
-				{ asd: 8, tut: 10 },
-				{ asd: 8, tut: 10 }
-			]
+			const expected = [{ asd: 8, tut: 10 }, { asd: 8, tut: 10 }, { asd: 8, tut: 10 }]
 
 			expect(result).toEqual(expected)
 		})
@@ -89,7 +85,7 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 			]
 
-			const g = new Genetic({
+			const g = new Instance({
 				population: mockPopulation,
 				numberOfParents: 1,
 				amountOfDna: 3,
@@ -121,7 +117,7 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: { asd: 8, tut: 10 } }
 			]
 
-			const g = new Genetic({
+			const g = new Instance({
 				population: mockPopulation,
 				amountOfDna: 3,
 				mutationFunction: () => 1,
@@ -132,11 +128,7 @@ describe('`crossover` method of an Genetic instance', () => {
 			g.findParents().crossover()
 
 			const result = g.newDna
-			const expected = [
-				{ asd: 6, tut: 11 },
-				{ asd: 6, tut: 11 },
-				{ asd: 6, tut: 11 }
-			]
+			const expected = [{ asd: 6, tut: 11 }, { asd: 6, tut: 11 }, { asd: 6, tut: 11 }]
 
 			expect(result).toEqual(expected)
 		})
@@ -150,7 +142,7 @@ describe('`crossover` method of an Genetic instance', () => {
 				{ fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
 			]
 
-			const g = new Genetic({
+			const g = new Instance({
 				population: mockPopulation,
 				amountOfDna: 3,
 				mutationFunction: () => 1,

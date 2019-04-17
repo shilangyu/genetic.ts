@@ -3,6 +3,7 @@
 A typescript library for genetic algorithms. Handles your parent finding, crossover and mutation. Contains also some helpful functions to get you started.
 
 - [configuration](#configuration)
+- [installation](#installation)
 - [usage](#usage)
 - [population](#population)
 - [fitness function](#fitness-function)
@@ -11,9 +12,31 @@ A typescript library for genetic algorithms. Handles your parent finding, crosso
 
 ---
 
+## installation
+
+As a module:
+
+```sh
+npm i --save geneticjs
+```
+
+or
+
+```sh
+pnpm i --save geneticjs
+```
+
+or
+
+```sh
+yarn add geneticjs
+```
+
+---
+
 ## configuration
 
-The `Genetic` class accepts a configuration object in the constructor. Genetic instance will follow the same structure. Here's the object it accepts with its defaults (those that do not have a default require a value to be passed):
+The `genetic.Instance` class accepts a configuration object in the constructor. Genetic instance will follow the same structure. Here's the object it accepts with its defaults (those that do not have a default require a value to be passed):
 
 - `population`: array containing your members that satisfy the [IPopMember](#population) interface
 - `amountOfDna`: amount of new genes to create (default: length of your population)
@@ -33,7 +56,7 @@ The `Genetic` class accepts a configuration object in the constructor. Genetic i
 See [examples](https://shilangyu.github.io/Genetic.js). Source code is in `docs/`.
 
 ```ts
-import Genetic, { CrossoverModes, chance, add } from './Genetic.ts' /* import the library */
+import * as genetic from 'geneticjs' /* import the library, this object will be available globally if imported through HTML */
 
 const population = [
 	{
@@ -57,12 +80,12 @@ const population = [
 ]
 
 /* create your genetic object */
-const ga = new Genetic({
+const ga = new genetic.Instance({
 	population: population /* set your population */,
-	mutationFunction: chance(add(-0.5, 0.5)) /* add mutation function */,
+	mutationFunction: genetic.chance(genetic.add(-0.5, 0.5)) /* add mutation function */,
 	fitnessFunction: mem => mem.fit() /* add fitness function */,
 	modes: {
-		crossover: CrossoverModes.clone /* overwrite default modes with enums */
+		crossover: genetic.CrossoverModes.clone /* overwrite default modes with enums */
 	}
 })
 
@@ -87,8 +110,6 @@ ga.nextGeneration(newGenes => {
 })
 ```
 
-If you wish to use the `.js` version it is located in the `docs/` folder. The usage is identical.
-
 ---
 
 ## population
@@ -107,9 +128,9 @@ interface IPopMember {
   - contains a fitness property (`number`)
   - contains a dna property:
     - can be any data structure as long as it ends with a `number`
-    - the structure is the same for every element in the array
+    - the structure is the same for every member in the array
 
-If you're unsure whether your population is correct you can always use the static method `Genetic.validatePopulation(pop)` that will throw an error if something is wrong.
+If you're unsure whether your population is correct you can always use `genetic.validatePopulation(pop)` that will throw an error if something is wrong.
 
 ---
 
