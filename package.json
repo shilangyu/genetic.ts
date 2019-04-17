@@ -25,10 +25,15 @@
 		"GA",
 		"genetic",
 		"genetic-algorithm",
-		"neuro-evolution"
+		"neuro-evolution",
+		"typescript",
+		"inheritance",
+		"mating",
+		"crossover",
+		"hackable"
 	],
 	"author": "Marcin Wojnarowski @shilangyu",
-	"license": "ISC",
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/clitcancer/Genetic.js/issues"
 	},
