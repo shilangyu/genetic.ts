@@ -59,7 +59,7 @@ The `genetic.Instance` class accepts a configuration object in the constructor. 
 
 ## usage
 
-See [examples](https://shilangyu.github.io/genetic.ts). Source code can be found in `examples/`.
+See [examples](https://shilangyu.github.io/genetic.ts). Source code can be found in `docs/`.
 
 ```ts
 import * as genetic from 'genetic.ts' /* import the library, this object will be available globally if imported through HTML */
