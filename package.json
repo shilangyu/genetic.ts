@@ -2,7 +2,7 @@
 	"name": "genetic.ts",
 	"version": "1.0.1",
 	"description": "Simple and clear JavaScript class for genetic algorithms. Contains helpful functions to get you going.",
-	"main": "./dist/Genetic.js",
+	"main": "./dist/genetic.ts",
 	"types": "./dist/Genetic.d.ts",
 	"scripts": {
 		"test": "jest --no-cache",
@@ -19,7 +19,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/clitcancer/Genetic.js.git"
+		"url": "git+https://github.com/clitcancer/genetic.ts.git"
 	},
 	"keywords": [
 		"GA",
@@ -35,9 +35,9 @@
 	"author": "Marcin Wojnarowski @shilangyu",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/clitcancer/Genetic.js/issues"
+		"url": "https://github.com/clitcancer/genetic.ts/issues"
 	},
-	"homepage": "https://github.com/clitcancer/Genetic.js#readme",
+	"homepage": "https://github.com/clitcancer/genetic.ts#readme",
 	"devDependencies": {
 		"@types/jest": "^23.3.9",
 		"@types/node": "^11.13.6",
