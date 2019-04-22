@@ -35,7 +35,7 @@ yarn add genetic.ts
 For browser:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/genetic.ts/dist/Genetic.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/genetic.ts/dist/Genetic.web.js"></script>
 ```
 
 ---
