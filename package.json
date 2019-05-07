@@ -2,7 +2,7 @@
 	"name": "genetic.ts",
 	"version": "1.0.2",
 	"description": "Simple and clear JavaScript class for genetic algorithms. Contains helpful functions to get you going.",
-	"main": "./dist/genetic.ts",
+	"main": "./dist/genetic.js",
 	"types": "./dist/Genetic.d.ts",
 	"scripts": {
 		"test": "jest --no-cache",
