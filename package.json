@@ -1,56 +1,56 @@
 {
-	"name": "genetic.ts",
-	"version": "1.0.3",
-	"description": "Simple and clear JavaScript class for genetic algorithms. Contains helpful functions to get you going.",
-	"main": "./dist/genetic.js",
-	"types": "./dist/Genetic.d.ts",
-	"scripts": {
-		"test": "jest --no-cache",
-		"build": "tsc",
-		"prepare": "npm run build && npm run browser",
-		"prepublishOnly": "pnpm test",
-		"postversion": "git push && git push --tags",
-		"browser": "webpack"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "pnpm test"
-		}
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/clitcancer/genetic.ts.git"
-	},
-	"keywords": [
-		"GA",
-		"genetic",
-		"genetic-algorithm",
-		"neuro-evolution",
-		"typescript",
-		"inheritance",
-		"mating",
-		"crossover",
-		"hackable"
-	],
-	"author": "Marcin Wojnarowski @shilangyu",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/clitcancer/genetic.ts/issues"
-	},
-	"homepage": "https://github.com/clitcancer/genetic.ts#readme",
-	"devDependencies": {
-		"@types/jest": "^23.3.9",
-		"@types/node": "^11.13.6",
-		"@types/webpack": "^4.4.27",
-		"husky": "^1.3.1",
-		"jest": "^23.6.0",
-		"ts-jest": "^23.10.4",
-		"ts-node": "^8.1.0",
-		"typescript": "^3.1.6",
-		"webpack": "^4.30.0",
-		"webpack-cli": "^3.3.1"
-	},
-	"files": [
-		"dist/**/*"
-	]
+  "name": "genetic.ts",
+  "version": "1.0.3",
+  "description": "Simple and clear JavaScript class for genetic algorithms. Contains helpful functions to get you going.",
+  "main": "./dist/genetic.js",
+  "types": "./dist/Genetic.d.ts",
+  "scripts": {
+    "test": "jest --no-cache",
+    "build": "tsc",
+    "prepare": "npm run build && npm run browser",
+    "prepublishOnly": "npm test",
+    "postversion": "git push && git push --tags",
+    "browser": "webpack"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pnpm test"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clitcancer/genetic.ts.git"
+  },
+  "keywords": [
+    "GA",
+    "genetic",
+    "genetic-algorithm",
+    "neuro-evolution",
+    "typescript",
+    "inheritance",
+    "mating",
+    "crossover",
+    "hackable"
+  ],
+  "author": "Marcin Wojnarowski @shilangyu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/clitcancer/genetic.ts/issues"
+  },
+  "homepage": "https://github.com/clitcancer/genetic.ts#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.9",
+    "@types/node": "^11.13.6",
+    "@types/webpack": "^4.4.27",
+    "husky": "^1.3.1",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.4",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.1.6",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1"
+  },
+  "files": [
+    "dist/**/*"
+  ]
 }
