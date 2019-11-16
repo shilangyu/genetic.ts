@@ -1,5 +1,7 @@
 # Genetic.js
 
+![](https://github.com/shilangyu/genetic.ts/workflows/genetic.ts/badge.svg)
+
 A simple yet powerful and hackable Genetic Algorithm library. Handles your parent finding, crossover and mutation. Contains also some helpful functions to get you started quick.
 
 - [configuration](#configuration)
