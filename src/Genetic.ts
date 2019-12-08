@@ -1,271 +1,302 @@
 export enum ParentsSelectionModes {
-	best,
-	probability
+  best,
+  probability
 }
 
 export enum CrossoverModes {
-	random,
-	average,
-	clone
+  random,
+  average,
+  clone
 }
 
 interface GeneticConstructor<T> {
-	population: T[]
-	amountOfDna?: number
-	mutationFunction: MutationFunction
-	mutationRate?: number
-	fitnessFunction: FitnessFunction<T>
-	numberOfParents?: number
-	modes?: {
-		parentsSelection?: ParentsSelectionModes
-		crossover?: CrossoverModes
-	}
-	preserveParents?: boolean
+  population: T[]
+  amountOfDna?: number
+  mutationFunction: MutationFunction
+  mutationRate?: number
+  numberOfParents?: number
+  modes?: {
+    parentsSelection?: ParentsSelectionModes
+    crossover?: CrossoverModes
+  }
+  preserveParents?: boolean
 }
 
 type DNA = any
 
-interface IPopMember {
-	fitness: number
-	dna: DNA
+export interface IPopMember {
+  fitness(): number
+  dna: DNA
 }
 
 type MutationFunction = (mutationRate: number) => number
-type FitnessFunction<T> = (member: T) => number
 type MapDnaFunction<T> = (newDna: DNA[]) => T[]
 
 export const Instance = class<MemberType extends IPopMember> {
-	parents: DNA[] = []
-	newDna: DNA[] = []
-	generation: number = 1
+  parents: DNA[] = []
+  newDna: DNA[] = []
+  generation: number = 1
 
-	population: MemberType[]
-	amountOfDna: number
-	mutationFunction: MutationFunction
-	mutationRate: number
-	fitnessFunction: FitnessFunction<MemberType>
-	numberOfParents: number
-	modes: {
-		parentsSelection: ParentsSelectionModes
-		crossover: CrossoverModes
-	}
-	preserveParents: boolean
+  population: MemberType[]
+  amountOfDna: number
+  mutationFunction: MutationFunction
+  mutationRate: number
+  numberOfParents: number
+  modes: {
+    parentsSelection: ParentsSelectionModes
+    crossover: CrossoverModes
+  }
+  preserveParents: boolean
 
-	constructor({
-		population,
-		amountOfDna,
-		mutationFunction,
-		mutationRate = 0.1,
-		numberOfParents = 2,
-		fitnessFunction,
-		modes: { parentsSelection = ParentsSelectionModes.best, crossover = CrossoverModes.random } = {
-			parentsSelection: ParentsSelectionModes.best,
-			crossover: CrossoverModes.random
-		},
-		preserveParents = false
-	}: GeneticConstructor<MemberType>) {
-		this.population = population
-		this.amountOfDna = amountOfDna || population.length
-		this.mutationFunction = mutationFunction
-		this.mutationRate = mutationRate
-		this.numberOfParents = numberOfParents
-		this.fitnessFunction = fitnessFunction
-		this.modes = {
-			parentsSelection,
-			crossover
-		}
-		this.preserveParents = preserveParents
-	}
+  constructor({
+    population,
+    amountOfDna,
+    mutationFunction,
+    mutationRate = 0.1,
+    numberOfParents = 2,
+    modes: {
+      parentsSelection = ParentsSelectionModes.best,
+      crossover = CrossoverModes.random
+    } = {
+      parentsSelection: ParentsSelectionModes.best,
+      crossover: CrossoverModes.random
+    },
+    preserveParents = false
+  }: GeneticConstructor<MemberType>) {
+    this.population = population
+    this.amountOfDna = amountOfDna || population.length
+    this.mutationFunction = mutationFunction
+    this.mutationRate = mutationRate
+    this.numberOfParents = numberOfParents
+    this.modes = {
+      parentsSelection,
+      crossover
+    }
+    this.preserveParents = preserveParents
+  }
 
-	calculateFitness(): this {
-		for (const member of this.population) member.fitness = this.fitnessFunction(member)
+  findParents(): this {
+    this.parents = []
 
-		return this
-	}
+    if (this.modes.parentsSelection === ParentsSelectionModes.best) {
+      this.parents = this.population
+        .sort((a, b) => a.fitness() - b.fitness())
+        .slice(-this.numberOfParents)
+        .map(e => e.dna)
+    } else if (
+      this.modes.parentsSelection === ParentsSelectionModes.probability
+    ) {
+      let left = this.numberOfParents
+      let fitnessSum = this.population.reduce(
+        (prev, curr) => prev + curr.fitness(),
+        0
+      )
 
-	findParents(): this {
-		this.parents = []
+      while (left-- > 0) {
+        let chosen = Math.random() * fitnessSum
 
-		if (this.modes.parentsSelection === ParentsSelectionModes.best) {
-			this.parents = this.population
-				.sort((a, b) => a.fitness - b.fitness)
-				.slice(-this.numberOfParents)
-				.map(e => e.dna)
-		} else if (this.modes.parentsSelection === ParentsSelectionModes.probability) {
-			let left = this.numberOfParents
-			let fitnessSum = this.population.reduce((prev, curr) => prev + curr.fitness, 0)
+        for (let member of this.population) {
+          chosen -= member.fitness()
+          if (chosen <= 0) {
+            this.parents.push(member.dna)
+            fitnessSum -= member.fitness()
+            this.population.splice(this.population.indexOf(member), 1)
+            break
+          }
+        }
+      }
+    }
 
-			while (left-- > 0) {
-				let chosen = Math.random() * fitnessSum
+    return this
+  }
 
-				for (let member of this.population) {
-					chosen -= member.fitness
-					if (chosen <= 0) {
-						this.parents.push(member.dna)
-						fitnessSum -= member.fitness
-						this.population.splice(this.population.indexOf(member), 1)
-						break
-					}
-				}
-			}
-		}
+  crossover(): this {
+    this.newDna = []
 
-		return this
-	}
+    if (this.modes.crossover === CrossoverModes.random) {
+      const deepAvrg = (targets: any[]): any => {
+        if (Array.isArray(targets[0])) {
+          return new Array(targets[0].length)
+            .fill(null)
+            .map((e, i) => deepAvrg(targets.map(e => e[i])))
+        } else if (typeof targets[0] === 'object') {
+          const temp: any = {}
+          for (const key of Object.keys(targets[0])) {
+            temp[key] = deepAvrg(targets.map(e => e[key]))
+          }
+          return temp
+        } else if (typeof targets[0] === 'number')
+          return targets[Math.floor(Math.random() * targets.length)]
+      }
 
-	crossover(): this {
-		this.newDna = []
+      this.newDna = new Array(this.amountOfDna)
+        .fill(null)
+        .map(() => deepAvrg(this.parents))
+    } else if (this.modes.crossover === CrossoverModes.clone) {
+      let left = this.amountOfDna
 
-		if (this.modes.crossover === CrossoverModes.random) {
-			const deepAvrg = (targets: any[]): any => {
-				if (Array.isArray(targets[0])) {
-					return new Array(targets[0].length)
-						.fill(null)
-						.map((e, i) => deepAvrg(targets.map(e => e[i])))
-				} else if (typeof targets[0] === 'object') {
-					const temp: any = {}
-					for (const key of Object.keys(targets[0])) {
-						temp[key] = deepAvrg(targets.map(e => e[key]))
-					}
-					return temp
-				} else if (typeof targets[0] === 'number')
-					return targets[Math.floor(Math.random() * targets.length)]
-			}
+      while (left-- > 0) {
+        let chosen = Math.floor(Math.random() * this.parents.length)
 
-			this.newDna = new Array(this.amountOfDna).fill(null).map(() => deepAvrg(this.parents))
-		} else if (this.modes.crossover === CrossoverModes.clone) {
-			let left = this.amountOfDna
+        this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])))
+      }
+    } else if (this.modes.crossover === CrossoverModes.average) {
+      const deepAvrg = (targets: any[]): any => {
+        if (Array.isArray(targets[0])) {
+          return new Array(targets[0].length)
+            .fill(null)
+            .map((e, i) => deepAvrg(targets.map(e => e[i])))
+        } else if (typeof targets[0] === 'object') {
+          const temp: any = {}
+          for (const key of Object.keys(targets[0])) {
+            temp[key] = deepAvrg(targets.map(e => e[key]))
+          }
+          return temp
+        } else if (typeof targets[0] === 'number')
+          return targets.reduce((prev, curr) => prev + curr, 0) / targets.length
+      }
 
-			while (left-- > 0) {
-				let chosen = Math.floor(Math.random() * this.parents.length)
+      const res = JSON.stringify(deepAvrg(this.parents))
 
-				this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])))
-			}
-		} else if (this.modes.crossover === CrossoverModes.average) {
-			const deepAvrg = (targets: any[]): any => {
-				if (Array.isArray(targets[0])) {
-					return new Array(targets[0].length)
-						.fill(null)
-						.map((e, i) => deepAvrg(targets.map(e => e[i])))
-				} else if (typeof targets[0] === 'object') {
-					const temp: any = {}
-					for (const key of Object.keys(targets[0])) {
-						temp[key] = deepAvrg(targets.map(e => e[key]))
-					}
-					return temp
-				} else if (typeof targets[0] === 'number')
-					return targets.reduce((prev, curr) => prev + curr, 0) / targets.length
-			}
+      this.newDna = new Array(this.amountOfDna)
+        .fill(null)
+        .map(() => JSON.parse(res))
+    }
 
-			const res = JSON.stringify(deepAvrg(this.parents))
+    return this
+  }
 
-			this.newDna = new Array(this.amountOfDna).fill(null).map(() => JSON.parse(res))
-		}
+  mutate(): this {
+    const deeper = (target: any[]): any => {
+      if (Array.isArray(target)) {
+        return target.map(deeper)
+      } else if (typeof target === 'object') {
+        const temp: any = {}
+        for (const key of Object.keys(target)) {
+          temp[key] = deeper(target[key])
+        }
+        return temp
+      } else if (typeof target === 'number')
+        return target + this.mutationFunction(this.mutationRate)
+    }
 
-		return this
-	}
+    this.newDna = this.newDna.map(deeper)
 
-	mutate(): this {
-		const deeper = (target: any[]): any => {
-			if (Array.isArray(target)) {
-				return target.map(deeper)
-			} else if (typeof target === 'object') {
-				const temp: any = {}
-				for (const key of Object.keys(target)) {
-					temp[key] = deeper(target[key])
-				}
-				return temp
-			} else if (typeof target === 'number')
-				return target + this.mutationFunction(this.mutationRate)
-		}
+    if (this.preserveParents) {
+      this.parents.forEach((parent, i) => {
+        this.newDna[i] = JSON.parse(JSON.stringify(parent))
+      })
+    }
 
-		this.newDna = this.newDna.map(deeper)
+    return this
+  }
 
-		if (this.preserveParents) {
-			this.parents.forEach((parent, i) => {
-				this.newDna[i] = JSON.parse(JSON.stringify(parent))
-			})
-		}
+  finishGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
+    this.population = mapDnaFunction(this.newDna)
+    this.generation++
 
-		return this
-	}
+    return this
+  }
 
-	finishGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
-		this.population = mapDnaFunction(this.newDna)
-		this.generation++
-
-		return this
-	}
-
-	nextGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
-		return this.calculateFitness()
-			.findParents()
-			.crossover()
-			.mutate()
-			.finishGeneration(mapDnaFunction)
-	}
+  nextGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
+    return this.findParents()
+      .crossover()
+      .mutate()
+      .finishGeneration(mapDnaFunction)
+  }
 }
 
-export const validatePopulation = (population: any[]) => {
-	if (!population.every(mem => 'fitness' in mem))
-		throw new Error('Member of the population is missing the fitness property.')
+export const validatePopulation = (population: any) => {
+  if (!Array.isArray(population))
+    throw new Error('The population is not an array.')
 
-	if (!population.every(mem => typeof mem.fitness === 'number'))
-		throw new Error('Fitness of a member of the population is not of type number.')
+  if (
+    !population.every(
+      mem => 'fitness' in mem && typeof mem.fitness === 'function'
+    )
+  )
+    throw new Error('Member of the population is missing the fitness method.')
 
-	if (!population.every(mem => 'dna' in mem))
-		throw new Error('Member of the population is missing the dna property.')
+  if (!population.every(mem => typeof mem.fitness() === 'number'))
+    throw new Error(
+      'Fitness of a member of the population returns something else than a number.'
+    )
 
-	function validateTypes(obj: any) {
-		if (Array.isArray(obj)) for (const ele of obj) validateTypes(ele)
-		else if (typeof obj === 'object') for (const ele of Object.values(obj)) validateTypes(ele)
-		else if (typeof obj !== 'number')
-			throw new Error('Dna of a member of the population has an incorrect type.')
-	}
-	validateTypes(population)
+  if (!population.every(mem => 'dna' in mem))
+    throw new Error('Member of the population is missing the dna property.')
 
-	const zip = (a: any, b: any): any[] => a.map((e: any, i: number) => [e, b[i]])
+  function validateDnaTypes(obj: any) {
+    if (Array.isArray(obj)) for (const ele of obj) validateDnaTypes(ele)
+    else if (typeof obj === 'object')
+      for (const ele of Object.values(obj)) validateDnaTypes(ele)
+    else if (typeof obj !== 'number')
+      throw new Error(
+        'Dna of a member of the population has an incorrect type.'
+      )
+  }
+  validateDnaTypes(population.map(p => p.dna))
 
-	function validateStructure(obj: any, model: any) {
-		if (Array.isArray(model)) {
-			if (obj.length !== model.length)
-				throw new Error('Dna of a member of the population has a different structure.')
+  const zip = (a: any, b: any): any[] => a.map((e: any, i: number) => [e, b[i]])
 
-			for (const [a, b] of zip(obj, model)) {
-				if (Array.isArray(a) !== Array.isArray(b)) {
-					throw new Error('Dna of a member of the population has a different structure.')
-				} else if (typeof a !== typeof b) {
-					throw new Error('Dna of a member of the population has a different structure.')
-				} else if (typeof a !== 'number') {
-					validateStructure(a, b)
-				}
-			}
-		} else if (typeof obj === 'object') {
-			if (!zip(Object.keys(obj), Object.keys(model)).every(([a, b]) => a === b)) {
-				throw new Error('Dna of a member of the population has a different structure.')
-			}
+  function validateStructure(obj: any, model: any) {
+    if (Array.isArray(model)) {
+      if (obj.length !== model.length)
+        throw new Error(
+          'Dna of a member of the population has a different structure.'
+        )
 
-			for (const [a, b] of zip(Object.values(obj), Object.values(model))) {
-				if (Array.isArray(a) !== Array.isArray(b)) {
-					throw new Error('Dna of a member of the population has a different structure.')
-				} else if (typeof a !== typeof b) {
-					throw new Error('Dna of a member of the population has a different structure.')
-				} else if (typeof a !== 'number') {
-					validateStructure(a, b)
-				}
-			}
-		} else if (typeof obj !== 'number')
-			throw new Error('Dna of a member of the population has a different structure.')
-	}
+      for (const [a, b] of zip(obj, model)) {
+        if (Array.isArray(a) !== Array.isArray(b)) {
+          throw new Error(
+            'Dna of a member of the population has a different structure.'
+          )
+        } else if (typeof a !== typeof b) {
+          throw new Error(
+            'Dna of a member of the population has a different structure.'
+          )
+        } else if (typeof a !== 'number') {
+          validateStructure(a, b)
+        }
+      }
+    } else if (typeof obj === 'object') {
+      if (
+        !zip(Object.keys(obj), Object.keys(model)).every(([a, b]) => a === b)
+      ) {
+        throw new Error(
+          'Dna of a member of the population has a different structure.'
+        )
+      }
 
-	for (const curr of population.slice(1)) validateStructure(curr, population[0])
+      for (const [a, b] of zip(Object.values(obj), Object.values(model))) {
+        if (Array.isArray(a) !== Array.isArray(b)) {
+          throw new Error(
+            'Dna of a member of the population has a different structure.'
+          )
+        } else if (typeof a !== typeof b) {
+          throw new Error(
+            'Dna of a member of the population has a different structure.'
+          )
+        } else if (typeof a !== 'number') {
+          validateStructure(a, b)
+        }
+      }
+    } else if (typeof obj !== 'number')
+      throw new Error(
+        'Dna of a member of the population has a different structure.'
+      )
+  }
+
+  for (const curr of population.slice(1))
+    validateStructure(curr.dna, population[0].dna)
 }
 
-export const chance = (func: MutationFunction): MutationFunction => mutationRate => {
-	if (Math.random() < mutationRate) return func(mutationRate)
-	return 0
+export const chance = (
+  func: MutationFunction
+): MutationFunction => mutationRate => {
+  if (Math.random() < mutationRate) return func(mutationRate)
+  return 0
 }
 
 export const add = (min: number, max: number): MutationFunction => () => {
-	return Math.random() * (max - min) + min
+  return Math.random() * (max - min) + min
 }

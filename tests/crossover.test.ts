@@ -4,18 +4,17 @@ describe('`crossover` method of an Genetic instance', () => {
   describe('random gene crossover', () => {
     it('tests for shallow DNA', () => {
       const mockPopulation = [
-        { fitness: 100, dna: { asd: 1, tut: 11 } },
-        { fitness: 200, dna: { asd: 2, tut: 12 } },
-        { fitness: 300, dna: { asd: 3, tut: 1 } },
-        { fitness: 400, dna: { asd: 4, tut: 12 } },
-        { fitness: 500, dna: { asd: 8, tut: 10 } }
+        { fitness: () => 100, dna: { asd: 1, tut: 11 } },
+        { fitness: () => 200, dna: { asd: 2, tut: 12 } },
+        { fitness: () => 300, dna: { asd: 3, tut: 1 } },
+        { fitness: () => 400, dna: { asd: 4, tut: 12 } },
+        { fitness: () => 500, dna: { asd: 8, tut: 10 } }
       ]
 
       const g = new Instance({
         population: mockPopulation,
         amountOfDna: 3,
-        mutationFunction: () => 1,
-        fitnessFunction: () => 0
+        mutationFunction: () => 1
       })
 
       g.findParents().crossover()
@@ -27,18 +26,17 @@ describe('`crossover` method of an Genetic instance', () => {
 
     it('tests for deep DNA', () => {
       const mockPopulation = [
-        { fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
-        { fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
-        { fitness: 300, dna: [{ a: 21, e: [32] }, [[2, 4, 53]]] },
-        { fitness: 400, dna: [{ a: 13, e: [223] }, [[442, 24, 35]]] },
-        { fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
+        { fitness: () => 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
+        { fitness: () => 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
+        { fitness: () => 300, dna: [{ a: 21, e: [32] }, [[2, 4, 53]]] },
+        { fitness: () => 400, dna: [{ a: 13, e: [223] }, [[442, 24, 35]]] },
+        { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
       ]
 
       const g = new Instance({
         population: mockPopulation,
         amountOfDna: 3,
-        mutationFunction: () => 1,
-        fitnessFunction: () => 0
+        mutationFunction: () => 1
       })
 
       g.findParents().crossover()
@@ -52,11 +50,11 @@ describe('`crossover` method of an Genetic instance', () => {
   describe('clone gene crossover', () => {
     it('tests for shallow DNA', () => {
       const mockPopulation = [
-        { fitness: 100, dna: { asd: 1, tut: 11 } },
-        { fitness: 200, dna: { asd: 2, tut: 12 } },
-        { fitness: 300, dna: { asd: 3, tut: 1 } },
-        { fitness: 400, dna: { asd: 4, tut: 12 } },
-        { fitness: 500, dna: { asd: 8, tut: 10 } }
+        { fitness: () => 100, dna: { asd: 1, tut: 11 } },
+        { fitness: () => 200, dna: { asd: 2, tut: 12 } },
+        { fitness: () => 300, dna: { asd: 3, tut: 1 } },
+        { fitness: () => 400, dna: { asd: 4, tut: 12 } },
+        { fitness: () => 500, dna: { asd: 8, tut: 10 } }
       ]
 
       const g = new Instance({
@@ -64,7 +62,6 @@ describe('`crossover` method of an Genetic instance', () => {
         numberOfParents: 1,
         amountOfDna: 3,
         mutationFunction: () => 1,
-        fitnessFunction: () => 0,
         modes: { crossover: CrossoverModes.clone }
       })
 
@@ -82,11 +79,11 @@ describe('`crossover` method of an Genetic instance', () => {
 
     it('tests for deep DNA', () => {
       const mockPopulation = [
-        { fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
-        { fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
-        { fitness: 300, dna: [{ a: 21, e: [32] }, [[2, 4, 53]]] },
-        { fitness: 400, dna: [{ a: 13, e: [223] }, [[442, 24, 35]]] },
-        { fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
+        { fitness: () => 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
+        { fitness: () => 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
+        { fitness: () => 300, dna: [{ a: 21, e: [32] }, [[2, 4, 53]]] },
+        { fitness: () => 400, dna: [{ a: 13, e: [223] }, [[442, 24, 35]]] },
+        { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
       ]
 
       const g = new Instance({
@@ -94,8 +91,7 @@ describe('`crossover` method of an Genetic instance', () => {
         numberOfParents: 1,
         amountOfDna: 3,
         mutationFunction: () => 1,
-        modes: { crossover: CrossoverModes.clone },
-        fitnessFunction: () => 0
+        modes: { crossover: CrossoverModes.clone }
       })
 
       g.findParents().crossover()
@@ -114,19 +110,18 @@ describe('`crossover` method of an Genetic instance', () => {
   describe('average gene crossover', () => {
     it('tests for shallow DNA', () => {
       const mockPopulation = [
-        { fitness: 100, dna: { asd: 1, tut: 11 } },
-        { fitness: 200, dna: { asd: 2, tut: 12 } },
-        { fitness: 300, dna: { asd: 3, tut: 1 } },
-        { fitness: 400, dna: { asd: 4, tut: 12 } },
-        { fitness: 500, dna: { asd: 8, tut: 10 } }
+        { fitness: () => 100, dna: { asd: 1, tut: 11 } },
+        { fitness: () => 200, dna: { asd: 2, tut: 12 } },
+        { fitness: () => 300, dna: { asd: 3, tut: 1 } },
+        { fitness: () => 400, dna: { asd: 4, tut: 12 } },
+        { fitness: () => 500, dna: { asd: 8, tut: 10 } }
       ]
 
       const g = new Instance({
         population: mockPopulation,
         amountOfDna: 3,
         mutationFunction: () => 1,
-        modes: { crossover: CrossoverModes.average },
-        fitnessFunction: () => 0
+        modes: { crossover: CrossoverModes.average }
       })
 
       g.findParents().crossover()
@@ -143,19 +138,18 @@ describe('`crossover` method of an Genetic instance', () => {
 
     it('tests for deep DNA', () => {
       const mockPopulation = [
-        { fitness: 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
-        { fitness: 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
-        { fitness: 300, dna: [{ a: 21, e: [32] }, [[2, 4, 53]]] },
-        { fitness: 400, dna: [{ a: 13, e: [223] }, [[442, 24, 35]]] },
-        { fitness: 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
+        { fitness: () => 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
+        { fitness: () => 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
+        { fitness: () => 300, dna: [{ a: 21, e: [32] }, [[2, 4, 53]]] },
+        { fitness: () => 400, dna: [{ a: 13, e: [223] }, [[442, 24, 35]]] },
+        { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
       ]
 
       const g = new Instance({
         population: mockPopulation,
         amountOfDna: 3,
         mutationFunction: () => 1,
-        modes: { crossover: CrossoverModes.average },
-        fitnessFunction: () => 0
+        modes: { crossover: CrossoverModes.average }
       })
 
       g.findParents().crossover()
