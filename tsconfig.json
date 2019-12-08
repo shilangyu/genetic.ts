@@ -1,11 +1,18 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"module": "commonjs",
-		"strict": true,
-		"lib": ["es2017"],
-		"outDir": "./dist",
-		"declaration": true
-	},
-	"exclude": ["node_modules", "**/*.test.ts", "docs", "dist", "webpack.config.ts"]
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "lib": ["es2017"],
+    "outDir": "./dist",
+    "declaration": true,
+    "rootDir": "src"
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts",
+    "docs",
+    "dist",
+    "webpack.config.ts"
+  ]
 }
