@@ -21,7 +21,7 @@ export interface IGeneticConstructor<T> {
   preserveParents?: boolean
 }
 
-type DNA = any
+export type DNA = any
 
 export interface IPopMember {
   fitness(): number
@@ -31,7 +31,8 @@ export interface IPopMember {
 type MutationFunction = (mutationRate: number) => number
 type MapDnaFunction<T> = (newDna: DNA[]) => T[]
 
-export const Instance = class<Member extends IPopMember> {
+export const Instance = class<Member extends IPopMember>
+  implements IGeneticConstructor<Member> {
   parents: DNA[] = []
   newDna: DNA[] = []
   generation: number = 1
