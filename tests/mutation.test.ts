@@ -12,7 +12,6 @@ describe('`mutation` method of an Genetic instance', () => {
 
     const g = new Instance({
       population: mockPopulation,
-      amountOfDna: 3,
       mutationFunction: () => 1,
       modes: { crossover: CrossoverModes.average }
     })
@@ -23,6 +22,8 @@ describe('`mutation` method of an Genetic instance', () => {
 
     const result = g.newDna
     const expected = [
+      [{ a: 9, e: [119] }, [[223, 50, 21]]],
+      [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]]
@@ -42,7 +43,6 @@ describe('`mutation` method of an Genetic instance', () => {
 
     let g = new Instance({
       population: mockPopulation,
-      amountOfDna: 3,
       mutationFunction: chance(() => 1),
       mutationRate: 0,
       modes: { crossover: CrossoverModes.average }
@@ -56,6 +56,8 @@ describe('`mutation` method of an Genetic instance', () => {
     let expected = [
       [{ a: 8, e: [118] }, [[222, 49, 20]]],
       [{ a: 8, e: [118] }, [[222, 49, 20]]],
+      [{ a: 8, e: [118] }, [[222, 49, 20]]],
+      [{ a: 8, e: [118] }, [[222, 49, 20]]],
       [{ a: 8, e: [118] }, [[222, 49, 20]]]
     ]
 
@@ -63,7 +65,6 @@ describe('`mutation` method of an Genetic instance', () => {
 
     g = new Instance({
       population: mockPopulation,
-      amountOfDna: 3,
       mutationFunction: chance(() => 1),
       mutationRate: 1,
       modes: { crossover: CrossoverModes.average }
@@ -75,6 +76,8 @@ describe('`mutation` method of an Genetic instance', () => {
 
     result = g.newDna
     expected = [
+      [{ a: 9, e: [119] }, [[223, 50, 21]]],
+      [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]]
@@ -94,7 +97,6 @@ describe('`mutation` method of an Genetic instance', () => {
 
     const g = new Instance({
       population: mockPopulation,
-      amountOfDna: 3,
       mutationFunction: add(1, 1),
       modes: { crossover: CrossoverModes.average }
     })
@@ -105,6 +107,8 @@ describe('`mutation` method of an Genetic instance', () => {
 
     const result = g.newDna
     const expected = [
+      [{ a: 9, e: [119] }, [[223, 50, 21]]],
+      [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]],
       [{ a: 9, e: [119] }, [[223, 50, 21]]]

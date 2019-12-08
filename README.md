@@ -42,7 +42,6 @@ For browser:
 The `genetic.Instance` class accepts a configuration object in the constructor. Genetic instance will follow the same structure. Here's the object it accepts with its defaults (those that do not have a default require a value to be passed):
 
 - `population`: array containing your members that satisfy the [IPopMember](#population) interface
-- `amountOfDna`: amount of new genes to create (default: length of your population)
 - `mutationFunction`: function to be used when mutating the genes | [see here](#mutating)
 - `mutationRate`: mutation rate of the algorithm (default: 0.1)
 - `amountOfParents`: amount of parents to be chosen in the mating pool (default: 2)

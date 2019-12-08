@@ -9,9 +9,8 @@ export enum CrossoverModes {
   clone
 }
 
-interface GeneticConstructor<T> {
+export interface IGeneticConstructor<T> {
   population: T[]
-  amountOfDna?: number
   mutationFunction: MutationFunction
   mutationRate?: number
   numberOfParents?: number
@@ -32,13 +31,12 @@ export interface IPopMember {
 type MutationFunction = (mutationRate: number) => number
 type MapDnaFunction<T> = (newDna: DNA[]) => T[]
 
-export const Instance = class<MemberType extends IPopMember> {
+export const Instance = class<Member extends IPopMember> {
   parents: DNA[] = []
   newDna: DNA[] = []
   generation: number = 1
 
-  population: MemberType[]
-  amountOfDna: number
+  population: Member[]
   mutationFunction: MutationFunction
   mutationRate: number
   numberOfParents: number
@@ -50,7 +48,6 @@ export const Instance = class<MemberType extends IPopMember> {
 
   constructor({
     population,
-    amountOfDna,
     mutationFunction,
     mutationRate = 0.1,
     numberOfParents = 2,
@@ -62,9 +59,8 @@ export const Instance = class<MemberType extends IPopMember> {
       crossover: CrossoverModes.random
     },
     preserveParents = false
-  }: GeneticConstructor<MemberType>) {
+  }: IGeneticConstructor<Member>) {
     this.population = population
-    this.amountOfDna = amountOfDna || population.length
     this.mutationFunction = mutationFunction
     this.mutationRate = mutationRate
     this.numberOfParents = numberOfParents
@@ -129,11 +125,11 @@ export const Instance = class<MemberType extends IPopMember> {
           return targets[Math.floor(Math.random() * targets.length)]
       }
 
-      this.newDna = new Array(this.amountOfDna)
+      this.newDna = new Array(this.population.length)
         .fill(null)
         .map(() => deepAvrg(this.parents))
     } else if (this.modes.crossover === CrossoverModes.clone) {
-      let left = this.amountOfDna
+      let left = this.population.length
 
       while (left-- > 0) {
         let chosen = Math.floor(Math.random() * this.parents.length)
@@ -158,7 +154,7 @@ export const Instance = class<MemberType extends IPopMember> {
 
       const res = JSON.stringify(deepAvrg(this.parents))
 
-      this.newDna = new Array(this.amountOfDna)
+      this.newDna = new Array(this.population.length)
         .fill(null)
         .map(() => JSON.parse(res))
     }
@@ -191,14 +187,14 @@ export const Instance = class<MemberType extends IPopMember> {
     return this
   }
 
-  finishGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
+  finishGeneration(mapDnaFunction: MapDnaFunction<Member>): this {
     this.population = mapDnaFunction(this.newDna)
     this.generation++
 
     return this
   }
 
-  nextGeneration(mapDnaFunction: MapDnaFunction<MemberType>): this {
+  nextGeneration(mapDnaFunction: MapDnaFunction<Member>): this {
     return this.findParents()
       .crossover()
       .mutate()

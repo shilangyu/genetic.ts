@@ -13,7 +13,6 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const g = new Instance({
         population: mockPopulation,
-        amountOfDna: 3,
         mutationFunction: () => 1
       })
 
@@ -21,7 +20,7 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const result = g.newDna
 
-      expect(result).toHaveLength(3)
+      expect(result).toHaveLength(5)
     })
 
     it('tests for deep DNA', () => {
@@ -35,7 +34,6 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const g = new Instance({
         population: mockPopulation,
-        amountOfDna: 3,
         mutationFunction: () => 1
       })
 
@@ -43,7 +41,7 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const result = g.newDna
 
-      expect(result).toHaveLength(3)
+      expect(result).toHaveLength(5)
     })
   })
 
@@ -60,7 +58,6 @@ describe('`crossover` method of an Genetic instance', () => {
       const g = new Instance({
         population: mockPopulation,
         numberOfParents: 1,
-        amountOfDna: 3,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.clone }
       })
@@ -69,6 +66,8 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const result = g.newDna
       const expected = [
+        { asd: 8, tut: 10 },
+        { asd: 8, tut: 10 },
         { asd: 8, tut: 10 },
         { asd: 8, tut: 10 },
         { asd: 8, tut: 10 }
@@ -89,7 +88,6 @@ describe('`crossover` method of an Genetic instance', () => {
       const g = new Instance({
         population: mockPopulation,
         numberOfParents: 1,
-        amountOfDna: 3,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.clone }
       })
@@ -98,6 +96,8 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const result = g.newDna
       const expected = [
+        [{ a: 3, e: [13] }, [[2, 74, 5]]],
+        [{ a: 3, e: [13] }, [[2, 74, 5]]],
         [{ a: 3, e: [13] }, [[2, 74, 5]]],
         [{ a: 3, e: [13] }, [[2, 74, 5]]],
         [{ a: 3, e: [13] }, [[2, 74, 5]]]
@@ -119,7 +119,6 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const g = new Instance({
         population: mockPopulation,
-        amountOfDna: 3,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.average }
       })
@@ -128,6 +127,8 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const result = g.newDna
       const expected = [
+        { asd: 6, tut: 11 },
+        { asd: 6, tut: 11 },
         { asd: 6, tut: 11 },
         { asd: 6, tut: 11 },
         { asd: 6, tut: 11 }
@@ -147,7 +148,6 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const g = new Instance({
         population: mockPopulation,
-        amountOfDna: 3,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.average }
       })
@@ -156,6 +156,8 @@ describe('`crossover` method of an Genetic instance', () => {
 
       const result = g.newDna
       const expected = [
+        [{ a: 8, e: [118] }, [[222, 49, 20]]],
+        [{ a: 8, e: [118] }, [[222, 49, 20]]],
         [{ a: 8, e: [118] }, [[222, 49, 20]]],
         [{ a: 8, e: [118] }, [[222, 49, 20]]],
         [{ a: 8, e: [118] }, [[222, 49, 20]]]
