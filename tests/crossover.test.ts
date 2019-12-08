@@ -166,4 +166,24 @@ describe('`crossover` method of an Genetic instance', () => {
       expect(result).toEqual(expected)
     })
   })
+
+  it('tests unsupported crossover mode', () => {
+    const mockPopulation = [
+      { fitness: () => 100, dna: [{ a: 213, e: [31] }, [[2, 46, 5]]] },
+      { fitness: () => 200, dna: [{ a: 23, e: [31] }, [[32, 64, 542]]] },
+      { fitness: () => 300, dna: [{ a: 21, e: [32] }, [[2, 4, 53]]] },
+      { fitness: () => 400, dna: [{ a: 13, e: [223] }, [[442, 24, 35]]] },
+      { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
+    ]
+
+    const g = new Instance({
+      population: mockPopulation,
+      mutationFunction: () => 1,
+      modes: { crossover: -1 }
+    })
+
+    expect(() => g.findParents().crossover()).toThrowError(
+      'Current crossover mode is not supported.'
+    )
+  })
 })

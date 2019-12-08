@@ -75,33 +75,38 @@ export const Instance = class<Member extends IPopMember>
   findParents(): this {
     this.parents = []
 
-    if (this.modes.parentsSelection === ParentsSelectionModes.best) {
-      this.parents = this.population
-        .sort((a, b) => a.fitness() - b.fitness())
-        .slice(-this.numberOfParents)
-        .map(e => e.dna)
-    } else if (
-      this.modes.parentsSelection === ParentsSelectionModes.probability
-    ) {
-      let left = this.numberOfParents
-      let fitnessSum = this.population.reduce(
-        (prev, curr) => prev + curr.fitness(),
-        0
-      )
+    switch (this.modes.parentsSelection) {
+      case ParentsSelectionModes.best:
+        this.parents = this.population
+          .sort((a, b) => a.fitness() - b.fitness())
+          .slice(-this.numberOfParents)
+          .map(e => e.dna)
+        break
 
-      while (left-- > 0) {
-        let chosen = Math.random() * fitnessSum
+      case ParentsSelectionModes.probability:
+        let left = this.numberOfParents
+        let fitnessSum = this.population.reduce(
+          (prev, curr) => prev + curr.fitness(),
+          0
+        )
 
-        for (let member of this.population) {
-          chosen -= member.fitness()
-          if (chosen <= 0) {
-            this.parents.push(member.dna)
-            fitnessSum -= member.fitness()
-            this.population.splice(this.population.indexOf(member), 1)
-            break
+        while (left-- > 0) {
+          let chosen = Math.random() * fitnessSum
+
+          for (let member of this.population) {
+            chosen -= member.fitness()
+            if (chosen <= 0) {
+              this.parents.push(member.dna)
+              fitnessSum -= member.fitness()
+              this.population.splice(this.population.indexOf(member), 1)
+              break
+            }
           }
         }
-      }
+        break
+
+      default:
+        throw new Error('Current parent selection mode is not supported.')
     }
 
     return this
@@ -110,54 +115,54 @@ export const Instance = class<Member extends IPopMember>
   crossover(): this {
     this.newDna = []
 
-    if (this.modes.crossover === CrossoverModes.random) {
-      const deepAvrg = (targets: any[]): any => {
+    const deep = (finisherFunc: (t: any[]) => any) =>
+      function deep(targets: DNA[]): any {
         if (Array.isArray(targets[0])) {
           return new Array(targets[0].length)
             .fill(null)
-            .map((e, i) => deepAvrg(targets.map(e => e[i])))
+            .map((e, i) => deep(targets.map(e => e[i])))
         } else if (typeof targets[0] === 'object') {
           const temp: any = {}
           for (const key of Object.keys(targets[0])) {
-            temp[key] = deepAvrg(targets.map(e => e[key]))
+            temp[key] = deep(targets.map(e => e[key]))
           }
           return temp
-        } else if (typeof targets[0] === 'number')
-          return targets[Math.floor(Math.random() * targets.length)]
+        } else if (typeof targets[0] === 'number') return finisherFunc(targets)
       }
 
-      this.newDna = new Array(this.population.length)
-        .fill(null)
-        .map(() => deepAvrg(this.parents))
-    } else if (this.modes.crossover === CrossoverModes.clone) {
-      let left = this.population.length
+    switch (this.modes.crossover) {
+      case CrossoverModes.random:
+        const randomGene = deep(t => t[Math.floor(Math.random() * t.length)])
 
-      while (left-- > 0) {
-        let chosen = Math.floor(Math.random() * this.parents.length)
+        this.newDna = new Array(this.population.length)
+          .fill(null)
+          .map(() => randomGene(this.parents))
+        break
 
-        this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])))
-      }
-    } else if (this.modes.crossover === CrossoverModes.average) {
-      const deepAvrg = (targets: any[]): any => {
-        if (Array.isArray(targets[0])) {
-          return new Array(targets[0].length)
-            .fill(null)
-            .map((e, i) => deepAvrg(targets.map(e => e[i])))
-        } else if (typeof targets[0] === 'object') {
-          const temp: any = {}
-          for (const key of Object.keys(targets[0])) {
-            temp[key] = deepAvrg(targets.map(e => e[key]))
-          }
-          return temp
-        } else if (typeof targets[0] === 'number')
-          return targets.reduce((prev, curr) => prev + curr, 0) / targets.length
-      }
+      case CrossoverModes.clone:
+        let left = this.population.length
 
-      const res = JSON.stringify(deepAvrg(this.parents))
+        while (left-- > 0) {
+          let chosen = Math.floor(Math.random() * this.parents.length)
 
-      this.newDna = new Array(this.population.length)
-        .fill(null)
-        .map(() => JSON.parse(res))
+          this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])))
+        }
+        break
+
+      case CrossoverModes.average:
+        const averager = deep(
+          t => t.reduce((prev, curr) => prev + curr, 0) / t.length
+        )
+
+        const res = JSON.stringify(averager(this.parents))
+
+        this.newDna = new Array(this.population.length)
+          .fill(null)
+          .map(() => JSON.parse(res))
+        break
+
+      default:
+        throw new Error('Current crossover mode is not supported.')
     }
 
     return this

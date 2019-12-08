@@ -46,4 +46,24 @@ describe('`findParents` method of an Genetic instance', () => {
 
     expect(result).toEqual(expected)
   })
+
+  it('tests unsupported parent selection mode', () => {
+    const mockPopulation = [
+      { fitness: () => 0, dna: { asd: 4 } },
+      { fitness: () => 500, dna: { asd: 5 } }
+    ]
+
+    const g = new Instance({
+      population: mockPopulation,
+      mutationFunction: () => 1,
+      modes: {
+        parentsSelection: -1,
+        crossover: CrossoverModes.clone
+      }
+    })
+
+    expect(() => g.findParents()).toThrowError(
+      'Current parent selection mode is not supported.'
+    )
+  })
 })
