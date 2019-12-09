@@ -1,14 +1,14 @@
 import { dnaCopy } from './util'
 
 export enum ParentsSelectionModes {
-  best,
-  probability
+  best = 'best',
+  probability = 'probability'
 }
 
 export enum CrossoverModes {
-  random,
-  average,
-  clone
+  random = 'random',
+  average = 'average',
+  clone = 'clone'
 }
 
 export interface IGeneticConstructor<T> {
@@ -81,6 +81,7 @@ export const Instance = class<Member extends IPopMember>
       case ParentsSelectionModes.best:
         const tempParents = []
         let worseParentIndex = 0
+
         for (let i = 0; i < this.population.length; i++) {
           if (tempParents.length === this.numberOfParents) {
             if (
@@ -107,7 +108,8 @@ export const Instance = class<Member extends IPopMember>
             }
           }
         }
-        this.parents = tempParents.map(p => p.dna)
+
+        this.parents = tempParents.map(p => dnaCopy(p.dna))
         break
 
       case ParentsSelectionModes.probability:
@@ -126,7 +128,7 @@ export const Instance = class<Member extends IPopMember>
             if (!blacklist.includes(i)) {
               chosen -= this.population[i].fitness()
               if (chosen <= 0) {
-                this.parents.push(this.population[i].dna)
+                this.parents.push(dnaCopy(this.population[i].dna))
                 fitnessSum -= this.population[i].fitness()
                 blacklist.push(i)
                 break
@@ -146,7 +148,7 @@ export const Instance = class<Member extends IPopMember>
   crossover(): this {
     this.newDna = []
 
-    const deep = (finisherFunc: (t: number[]) => any) =>
+    const deep = (finisherFunc: (t: number[]) => number) =>
       function deep(targets: DNA[]): any {
         if (Array.isArray(targets[0])) {
           return new Array(targets[0].length)

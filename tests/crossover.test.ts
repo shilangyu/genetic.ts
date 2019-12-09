@@ -179,7 +179,7 @@ describe('`crossover` method of an Genetic instance', () => {
     const g = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
-      modes: { crossover: -1 }
+      modes: { crossover: -1 as any }
     })
 
     expect(() => g.findParents().crossover()).toThrowError(

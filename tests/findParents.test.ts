@@ -59,7 +59,7 @@ describe('`findParents` method of an Genetic instance', () => {
       population: mockPopulation,
       mutationFunction: () => 1,
       modes: {
-        parentsSelection: -1,
+        parentsSelection: -1 as any,
         crossover: CrossoverModes.clone
       }
     })
