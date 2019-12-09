@@ -3,11 +3,11 @@
   "version": "1.0.3",
   "description": "Simple and clear JavaScript class for genetic algorithms. Contains helpful functions to get you going.",
   "main": "./dist/genetic.js",
-  "types": "./dist/Genetic.d.ts",
+  "types": "./dist/genetic.d.ts",
   "scripts": {
     "test": "jest --no-cache",
-    "build": "tsc",
-    "prepare": "npm run build && npm run browser",
+    "build": "tsc && npm run browser",
+    "prepare": "npm run build",
     "prepublishOnly": "npm test",
     "postversion": "git push && git push --tags",
     "browser": "webpack"
