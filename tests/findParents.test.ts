@@ -21,7 +21,9 @@ describe('`findParents` method of an Genetic instance', () => {
     const result = g.parents
     const expected = [{ asd: 4 }, { asd: 5 }]
 
-    expect(result).toEqual(expected)
+    expect(result).toContainEqual(expected[0])
+    expect(result).toContainEqual(expected[1])
+    expect(result.length).toBe(expected.length)
   })
 
   it('tests the probability parents selection', () => {

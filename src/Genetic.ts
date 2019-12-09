@@ -77,10 +77,35 @@ export const Instance = class<Member extends IPopMember>
 
     switch (this.modes.parentsSelection) {
       case ParentsSelectionModes.best:
-        this.parents = this.population
-          .sort((a, b) => a.fitness() - b.fitness())
-          .slice(-this.numberOfParents)
-          .map(e => e.dna)
+        const tempParents = []
+        let worseParentIndex = 0
+        for (let i = 0; i < this.population.length; i++) {
+          if (tempParents.length === this.numberOfParents) {
+            if (
+              tempParents[worseParentIndex].fitness() <
+              this.population[i].fitness()
+            ) {
+              tempParents[worseParentIndex] = this.population[i]
+              for (let n = 0; n < this.numberOfParents; n++) {
+                if (
+                  tempParents[worseParentIndex].fitness() >
+                  tempParents[n].fitness()
+                ) {
+                  worseParentIndex = n
+                }
+              }
+            }
+          } else {
+            tempParents.push(this.population[i])
+            if (
+              tempParents[worseParentIndex].fitness() >
+              this.population[i].fitness()
+            ) {
+              worseParentIndex = tempParents.length - 1
+            }
+          }
+        }
+        this.parents = tempParents.map(p => p.dna)
         break
 
       case ParentsSelectionModes.probability:
