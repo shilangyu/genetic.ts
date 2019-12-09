@@ -146,6 +146,10 @@ _methods of choosing the parents_
 
 `probability`: selects members based on their fitness scores that will correspond to the chance of being chosen
 
+`probability2`: selects members based on their fitness scores squared that will correspond to the chance of being chosen
+
+`probability3`: selects members based on their fitness scores cubed that will correspond to the chance of being chosen
+
 ### Crossover modes:
 
 _method of crossing parents' genes_

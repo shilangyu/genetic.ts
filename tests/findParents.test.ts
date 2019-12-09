@@ -35,6 +35,7 @@ describe('`findParents` method of an Genetic instance', () => {
     const g = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
+      numberOfParents: 1,
       modes: {
         parentsSelection: ParentsSelectionModes.probability,
         crossover: CrossoverModes.clone
@@ -44,7 +45,55 @@ describe('`findParents` method of an Genetic instance', () => {
     g.findParents()
 
     const result = g.parents
-    const expected = [{ asd: 5 }, { asd: 4 }]
+    const expected = [{ asd: 5 }]
+
+    expect(result).toEqual(expected)
+  })
+
+  it('tests the probability2 parents selection', () => {
+    const mockPopulation = [
+      { fitness: () => 0, dna: { asd: 4 } },
+      { fitness: () => -500, dna: { asd: 5 } }
+    ]
+
+    const g = new Instance({
+      population: mockPopulation,
+      mutationFunction: () => 1,
+      numberOfParents: 1,
+      modes: {
+        parentsSelection: ParentsSelectionModes.probability2,
+        crossover: CrossoverModes.clone
+      }
+    })
+
+    g.findParents()
+
+    const result = g.parents
+    const expected = [{ asd: 5 }]
+
+    expect(result).toEqual(expected)
+  })
+
+  it('tests the probability3 parents selection', () => {
+    const mockPopulation = [
+      { fitness: () => -200, dna: { asd: 4 } },
+      { fitness: () => 500, dna: { asd: 5 } }
+    ]
+
+    const g = new Instance({
+      population: mockPopulation,
+      mutationFunction: () => 1,
+      numberOfParents: 1,
+      modes: {
+        parentsSelection: ParentsSelectionModes.probability3,
+        crossover: CrossoverModes.clone
+      }
+    })
+
+    g.findParents()
+
+    const result = g.parents
+    const expected = [{ asd: 5 }]
 
     expect(result).toEqual(expected)
   })

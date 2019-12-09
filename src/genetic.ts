@@ -2,7 +2,9 @@ import { dnaCopy } from './util'
 
 export enum ParentsSelectionModes {
   best = 'best',
-  probability = 'probability'
+  probability = 'probability',
+  probability2 = 'probability2',
+  probability3 = 'probability3'
 }
 
 export enum CrossoverModes {
@@ -115,10 +117,18 @@ export const Instance = class<
         break
 
       case ParentsSelectionModes.probability:
+      case ParentsSelectionModes.probability2:
+      case ParentsSelectionModes.probability3:
+        const power =
+          this.modes.parentsSelection === ParentsSelectionModes.probability
+            ? 1
+            : this.modes.parentsSelection === ParentsSelectionModes.probability2
+            ? 2
+            : 3
         let left = this.numberOfParents
         let fitnessSum = 0
         for (const memeber of this.population) {
-          fitnessSum += memeber.fitness()
+          fitnessSum += memeber.fitness() ** power
         }
 
         const blacklist: number[] = []
@@ -128,10 +138,10 @@ export const Instance = class<
 
           for (let i = 0; i < this.population.length; i++) {
             if (!blacklist.includes(i)) {
-              chosen -= this.population[i].fitness()
+              chosen -= this.population[i].fitness() ** power
               if (chosen <= 0) {
                 this.parents.push(dnaCopy(this.population[i].dna))
-                fitnessSum -= this.population[i].fitness()
+                fitnessSum -= this.population[i].fitness() ** power
                 blacklist.push(i)
                 break
               }
