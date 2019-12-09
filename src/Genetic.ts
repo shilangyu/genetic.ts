@@ -144,7 +144,7 @@ export const Instance = class<Member extends IPopMember>
   crossover(): this {
     this.newDna = []
 
-    const deep = (finisherFunc: (t: any[]) => any) =>
+    const deep = (finisherFunc: (t: number[]) => any) =>
       function deep(targets: DNA[]): any {
         if (Array.isArray(targets[0])) {
           return new Array(targets[0].length)
@@ -163,18 +163,16 @@ export const Instance = class<Member extends IPopMember>
       case CrossoverModes.random:
         const randomGene = deep(t => t[Math.floor(Math.random() * t.length)])
 
-        this.newDna = new Array(this.population.length)
-          .fill(null)
-          .map(() => randomGene(this.parents))
+        for (let i = 0; i < this.population.length; i++) {
+          this.newDna.push(randomGene(this.parents))
+        }
         break
 
       case CrossoverModes.clone:
-        let left = this.population.length
-
-        while (left-- > 0) {
-          let chosen = Math.floor(Math.random() * this.parents.length)
-
-          this.newDna.push(JSON.parse(JSON.stringify(this.parents[chosen])))
+        for (let i = 0; i < this.population.length; i++) {
+          const chosen = Math.floor(Math.random() * this.numberOfParents)
+          const chooseOne = deep(t => t[chosen])
+          this.newDna.push(chooseOne(this.parents))
         }
         break
 
@@ -183,11 +181,10 @@ export const Instance = class<Member extends IPopMember>
           t => t.reduce((prev, curr) => prev + curr, 0) / t.length
         )
 
-        const res = JSON.stringify(averager(this.parents))
-
-        this.newDna = new Array(this.population.length)
-          .fill(null)
-          .map(() => JSON.parse(res))
+        const avg = JSON.stringify(averager(this.parents))
+        for (let i = 0; i < this.population.length; i++) {
+          this.newDna.push(JSON.parse(avg))
+        }
         break
 
       default:
