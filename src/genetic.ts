@@ -23,6 +23,7 @@ export interface IGeneticConstructor<Member> {
     crossover?: CrossoverModes
   }
   preserveParents?: boolean
+  keepHistory?: boolean
 }
 
 export interface IPopMember<DNA> {
@@ -31,6 +32,10 @@ export interface IPopMember<DNA> {
 }
 
 export type MutationFunction = (mutationRate: number) => number
+export type HistoryRecord<DNA> = {
+  fitness: number
+  dna: DNA
+}[]
 
 type InferDna<T> = T extends { dna: infer DNA } ? DNA : T
 
@@ -38,6 +43,7 @@ export const Instance = class<
   Member extends IPopMember<InferDna<Member>>,
   DNA extends InferDna<Member>
 > implements IGeneticConstructor<Member> {
+  history: HistoryRecord<DNA>[] = []
   parents: DNA[] = []
   newDna: DNA[] = []
   generation: number = 1
@@ -51,6 +57,7 @@ export const Instance = class<
     crossover: CrossoverModes
   }
   preserveParents: boolean
+  keepHistory: boolean
 
   constructor({
     population,
@@ -64,7 +71,8 @@ export const Instance = class<
       parentsSelection: ParentsSelectionModes.best,
       crossover: CrossoverModes.random
     },
-    preserveParents = false
+    preserveParents = false,
+    keepHistory = false
   }: IGeneticConstructor<Member>) {
     this.population = population
     this.mutationFunction = mutationFunction
@@ -75,10 +83,13 @@ export const Instance = class<
       crossover
     }
     this.preserveParents = preserveParents
+    this.keepHistory = keepHistory
   }
 
   findParents(): this {
     this.parents = []
+
+    if (this.keepHistory) this.history.push([])
 
     switch (this.modes.parentsSelection) {
       case ParentsSelectionModes.best:
@@ -112,6 +123,14 @@ export const Instance = class<
           }
         }
 
+        if (this.keepHistory) {
+          for (let i = 0; i < tempParents.length; i++) {
+            this.history[this.generation - 1].push({
+              fitness: tempParents[i].fitness(),
+              dna: dnaCopy(tempParents[i].dna)
+            })
+          }
+        }
         this.parents = tempParents.map(p => dnaCopy(p.dna))
         break
 
@@ -139,6 +158,13 @@ export const Instance = class<
             if (!blacklist.includes(i)) {
               chosen -= this.population[i].fitness() ** power
               if (chosen <= 0) {
+                if (this.keepHistory) {
+                  this.history[this.generation - 1].push({
+                    fitness: this.population[i].fitness(),
+                    dna: dnaCopy(this.population[i].dna)
+                  })
+                }
+
                 this.parents.push(dnaCopy(this.population[i].dna))
                 fitnessSum -= this.population[i].fitness() ** power
                 blacklist.push(i)

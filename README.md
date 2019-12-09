@@ -13,9 +13,10 @@ A simple yet powerful and hackable Genetic Algorithm library. Handles your paren
     - [Parent selection modes:](#parent-selection-modes)
     - [Crossover modes:](#crossover-modes)
   - [mutating](#mutating)
-    - [premade mutation functions](#premade-mutation-functions)
-      - [chance](#chance)
-      - [add](#add)
+  - [history](#history)
+  - [premade mutation functions](#premade-mutation-functions)
+    - [chance](#chance)
+    - [add](#add)
 
 ---
 
@@ -67,7 +68,7 @@ const population = [
 
 /* create your genetic object */
 const ga = new genetic.Instance({
-  population, /* set your population */,
+  population /* set your population */,
   mutationFunction: genetic.chance(
     genetic.add(-0.5, 0.5)
   ) /* add mutation function */,
@@ -101,6 +102,7 @@ The `genetic.Instance` class accepts a configuration object in the constructor. 
   - `parentsSelection`: method of choosing the parents (default: `'best'`)
   - `crossover`: method of crossing parents' genes (default: `'random'`)
 - `preserveParents`: preservation of parents' dna in the new generation. If you set this to `true` and have `modes.parentsSelection = 'best'` you will ensure the next generations wont get worse (default: `false`)
+- `keepHistory`: saves history of parents of every generation in [`this.history`](#history)
 
 ---
 
@@ -165,11 +167,22 @@ type MutationFunction = (mutationRate: number) => number
 - will accept a mutationRate
 - will return a number
 
-### premade mutation functions
+## history
+
+If enabled history is stored under `ga.history`. It is saved each time `ga.findParents()` is called. It is an array of arrays of all previous parents with their fitness and dna:
+
+```ts
+type HistoryRecord<DNA> = {
+  fitness: number
+  dna: DNA
+}[]
+```
+
+## premade mutation functions
 
 Genetic.ts provides some pre-made functions for mutations:
 
-#### chance
+### chance
 
 If you'd like to mutate only some properties (based on the mutation rate) wrap your function in `chance(yourFunction)`, like so:
 
@@ -177,7 +190,7 @@ If you'd like to mutate only some properties (based on the mutation rate) wrap y
 const mutFunc = chance(mRate => 2 * mRate)
 ```
 
-#### add
+### add
 
 If you'd like to mutate values by some random number in a range use `add(min, max)`:
 
