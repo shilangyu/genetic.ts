@@ -1,4 +1,4 @@
-import { CrossoverModes, Instance } from '../src/Genetic'
+import { CrossoverModes, Instance } from '../src/genetic'
 
 describe('`crossover` method of an Genetic instance', () => {
   describe('random gene crossover', () => {

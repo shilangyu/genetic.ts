@@ -1,4 +1,4 @@
-import { CrossoverModes, Instance, ParentsSelectionModes } from '../src/Genetic'
+import { CrossoverModes, Instance, ParentsSelectionModes } from '../src/genetic'
 
 describe('`findParents` method of an Genetic instance', () => {
   it('tests the best parents selection', () => {

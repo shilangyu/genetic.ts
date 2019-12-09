@@ -1,4 +1,4 @@
-import { validatePopulation } from '../src/Genetic'
+import { validatePopulation } from '../src/genetic'
 
 describe('`validatePopulation` static method of the Genetic class', () => {
   it('tests missing fitness', () => {

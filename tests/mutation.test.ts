@@ -1,4 +1,4 @@
-import { add, chance, CrossoverModes, Instance } from '../src/Genetic'
+import { add, chance, CrossoverModes, Instance } from '../src/genetic'
 
 describe('`mutation` method of an Genetic instance', () => {
   it('tests adding 1 to a property', () => {

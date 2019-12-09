@@ -1,4 +1,4 @@
-import { Instance } from '../src/Genetic'
+import { Instance } from '../src/genetic'
 
 describe('`nextGeneration` method of an Genetic instance', () => {
   it('tests the generation counter increase', () => {
