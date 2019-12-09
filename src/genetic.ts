@@ -11,8 +11,8 @@ export enum CrossoverModes {
   clone = 'clone'
 }
 
-export interface IGeneticConstructor<T> {
-  population: T[]
+export interface IGeneticConstructor<Member> {
+  population: Member[]
   mutationFunction: MutationFunction
   mutationRate?: number
   numberOfParents?: number
@@ -23,18 +23,20 @@ export interface IGeneticConstructor<T> {
   preserveParents?: boolean
 }
 
-export type DNA = any
-
-export interface IPopMember {
+export interface IPopMember<DNA> {
   fitness(): number
   dna: DNA
 }
 
 export type MutationFunction = (mutationRate: number) => number
-type MapDnaFunction<T> = (newDna: DNA[]) => T[]
+type MapDnaFunction<Member, DNA> = (newDna: DNA[]) => Member[]
 
-export const Instance = class<Member extends IPopMember>
-  implements IGeneticConstructor<Member> {
+type InferDna<T> = T extends { dna: infer DNA } ? DNA : T
+
+export const Instance = class<
+  Member extends IPopMember<InferDna<Member>>,
+  DNA = InferDna<Member>
+> implements IGeneticConstructor<Member> {
   parents: DNA[] = []
   newDna: DNA[] = []
   generation: number = 1
@@ -149,7 +151,7 @@ export const Instance = class<Member extends IPopMember>
     this.newDna = []
 
     const deep = (finisherFunc: (t: number[]) => number) =>
-      function deep(targets: DNA[]): any {
+      function deep(targets: any[]): any {
         if (Array.isArray(targets[0])) {
           return new Array(targets[0].length)
             .fill(null)
@@ -199,7 +201,7 @@ export const Instance = class<Member extends IPopMember>
   }
 
   mutate(): this {
-    const deep = (target: DNA): any => {
+    const deep = (target: any): any => {
       if (Array.isArray(target)) {
         return target.map(deep)
       } else if (typeof target === 'object') {
@@ -223,14 +225,14 @@ export const Instance = class<Member extends IPopMember>
     return this
   }
 
-  finishGeneration(mapDnaFunction: MapDnaFunction<Member>): this {
+  finishGeneration(mapDnaFunction: MapDnaFunction<Member, DNA>): this {
     this.population = mapDnaFunction(this.newDna)
     this.generation++
 
     return this
   }
 
-  nextGeneration(mapDnaFunction: MapDnaFunction<Member>): this {
+  nextGeneration(mapDnaFunction: MapDnaFunction<Member, DNA>): this {
     return this.findParents()
       .crossover()
       .mutate()

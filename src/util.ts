@@ -1,6 +1,4 @@
-import { DNA } from './genetic'
-
-export const dnaCopy = (target: DNA): any => {
+export const dnaCopy = (target: any): any => {
   if (Array.isArray(target)) {
     return target.map(dnaCopy)
   } else if (typeof target === 'object') {

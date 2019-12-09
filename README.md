@@ -119,9 +119,9 @@ The `genetic.Instance` class accepts a configuration object in the constructor. 
 A population is considered correct when:
 
 ```ts
-interface IPopMember {
+interface IPopMember<DNA> {
   fitness(): number
-  dna: any /* !!!arrays and objects have to end with a number!!! */
+  dna: DNA
 }
 ```
 
