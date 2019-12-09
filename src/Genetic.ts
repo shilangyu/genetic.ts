@@ -110,21 +110,25 @@ export const Instance = class<Member extends IPopMember>
 
       case ParentsSelectionModes.probability:
         let left = this.numberOfParents
-        let fitnessSum = this.population.reduce(
-          (prev, curr) => prev + curr.fitness(),
-          0
-        )
+        let fitnessSum = 0
+        for (const memeber of this.population) {
+          fitnessSum += memeber.fitness()
+        }
+
+        const blacklist: number[] = []
 
         while (left-- > 0) {
           let chosen = Math.random() * fitnessSum
 
-          for (let member of this.population) {
-            chosen -= member.fitness()
-            if (chosen <= 0) {
-              this.parents.push(member.dna)
-              fitnessSum -= member.fitness()
-              this.population.splice(this.population.indexOf(member), 1)
-              break
+          for (let i = 0; i < this.population.length; i++) {
+            if (!blacklist.includes(i)) {
+              chosen -= this.population[i].fitness()
+              if (chosen <= 0) {
+                this.parents.push(this.population[i].dna)
+                fitnessSum -= this.population[i].fitness()
+                blacklist.push(i)
+                break
+              }
             }
           }
         }
