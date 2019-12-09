@@ -208,12 +208,24 @@ export const Instance = class<Member extends IPopMember>
         return target + this.mutationFunction(this.mutationRate)
     }
 
-    this.newDna = this.newDna.map(deeper)
+    const copy = (target: any[]): any => {
+      if (Array.isArray(target)) {
+        return target.map(deeper)
+      } else if (typeof target === 'object') {
+        const temp: any = {}
+        for (const key of Object.keys(target)) {
+          temp[key] = deeper(target[key])
+        }
+        return temp
+      } else if (typeof target === 'number') return target
+    }
 
-    if (this.preserveParents) {
-      this.parents.forEach((parent, i) => {
-        this.newDna[i] = JSON.parse(JSON.stringify(parent))
-      })
+    for (let i = 0; i < this.newDna.length; i++) {
+      if (this.preserveParents && i < this.numberOfParents) {
+        this.newDna[i] = copy(this.parents[i])
+      } else {
+        this.newDna[i] = deeper(this.newDna[i])
+      }
     }
 
     return this
