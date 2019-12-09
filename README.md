@@ -47,19 +47,19 @@ import * as genetic from 'genetic.ts' /* import the library, this object will be
 const population = [
   {
     dna: [1, 2, 4],
-    fitness: function() {
+    fitness() {
       return this.dna.reduce((a, b) => a + b)
     }
   },
   {
     dna: [4, 4, 8],
-    fitness: function() {
+    fitness() {
       return this.dna.reduce((a, b) => a + b)
     }
   },
   {
     dna: [11, 3, 7],
-    fitness: function() {
+    fitness() {
       return this.dna.reduce((a, b) => a + b)
     }
   }
@@ -80,21 +80,11 @@ const ga = new genetic.Instance({
 /* All Genetic's methods are chainable */
 ga.findParents() /* finds parents using the passed mode */
   .crossover() /* creates new genes using the passed mode */
-  .mutate() /* mutates the genes using the passed mode */
-  .finishGeneration(newGenes => {
-    newGenes.forEach((g, i) => {
-      population[i].dna = g
-    })
-    return population
-  }) /* here you map the new genes to your population, then return the ready population. It will also increment the generation count */
+  .mutate() /* mutates the genes using the passed function */
+  .finishGeneration() /* Overwrites your population's dna and increments the generation counter */
 
 /* or use the `nextGeneration` method to do the above all at once */
-ga.nextGeneration(newGenes => {
-  newGenes.forEach((g, i) => {
-    population[i].dna = g
-  })
-  return population
-})
+ga.nextGeneration()
 ```
 
 ---

@@ -7,7 +7,7 @@ describe('`nextGeneration` method of an Genetic instance', () => {
       mutationFunction: () => 1
     })
 
-    ga.nextGeneration(() => [])
+    ga.nextGeneration()
 
     const result = ga.generation
     const expected = 2
@@ -28,18 +28,15 @@ describe('`nextGeneration` method of an Genetic instance', () => {
       population: mockPopulation,
       numberOfParents: 1,
       mutationFunction: () => 0
-    })
+    }).nextGeneration()
 
-    const fitFunc = () => 0
-    ga.nextGeneration(newDna => newDna.map(dna => ({ fitness: fitFunc, dna })))
-
-    const result = ga.population
+    const result = ga.population.map(e => e.dna)
     const expected = [
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } }
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 }
     ]
 
     expect(result).toEqual(expected)

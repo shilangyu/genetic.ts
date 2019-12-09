@@ -7,7 +7,7 @@ describe('`finishGeneration` method of an Genetic instance', () => {
       mutationFunction: () => 1
     })
 
-    ga.finishGeneration(() => [])
+    ga.finishGeneration()
 
     const result = ga.generation
     const expected = 2
@@ -30,21 +30,18 @@ describe('`finishGeneration` method of an Genetic instance', () => {
       mutationFunction: () => 0
     })
 
-    const fitFunc = () => 0
     ga.findParents()
       .crossover()
       .mutate()
-    ga.finishGeneration(newDna =>
-      newDna.map(dna => ({ fitness: fitFunc, dna }))
-    )
+      .finishGeneration()
 
-    const result = ga.population
+    const result = ga.population.map(e => e.dna)
     const expected = [
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
-      { fitness: fitFunc, dna: { asd: 8, tut: 10 } }
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 },
+      { asd: 8, tut: 10 }
     ]
 
     expect(result).toEqual(expected)

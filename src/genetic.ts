@@ -31,13 +31,12 @@ export interface IPopMember<DNA> {
 }
 
 export type MutationFunction = (mutationRate: number) => number
-type MapDnaFunction<Member, DNA> = (newDna: DNA[]) => Member[]
 
 type InferDna<T> = T extends { dna: infer DNA } ? DNA : T
 
 export const Instance = class<
   Member extends IPopMember<InferDna<Member>>,
-  DNA = InferDna<Member>
+  DNA extends InferDna<Member>
 > implements IGeneticConstructor<Member> {
   parents: DNA[] = []
   newDna: DNA[] = []
@@ -235,18 +234,20 @@ export const Instance = class<
     return this
   }
 
-  finishGeneration(mapDnaFunction: MapDnaFunction<Member, DNA>): this {
-    this.population = mapDnaFunction(this.newDna)
+  finishGeneration(): this {
+    for (let i = 0; i < this.population.length; i++) {
+      this.population[i].dna = this.newDna[i]
+    }
     this.generation++
 
     return this
   }
 
-  nextGeneration(mapDnaFunction: MapDnaFunction<Member, DNA>): this {
+  nextGeneration(): this {
     return this.findParents()
       .crossover()
       .mutate()
-      .finishGeneration(mapDnaFunction)
+      .finishGeneration()
   }
 }
 
