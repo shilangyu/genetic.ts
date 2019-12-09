@@ -10,15 +10,15 @@ describe('`findParents` method of an Genetic instance', () => {
       { fitness: () => 500, dna: { asd: 5 } }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
       modes: { crossover: CrossoverModes.clone }
     })
 
-    g.findParents()
+    ga.findParents()
 
-    const result = g.parents
+    const result = ga.parents
     const expected = [{ asd: 4 }, { asd: 5 }]
 
     expect(result).toContainEqual(expected[0])
@@ -32,7 +32,7 @@ describe('`findParents` method of an Genetic instance', () => {
       { fitness: () => 500, dna: { asd: 5 } }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
       numberOfParents: 1,
@@ -42,9 +42,9 @@ describe('`findParents` method of an Genetic instance', () => {
       }
     })
 
-    g.findParents()
+    ga.findParents()
 
-    const result = g.parents
+    const result = ga.parents
     const expected = [{ asd: 5 }]
 
     expect(result).toEqual(expected)
@@ -56,7 +56,7 @@ describe('`findParents` method of an Genetic instance', () => {
       { fitness: () => -500, dna: { asd: 5 } }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
       numberOfParents: 1,
@@ -66,9 +66,9 @@ describe('`findParents` method of an Genetic instance', () => {
       }
     })
 
-    g.findParents()
+    ga.findParents()
 
-    const result = g.parents
+    const result = ga.parents
     const expected = [{ asd: 5 }]
 
     expect(result).toEqual(expected)
@@ -80,7 +80,7 @@ describe('`findParents` method of an Genetic instance', () => {
       { fitness: () => 500, dna: { asd: 5 } }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
       numberOfParents: 1,
@@ -90,9 +90,9 @@ describe('`findParents` method of an Genetic instance', () => {
       }
     })
 
-    g.findParents()
+    ga.findParents()
 
-    const result = g.parents
+    const result = ga.parents
     const expected = [{ asd: 5 }]
 
     expect(result).toEqual(expected)
@@ -104,7 +104,7 @@ describe('`findParents` method of an Genetic instance', () => {
       { fitness: () => 500, dna: { asd: 5 } }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
       modes: {
@@ -113,7 +113,7 @@ describe('`findParents` method of an Genetic instance', () => {
       }
     })
 
-    expect(() => g.findParents()).toThrowError(
+    expect(() => ga.findParents()).toThrowError(
       'Current parent selection mode is not supported.'
     )
   })

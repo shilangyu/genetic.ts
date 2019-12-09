@@ -11,14 +11,14 @@ describe('`crossover` method of an Genetic instance', () => {
         { fitness: () => 500, dna: { asd: 8, tut: 10 } }
       ]
 
-      const g = new Instance({
+      const ga = new Instance({
         population: mockPopulation,
         mutationFunction: () => 1
       })
 
-      g.findParents().crossover()
+      ga.findParents().crossover()
 
-      const result = g.newDna
+      const result = ga.newDna
 
       expect(result).toHaveLength(5)
     })
@@ -32,14 +32,14 @@ describe('`crossover` method of an Genetic instance', () => {
         { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
       ]
 
-      const g = new Instance({
+      const ga = new Instance({
         population: mockPopulation,
         mutationFunction: () => 1
       })
 
-      g.findParents().crossover()
+      ga.findParents().crossover()
 
-      const result = g.newDna
+      const result = ga.newDna
 
       expect(result).toHaveLength(5)
     })
@@ -55,16 +55,16 @@ describe('`crossover` method of an Genetic instance', () => {
         { fitness: () => 500, dna: { asd: 8, tut: 10 } }
       ]
 
-      const g = new Instance({
+      const ga = new Instance({
         population: mockPopulation,
         numberOfParents: 1,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.clone }
       })
 
-      g.findParents().crossover()
+      ga.findParents().crossover()
 
-      const result = g.newDna
+      const result = ga.newDna
       const expected = [
         { asd: 8, tut: 10 },
         { asd: 8, tut: 10 },
@@ -85,16 +85,16 @@ describe('`crossover` method of an Genetic instance', () => {
         { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
       ]
 
-      const g = new Instance({
+      const ga = new Instance({
         population: mockPopulation,
         numberOfParents: 1,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.clone }
       })
 
-      g.findParents().crossover()
+      ga.findParents().crossover()
 
-      const result = g.newDna
+      const result = ga.newDna
       const expected = [
         [{ a: 3, e: [13] }, [[2, 74, 5]]],
         [{ a: 3, e: [13] }, [[2, 74, 5]]],
@@ -117,15 +117,15 @@ describe('`crossover` method of an Genetic instance', () => {
         { fitness: () => 500, dna: { asd: 8, tut: 10 } }
       ]
 
-      const g = new Instance({
+      const ga = new Instance({
         population: mockPopulation,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.average }
       })
 
-      g.findParents().crossover()
+      ga.findParents().crossover()
 
-      const result = g.newDna
+      const result = ga.newDna
       const expected = [
         { asd: 6, tut: 11 },
         { asd: 6, tut: 11 },
@@ -146,15 +146,15 @@ describe('`crossover` method of an Genetic instance', () => {
         { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
       ]
 
-      const g = new Instance({
+      const ga = new Instance({
         population: mockPopulation,
         mutationFunction: () => 1,
         modes: { crossover: CrossoverModes.average }
       })
 
-      g.findParents().crossover()
+      ga.findParents().crossover()
 
-      const result = g.newDna
+      const result = ga.newDna
       const expected = [
         [{ a: 8, e: [118] }, [[222, 49, 20]]],
         [{ a: 8, e: [118] }, [[222, 49, 20]]],
@@ -176,13 +176,13 @@ describe('`crossover` method of an Genetic instance', () => {
       { fitness: () => 500, dna: [{ a: 3, e: [13] }, [[2, 74, 5]]] }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       mutationFunction: () => 1,
       modes: { crossover: -1 as any }
     })
 
-    expect(() => g.findParents().crossover()).toThrowError(
+    expect(() => ga.findParents().crossover()).toThrowError(
       'Current crossover mode is not supported.'
     )
   })

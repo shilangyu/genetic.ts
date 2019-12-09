@@ -2,14 +2,14 @@ import { Instance } from '../src/genetic'
 
 describe('`finishGeneration` method of an Genetic instance', () => {
   it('tests the generation counter increase', () => {
-    const g = new Instance({
+    const ga = new Instance({
       population: [],
       mutationFunction: () => 1
     })
 
-    g.finishGeneration(() => [])
+    ga.finishGeneration(() => [])
 
-    const result = g.generation
+    const result = ga.generation
     const expected = 2
 
     expect(result).toEqual(expected)
@@ -24,19 +24,21 @@ describe('`finishGeneration` method of an Genetic instance', () => {
       { fitness: () => 500, dna: { asd: 8, tut: 10 } }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       numberOfParents: 1,
       mutationFunction: () => 0
     })
 
     const fitFunc = () => 0
-    g.findParents()
+    ga.findParents()
       .crossover()
       .mutate()
-    g.finishGeneration(newDna => newDna.map(dna => ({ fitness: fitFunc, dna })))
+    ga.finishGeneration(newDna =>
+      newDna.map(dna => ({ fitness: fitFunc, dna }))
+    )
 
-    const result = g.population
+    const result = ga.population
     const expected = [
       { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
       { fitness: fitFunc, dna: { asd: 8, tut: 10 } },

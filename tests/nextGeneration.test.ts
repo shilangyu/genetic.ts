@@ -2,14 +2,14 @@ import { Instance } from '../src/genetic'
 
 describe('`nextGeneration` method of an Genetic instance', () => {
   it('tests the generation counter increase', () => {
-    const g = new Instance({
+    const ga = new Instance({
       population: [],
       mutationFunction: () => 1
     })
 
-    g.nextGeneration(() => [])
+    ga.nextGeneration(() => [])
 
-    const result = g.generation
+    const result = ga.generation
     const expected = 2
 
     expect(result).toEqual(expected)
@@ -24,16 +24,16 @@ describe('`nextGeneration` method of an Genetic instance', () => {
       { fitness: () => 500, dna: { asd: 8, tut: 10 } }
     ]
 
-    const g = new Instance({
+    const ga = new Instance({
       population: mockPopulation,
       numberOfParents: 1,
       mutationFunction: () => 0
     })
 
     const fitFunc = () => 0
-    g.nextGeneration(newDna => newDna.map(dna => ({ fitness: fitFunc, dna })))
+    ga.nextGeneration(newDna => newDna.map(dna => ({ fitness: fitFunc, dna })))
 
-    const result = g.population
+    const result = ga.population
     const expected = [
       { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
       { fitness: fitFunc, dna: { asd: 8, tut: 10 } },
