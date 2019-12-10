@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="theme-color" content="#ff80ab" />
-		<title>Genetic.ts</title>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
-		/>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-	</head>
-	<body class="container cyan lighten-3">
-		<h4>
-			Hello there! Here are some example projects showcasing my
-			<a href="https://github.com/shilangyu/Genetic.ts">Genetic.ts</a> library for genetic
-			algorithms.
-		</h4>
-		<div class="divider"></div>
-		<div class="row" id="previews"></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#ff80ab" />
+    <title>Genetic.ts</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body class="container cyan lighten-3">
+    <h4>
+      Hello there! Here are some example projects showcasing my
+      <a href="https://github.com/shilangyu/genetic.ts">Genetic.ts</a> library
+      for genetic algorithms.
+    </h4>
+    <div class="divider"></div>
+    <div class="row" id="previews"></div>
 
-		<script>
-			const Card = (title, desc, href) => `
+    <script>
+      const Card = (title, desc, href) => `
 				<div class="col s12 m6 l4">
 					<div class="card pink accent-1 hoverable">
 						<div class="card-content black-text">
@@ -34,17 +34,17 @@
 					</div>
 				</div>
 			`
-			document.querySelector('#previews').innerHTML =
-				Card(
-					'Quadratic function',
-					'The genetic algorithm tries to find a, b, and c of a function knowing its 2 roots.',
-					'./quadratic_function.html'
-				) +
-				Card(
-					"Shakespeare's monkeys",
-					'The gentic algorithm tries to reach your sentence.',
-					'./shakespeare-monkey.html'
-				)
-		</script>
-	</body>
+      document.querySelector('#previews').innerHTML =
+        Card(
+          'Quadratic function',
+          'The genetic algorithm tries to find a, b, and c of a function knowing its 2 roots.',
+          './quadratic_function.html'
+        ) +
+        Card(
+          "Shakespeare's monkeys",
+          'The gentic algorithm tries to reach your sentence.',
+          './shakespeare_monkey.html'
+        )
+    </script>
+  </body>
 </html>

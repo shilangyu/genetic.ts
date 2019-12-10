@@ -1,141 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="theme-color" content="#ff80ab" />
-		<title>Genetic.ts - Quadratic function</title>
-		<script src="https://cdn.jsdelivr.net/npm/genetic.ts/dist/Genetic.web.js"></script>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
-		/>
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<style>
-			input::-webkit-outer-spin-button,
-			input::-webkit-inner-spin-button {
-				-webkit-appearance: none;
-				margin: 0;
-			}
-			input[type='number'] {
-				-moz-appearance: textfield;
-			}
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="theme-color" content="#ff80ab" />
+    <title>Genetic.ts - Quadratic function</title>
+    <script src="https://cdn.jsdelivr.net/npm/genetic.ts/dist/genetic.web.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type='number'] {
+        -moz-appearance: textfield;
+      }
 
-			.input-field input[type='number']:focus {
-				border-bottom: 1px solid #ff80ab !important;
-				box-shadow: 0 1px 0 0 #ff80ab !important;
-			}
-		</style>
-	</head>
+      .input-field input[type='number']:focus {
+        border-bottom: 1px solid #ff80ab !important;
+        box-shadow: 0 1px 0 0 #ff80ab !important;
+      }
+    </style>
+  </head>
 
-	<body class="container cyan lighten-3">
-		<h4>The genetic algorithm tries to find a, b, and c knowing the 2 roots of that function.</h4>
-		<h6>The formula:</h6>
-		<code> f(x) = ax<sup>2</sup> + bx + c </code>
-		<h6>Roots:</h6>
-		<div class="row">
-			<div class="col s12 m6">
-				f(
-				<div class="input-field inline">
-					<input id="x1" type="number" value="-1" />
-				</div>
-				) = 0
-			</div>
-			<div class="col s12 m6">
-				f(
-				<div class="input-field inline">
-					<input id="x2" type="number" value="3" />
-				</div>
-				) = 0
-			</div>
-		</div>
+  <body class="container cyan lighten-3">
+    <h4>
+      The genetic algorithm tries to find a, b, and c knowing the 2 roots of
+      that function.
+    </h4>
+    <h6>The formula:</h6>
+    <code> f(x) = ax<sup>2</sup> + bx + c </code>
+    <h6>Roots:</h6>
+    <div class="row">
+      <div class="col s12 m6">
+        f(
+        <div class="input-field inline">
+          <input id="x1" type="number" value="-1" />
+        </div>
+        ) = 0
+      </div>
+      <div class="col s12 m6">
+        f(
+        <div class="input-field inline">
+          <input id="x2" type="number" value="3" />
+        </div>
+        ) = 0
+      </div>
+    </div>
 
-		<h6>Best guess:</h6>
-		<p>
-			a = <span id="a"></span> <br />
-			b = <span id="b"></span> <br />
-			c = <span id="c"></span> <br />
-			How far off the answer: <span id="accuracy"></span>
-		</p>
+    <h6>Best guess:</h6>
+    <p>
+      a = <span id="a"></span> <br />
+      b = <span id="b"></span> <br />
+      c = <span id="c"></span> <br />
+      How far off the answer: <span id="accuracy"></span>
+    </p>
 
-		<script>
-			const ENV = {
-				population: {
-					size: 100,
-					members: []
-				},
-				x1: (() => {
-					const ref = document.querySelector('#x1')
-					return () => Number(ref.value)
-				})(),
-				x2: (() => {
-					const ref = document.querySelector('#x2')
-					return () => Number(ref.value)
-				})(),
-				setBest: (() => {
-					const preview = ['a', 'b', 'c', 'accuracy'].map(e => document.querySelector(`#${e}`))
+    <script>
+      const x1Ref = document.querySelector('#x1')
+      const x2Ref = document.querySelector('#x2')
 
-					return dna => {
-						dna = { ...dna }
-						dna.accuracy =
-							Math.abs(f(dna.a, dna.b, dna.c, ENV.x1())) +
-							Math.abs(f(dna.a, dna.b, dna.c, ENV.x2()))
-						preview.forEach(e => (e.innerText = dna[e.id]))
-					}
-				})()
-			}
+      const population = new Array(100).fill(null)
 
-			const f = (a, b, c, x) => a * x ** 2 + b * x + c
+      const setBest = (() => {
+        const preview = ['a', 'b', 'c', 'accuracy'].map(e =>
+          document.querySelector(`#${e}`)
+        )
 
-			class Guess {
-				constructor(dna) {
-					this.fitness = 0
-					this.dna = dna || {
-						a: Math.random() * 10 - 5,
-						b: Math.random() * 10 - 5,
-						c: Math.random() * 10 - 5
-					}
-				}
+        return dna => {
+          dna = { ...dna }
+          dna.accuracy =
+            Math.abs(f(dna.a, dna.b, dna.c, x1Ref.value)) +
+            Math.abs(f(dna.a, dna.b, dna.c, x2Ref.value))
+          preview.forEach(e => (e.innerText = dna[e.id]))
+        }
+      })()
 
-				calcFitness(x1, x2) {
-					return (
-						1 /
-						(Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x1)) +
-							Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x2)))
-					)
-				}
-			}
+      const f = (a, b, c, x) => a * x ** 2 + b * x + c
 
-			function initPopulation(genes) {
-				const { population: pop } = ENV
-				pop.members = new Array(pop.size)
-					.fill(null)
-					.map((e, i) => new Guess(genes ? genes[i] : null))
-			}
-			initPopulation()
+      class Guess {
+        constructor() {
+          this.dna = {
+            a: Math.random() * 10 - 5,
+            b: Math.random() * 10 - 5,
+            c: Math.random() * 10 - 5
+          }
+        }
 
-			const ga = new genetic.Instance({
-				population: ENV.population.members,
-				mutationFunction: genetic.chance(genetic.add(-0.5, 0.5)),
-				fitnessFunction: mem => mem.calcFitness(ENV.x1(), ENV.x2()),
-				preserveParents: true,
-				modes: {
-					crossover: genetic.CrossoverModes.average
-				}
-			})
+        fitness() {
+          return (
+            1 /
+            (Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x1Ref.value)) +
+              Math.abs(f(this.dna.a, this.dna.b, this.dna.c, x2Ref.value)))
+          )
+        }
+      }
 
-			setInterval(() => {
-				ga.calculateFitness().findParents()
+      function initPopulation() {
+        for (let i = 0; i < population.length; i++) {
+          population[i] = new Guess()
+        }
+      }
+      initPopulation()
 
-				ENV.setBest(ga.parents[0])
+      const ga = new genetic.Instance({
+        population: population,
+        mutationFunction: genetic.chance(genetic.add(-0.5, 0.5)),
+        preserveParents: true,
+        modes: {
+          crossover: genetic.CrossoverModes.average
+        }
+      })
 
-				ga.crossover()
-					.mutate()
-					.finishGeneration(newGenes => {
-						initPopulation(newGenes)
-						return ENV.population.members
-					})
-			}, 1)
-		</script>
-	</body>
+      setInterval(() => {
+        ga.findParents()
+
+        setBest(ga.parents[0])
+
+        ga.crossover()
+          .mutate()
+          .finishGeneration()
+      }, 1)
+    </script>
+  </body>
 </html>
