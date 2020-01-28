@@ -39,7 +39,7 @@
   },
   "homepage": "https://github.com/clitcancer/genetic.ts#readme",
   "devDependencies": {
-    "@types/jest": "^24.0.23",
+    "@types/jest": "^25.1.0",
     "@types/node": "^13.1.0",
     "@types/webpack": "^4.4.27",
     "husky": "^4.0.0",
