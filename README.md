@@ -40,7 +40,7 @@ For browser:
 
 ## usage
 
-See [examples](https://shilangyu.dev/genetic.ts/). Source code can be found in `docs/`.
+See [examples](https://github.shilangyu.dev/genetic.ts/). Source code can be found in `docs/`.
 
 ```ts
 import * as genetic from 'genetic.ts' /* import the library, this object will be available globally if imported through HTML */
@@ -50,20 +50,20 @@ const population = [
     dna: [1, 2, 4],
     fitness() {
       return this.dna.reduce((a, b) => a + b)
-    }
+    },
   },
   {
     dna: [4, 4, 8],
     fitness() {
       return this.dna.reduce((a, b) => a + b)
-    }
+    },
   },
   {
     dna: [11, 3, 7],
     fitness() {
       return this.dna.reduce((a, b) => a + b)
-    }
-  }
+    },
+  },
 ]
 
 /* create your genetic object */
@@ -74,8 +74,8 @@ const ga = new genetic.Instance({
   ) /* add mutation function */,
   modes: {
     crossover:
-      genetic.CrossoverModes.clone /* overwrite default modes with enums */
-  }
+      genetic.CrossoverModes.clone /* overwrite default modes with enums */,
+  },
 })
 
 /* All Genetic's methods are chainable */
@@ -187,7 +187,7 @@ Genetic.ts provides some pre-made functions for mutations:
 If you'd like to mutate only some properties (based on the mutation rate) wrap your function in `chance(yourFunction)`, like so:
 
 ```ts
-const mutFunc = chance(mRate => 2 * mRate)
+const mutFunc = chance((mRate) => 2 * mRate)
 ```
 
 ### add
